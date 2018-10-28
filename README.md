@@ -1,11 +1,8 @@
 # Computer Graphics 203.3710, Winter 2018/2019
 ## Students Team data
 
-Name: 'Your real name'  
-Student Number: 'Your student number'
-
-Name: 'Your real name'  
-Student Number: 'Your student number'
+Name: 'Asaf Agami'  
+Student Number: '203941661'
 
 ### Lecturer
 *Roi Poranne*
