@@ -62,6 +62,11 @@ void Renderer::ClearColorBuffer(const glm::vec3& color)
 	}
 }
 
+void Renderer::drawLine(Line line)
+{
+
+}
+
 void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX, int viewportY)
 {
 	this->viewportX = viewportX;

@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 #include <imgui/imgui.h>
+#include "line.h"
 
 /*
  * Renderer class.
@@ -21,6 +22,7 @@ private:
 
 	void putPixel(int x, int y, const glm::vec3& color);
 	void createBuffers(int viewportWidth, int viewportHeight);
+	void drawLine(Line line);
 
 	GLuint glScreenTex;
 	GLuint glScreenVtc;
