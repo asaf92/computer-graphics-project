@@ -1,14 +1,9 @@
 #pragma once
 
-class Point
+struct Point
 {
-public:
-	double GetX() { return _x; }
-	double GetY() { return _y; }
+	const double X;
+	const double Y;
 
-	Point(double x, double y) :_x(x), _y(y) {}
-
-private:
-	double _x;
-	double _y;
+	Point(double x, double y) :X(x), Y(y) {}
 };

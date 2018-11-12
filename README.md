@@ -4,10 +4,6 @@
 Name: 'Asaf Agami'  
 Student Number: '203941661'
 
-
-Name: 'Tal Katz'  
-Student Number: '065954786'
-
 ### Lecturer
 *Roi Poranne*
 

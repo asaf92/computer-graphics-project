@@ -1,11 +1,12 @@
 #pragma once
 #include "Scene.h"
+#include "Line.h"
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 #include <imgui/imgui.h>
-#include "line.h"
+
 
 /*
  * Renderer class.

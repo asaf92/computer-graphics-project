@@ -9,6 +9,7 @@
 
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 
+
 Renderer::Renderer(int viewportWidth, int viewportHeight, int viewportX, int viewportY) :
 	colorBuffer(nullptr),
 	zBuffer(nullptr)
@@ -64,7 +65,29 @@ void Renderer::ClearColorBuffer(const glm::vec3& color)
 
 void Renderer::drawLine(Line line)
 {
+	/*
+	ensure x0 <= x1
+	*/
 
+
+	/*
+	if y0 == y1 || x1 == x2
+		draw straight line
+	else
+		deltaX = x1-x0
+		deltaY = y1-y0
+		deltaE = abs(deltaY/deltaX) (delta x is not zero)
+		Error  = 0.0
+	y = y0
+	for(x:x0 -> x1)
+		putPixel(x0,y0)
+		error = error + deltaE
+		if error >= 0.5
+			y = y + sign(deltay) * 1
+			error = error - 1.0
+	*/
+
+	
 }
 
 void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX, int viewportY)
@@ -84,25 +107,26 @@ void Renderer::Render(const Scene& scene)
 	//## Here you should render the scene.       ##
 	//#############################################
 
-	// Draw a chess board in the middle of the screen
-	for (int i = 100; i < viewportWidth - 100; i++)
-	{
-		for (int j = 100; j < viewportHeight - 100; j++)
-		{
-			int mod_i = i / 50;
-			int mod_j = j / 50;
 
-			int odd = (mod_i + mod_j) % 2;
-			if (odd)
-			{
-				putPixel(i, j, glm::vec3(0, 1, 0));
-			}
-			else
-			{
-				putPixel(i, j, glm::vec3(1, 0, 0));
-			}
-		}
-	}
+	// Draw a chess board in the middle of the screen
+	//for (int i = 100; i < viewportWidth - 100; i++)
+	//{
+	//	for (int j = 100; j < viewportHeight - 100; j++)
+	//	{
+	//		int mod_i = i / 50;
+	//		int mod_j = j / 50;
+
+	//		int odd = (mod_i + mod_j) % 2;
+	//		if (odd)
+	//		{
+	//			putPixel(i, j, glm::vec3(0, 1, 0));
+	//		}
+	//		else
+	//		{
+	//			putPixel(i, j, glm::vec3(1, 0, 0));
+	//		}
+	//	}
+	//}
 }
 
 //##############################
