@@ -23,7 +23,7 @@ private:
 
 	void putPixel(int x, int y, const glm::vec3& color);
 	void createBuffers(int viewportWidth, int viewportHeight);
-	void drawLine(Line line);
+	void drawLine(Line& line);
 
 	GLuint glScreenTex;
 	GLuint glScreenVtc;
