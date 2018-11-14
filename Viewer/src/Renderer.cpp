@@ -66,75 +66,23 @@ void Renderer::ClearColorBuffer(const glm::vec3& color)
 void Renderer::drawLine(Line& line)
 {
 	unsigned int x0, x1, y0, y1;
-	glm::vec3& lineColor = glm::vec3(0, 1, 0);
+	glm::vec3& lineColor = glm::vec3(0, 0, 0);
 
-	/*
-	ensure x0 <= x1
-	*/
-	if (line.PointA->X < line.PointB->X)
+	setXZeroToBeSmaller(line, x0, y0, x1, y1);
+	if (y0 == y1 || x0 == x1)
 	{
-		x0 = line.PointA->X;
-		y0 = line.PointA->Y;
-		x1 = line.PointB->X;
-		y1 = line.PointB->Y;
-	}
-	else
-	{
-		x0 = line.PointB->X;
-		y0 = line.PointB->Y;
-		x1 = line.PointA->X;
-		y1 = line.PointA->Y;
-	}
-
-	/*
-	if y0 == y1 || x1 == x2
-		draw straight line
-	*/
-	if (y0 == y1)
-	{
-		for (int i = x0; i <= x1; i++)
-		{
-			putPixel(i, y0, lineColor);
-		}
+		drawStraightLine(y0, y1, x0, x1, lineColor);
 		return;
 	}
 
-	if (x0 == x1)
-	{
-		// ensure y0 < y1
-		if (y0 > y1)
-		{
-			std::swap(y0, y1);
-		}
-		for (int i = y0; i < y1; i++)
-		{
-			putPixel(x0, i, lineColor);
-		}
-		return;
-	}
-	/*
-	else
-		deltaX = x1-x0
-		deltaY = y1-y0
-		deltaE = abs(deltaY/deltaX) (delta x is not zero)
-		Error  = 0.0
-	y = y0
-
-	*/
 	double deltaX = x1 - x0;
 	double deltaY = y1 - y0;
 	double deltaE = abs(deltaY / deltaX);
 	double Error  = 0.0;
 	int y = y0;
 	int x = x0;
-	/*
-	for(x:x0 -> x1)
-		putPixel(x0,y0)
-		error = error + deltaE
-		if error >= 0.5
-			y = y + sign(deltay) * 1
-			error = error - 1.0
-	*/
+
+	//Bresenham's algorithm
 	if (line.GetSlope() > 1)
 	{
 		for (; y <= y1; y++)
@@ -156,7 +104,6 @@ void Renderer::drawLine(Line& line)
 				}
 			}
 		}
-
 		return;
 	}
 
@@ -179,9 +126,8 @@ void Renderer::drawLine(Line& line)
 			}
 		}
 	}
-
-	return;
 }
+
 
 void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX, int viewportY)
 {
@@ -340,4 +286,48 @@ void Renderer::SwapBuffers()
 
 	// Finally renders the data.
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+void Renderer::setXZeroToBeSmaller(Line & line, unsigned int &x0, unsigned int &y0, unsigned int &x1, unsigned int &y1)
+{
+	if (line.PointA->X < line.PointB->X)
+	{
+		x0 = line.PointA->X;
+		y0 = line.PointA->Y;
+		x1 = line.PointB->X;
+		y1 = line.PointB->Y;
+	}
+	else
+	{
+		x0 = line.PointB->X;
+		y0 = line.PointB->Y;
+		x1 = line.PointA->X;
+		y1 = line.PointA->Y;
+	}
+}
+
+void Renderer::drawStraightLine(unsigned int &y0, unsigned int &y1, unsigned int x0, unsigned int x1, glm::vec3 & lineColor)
+{
+	if (y0 == y1)
+	{
+		for (int i = x0; i <= x1; i++)
+		{
+			putPixel(i, y0, lineColor);
+		}
+		return;
+	}
+
+	if (x0 == x1)
+	{
+		// ensure y0 < y1
+		if (y0 > y1)
+		{
+			std::swap(y0, y1);
+		}
+		for (int i = y0; i < y1; i++)
+		{
+			putPixel(x0, i, lineColor);
+		}
+		return;
+	}
 }
