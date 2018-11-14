@@ -126,7 +126,7 @@ void Renderer::drawLine(Line& line)
 	double deltaE = abs(deltaY / deltaX);
 	double Error  = 0.0;
 	int y = y0;
-
+	int x = x0;
 	/*
 	for(x:x0 -> x1)
 		putPixel(x0,y0)
@@ -135,7 +135,32 @@ void Renderer::drawLine(Line& line)
 			y = y + sign(deltay) * 1
 			error = error - 1.0
 	*/
-	for (int x = x0; x <= x1; x++)
+	if (line.GetSlope() > 1)
+	{
+		for (; y <= y1; y++)
+		{
+			putPixel(x, y, lineColor);
+			Error = Error + deltaE;
+			if (Error >= 0.5)
+			{
+				if (deltaX < 0)
+				{
+					x--;
+					Error = Error - 1.0;
+				}
+
+				if (deltaX > 0)
+				{
+					x++;
+					Error = Error - 1.0;
+				}
+			}
+		}
+
+		return;
+	}
+
+	for (; x <= x1; x++)
 	{
 		putPixel(x, y, lineColor);
 		Error = Error + deltaE;
@@ -175,10 +200,12 @@ void Renderer::Render(const Scene& scene)
 	//## Here you should render the scene.       ##
 	//#############################################
 	Point *A, *B;
-	A = new Point(30, 30);
-	B = new Point(30, 1000);
+	A = new Point(30, 50);
+	B = new Point(300, 200);
 	Line line = Line(A, B);
 	drawLine(line);
+	drawLine(Line(&Point(70, 200), &Point(90, 400)));
+
 	// Draw a chess board in the middle of the screen
 	//for (int i = 100; i < viewportWidth - 100; i++)
 	//{
