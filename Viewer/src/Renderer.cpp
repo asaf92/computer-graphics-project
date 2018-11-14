@@ -129,6 +129,13 @@ void Renderer::drawLine(Line& line)
 }
 
 
+void Renderer::drawTriangle(Line lineA, Line lineB, Line lineC)
+{
+	drawLine(lineA);
+	drawLine(lineB);
+	drawLine(lineC);
+}
+
 void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX, int viewportY)
 {
 	this->viewportX = viewportX;
