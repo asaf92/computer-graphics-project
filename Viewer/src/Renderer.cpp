@@ -156,25 +156,6 @@ void Renderer::Render(const Scene& scene)
 	drawLine(line);
 	drawLine(Line(&Point(70, 200), &Point(90, 400)));
 
-	// Draw a chess board in the middle of the screen
-	//for (int i = 100; i < viewportWidth - 100; i++)
-	//{
-	//	for (int j = 100; j < viewportHeight - 100; j++)
-	//	{
-	//		int mod_i = i / 50;
-	//		int mod_j = j / 50;
-
-	//		int odd = (mod_i + mod_j) % 2;
-	//		if (odd)
-	//		{
-	//			putPixel(i, j, glm::vec3(0, 1, 0));
-	//		}
-	//		else
-	//		{
-	//			putPixel(i, j, glm::vec3(1, 0, 0));
-	//		}
-	//	}
-	//}
 	delete A;
 	delete B;
 }

@@ -46,7 +46,7 @@ MeshModel Utils::LoadMeshModel(const std::string& filePath)
 		}
 		else if (lineType == "vn")
 		{
-			// Add the required code here...
+			normals.push_back(Utils::Vec3fFromStream(issLine));
 		}
 		else if (lineType == "vt")
 		{
