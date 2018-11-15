@@ -148,10 +148,7 @@ void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX,
 
 void Renderer::Render(const Scene& scene)
 {
-	//#############################################
-	//## You should override this implementation ##
-	//## Here you should render the scene.       ##
-	//#############################################
+	auto activeModel = scene.GetActiveModel();
 	Point *A, *B;
 	A = new Point(30, 50);
 	B = new Point(300, 200);
