@@ -75,16 +75,17 @@ void Renderer::drawLine(Line& line)
 		return;
 	}
 
-	double deltaX = x1 - x0;
-	double deltaY = y1 - y0;
+	double deltaX = (double)x1 - (double)x0;
+	double deltaY = (double)y1 - (double)y0;
 	double deltaE = abs(deltaY / deltaX);
 	double Error  = 0.0;
 	int y = y0;
 	int x = x0;
 
 	//Bresenham's algorithm
-	if (line.GetSlope() > 1)
+	if (abs(line.GetSlope()) > 1)
 	{
+		deltaE = abs(deltaX / deltaY);
 		for (; y <= y1; y++)
 		{
 			putPixel(x, y, lineColor);
@@ -129,11 +130,11 @@ void Renderer::drawLine(Line& line)
 }
 
 
-void Renderer::drawTriangle(Line lineA, Line lineB, Line lineC)
+void Renderer::drawTriangle(const Point& PointA,const Point& PointB, const Point& PointC)
 {
-	drawLine(lineA);
-	drawLine(lineB);
-	drawLine(lineC);
+	drawLine(Line(PointA,PointB));
+	drawLine(Line(PointB, PointC));
+	drawLine(Line(PointC, PointA));
 }
 
 void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX, int viewportY)
@@ -149,15 +150,7 @@ void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX,
 void Renderer::Render(const Scene& scene)
 {
 	auto activeModel = scene.GetActiveModel();
-	Point *A, *B;
-	A = new Point(30, 50);
-	B = new Point(300, 200);
-	Line line = Line(A, B);
-	drawLine(line);
-	drawLine(Line(&Point(70, 200), &Point(90, 400)));
-
-	delete A;
-	delete B;
+	drawTriangle(Point(1, 1), Point(100, 500), Point(800, 200));
 }
 
 //##############################
@@ -275,19 +268,19 @@ void Renderer::SwapBuffers()
 
 void Renderer::setXZeroToBeSmaller(Line & line, unsigned int &x0, unsigned int &y0, unsigned int &x1, unsigned int &y1)
 {
-	if (line.PointA->X < line.PointB->X)
+	if (line.PointA.X < line.PointB.X)
 	{
-		x0 = line.PointA->X;
-		y0 = line.PointA->Y;
-		x1 = line.PointB->X;
-		y1 = line.PointB->Y;
+		x0 = line.PointA.X;
+		y0 = line.PointA.Y;
+		x1 = line.PointB.X;
+		y1 = line.PointB.Y;
 	}
 	else
 	{
-		x0 = line.PointB->X;
-		y0 = line.PointB->Y;
-		x1 = line.PointA->X;
-		y1 = line.PointA->Y;
+		x0 = line.PointB.X;
+		y0 = line.PointB.Y;
+		x1 = line.PointA.X;
+		y1 = line.PointA.Y;
 	}
 }
 
