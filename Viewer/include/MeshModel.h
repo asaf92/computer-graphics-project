@@ -18,6 +18,9 @@ protected:
 	glm::mat4x4 worldTransform;
 	glm::vec4 color;
 	std::string modelName;
+	glm::vec3 centerPoint;
+	glm::vec3 minimums;
+	glm::vec3 maximums;
 
 public:
 	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::string& modelName = "");
@@ -35,5 +38,8 @@ public:
 
 	// Returns a const vertices vector reference
 	std::vector<glm::vec3>& GetVerticesVector() { return vertices; }
+	// Returns faces vector
 	std::vector<Face>& GetFacesVector() { return faces; }
+	// Returns the meshmodel center point
+	glm::vec3& GetCenterPoint() { return centerPoint; }
 };
