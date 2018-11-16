@@ -156,7 +156,9 @@ void Renderer::Render(const Scene& scene)
 		
 		for (std::vector<glm::vec3>::const_iterator verticesConstIterator = vertices.cbegin(); verticesConstIterator != vertices.end(); ++verticesConstIterator)
 		{
-
+			auto x = (int)(verticesConstIterator->x * (float) viewportWidth);
+			auto y = (int)(verticesConstIterator->y * (float)viewportHeight);
+			putPixel(x, y, glm::vec3(0, 0, 0));
 		}
 	}
 	drawTriangle(Point(1, 1), Point(100, 500), Point(800, 200));
