@@ -149,6 +149,7 @@ void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX,
 
 void Renderer::Render(const Scene& scene)
 {
+	scene.AddCamera(Camera());
 	auto activeModel = scene.GetActiveModel();
 	if (activeModel != nullptr)
 	{
@@ -161,22 +162,25 @@ void Renderer::Render(const Scene& scene)
 		auto minY = minimums.y;
 		auto maxX = maximums.x;
 		auto maxY = maximums.y;
+		auto deltaX = maxX - minX;
+		auto deltaY = maxY - minY;
+		int scale = 50;
 
 		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
 		{
 			const int firstPointIndex = facesIterator->GetVertexIndex(0) - 1;
-			int x = (int)(vertices[firstPointIndex].x);
-			int y = (int)(vertices[firstPointIndex].y);
+			int x = (int)((vertices[firstPointIndex].x + abs(minX)) /(deltaX) * scale);
+			int y = (int)((vertices[firstPointIndex].y + abs(minY)) /(deltaY) * scale);
 			Point PointA(x, y);
 
 			const int secondPointIndex = facesIterator->GetVertexIndex(1) - 1;
-			x = (int)(vertices[secondPointIndex].x);
-			y = (int)(vertices[secondPointIndex].y);
+			x = (int)((vertices[secondPointIndex].x + abs(minX)) / (deltaX)* scale);
+			y = (int)((vertices[secondPointIndex].y + abs(minY)) / (deltaY)* scale);
 			Point PointB(x, y);
 
 			const int thirdPointIndex = facesIterator->GetVertexIndex(2) - 1;
-			x = (int)(vertices[thirdPointIndex].x);
-			y = (int)(vertices[thirdPointIndex].y);
+			x = (int)((vertices[thirdPointIndex].x + abs(minX)) / (deltaX)* scale);
+			y = (int)((vertices[thirdPointIndex].y + abs(minY)) / (deltaY)* scale);
 			Point PointC(x, y);
 
 			drawTriangle(PointA, PointB, PointC);

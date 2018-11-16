@@ -19,6 +19,7 @@ private:
 	float zoom;
 
 public:
+	Camera() { Camera(glm::vec4(0), glm::vec4(0), glm::vec4(0)); }
 	Camera(const glm::vec4& eye, const glm::vec4& at, const glm::vec4& up);
 	~Camera();
 
