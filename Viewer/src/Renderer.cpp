@@ -155,32 +155,32 @@ void Renderer::Render(const Scene& scene)
 		std::vector<glm::vec3>& vertices = activeModel->GetVerticesVector();
 		std::vector<Face>& faces = activeModel->GetFacesVector();
 
-		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
-		{
-			drawAllTriangles(facesIterator, vertices);
-		}
+		drawAllTriangles(faces, vertices);
 	}
 	drawTriangle(Point(1, 1), Point(100, 500), Point(800, 200));
 }
 
-void Renderer::drawAllTriangles(std::vector<Face>::iterator &facesIterator, std::vector<glm::vec3> & vertices)
+void Renderer::drawAllTriangles(std::vector<Face> & faces, std::vector<glm::vec3> & vertices)
 {
-	const int firstPointIndex = facesIterator->GetVertexIndex(0) - 1;
-	int x = (int)(vertices[firstPointIndex].x * (float)viewportWidth);
-	int y = (int)(vertices[firstPointIndex].y * (float)viewportHeight);
-	Point PointA(x, y);
+	for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
+	{
+		const int firstPointIndex = facesIterator->GetVertexIndex(0) - 1;
+		int x = (int)(vertices[firstPointIndex].x);
+		int y = (int)(vertices[firstPointIndex].y);
+		Point PointA(x, y);
 
-	const int secondPointIndex = facesIterator->GetVertexIndex(1) - 1;
-	x = (int)(vertices[secondPointIndex].x * (float)viewportWidth);
-	y = (int)(vertices[secondPointIndex].y * (float)viewportHeight);
-	Point PointB(x, y);
+		const int secondPointIndex = facesIterator->GetVertexIndex(1) - 1;
+		x = (int)(vertices[secondPointIndex].x);
+		y = (int)(vertices[secondPointIndex].y);
+		Point PointB(x, y);
 
-	const int thirdPointIndex = facesIterator->GetVertexIndex(2) - 1;
-	x = (int)(vertices[thirdPointIndex].x * (float)viewportWidth);
-	y = (int)(vertices[thirdPointIndex].y * (float)viewportHeight);
-	Point PointC(x, y);
+		const int thirdPointIndex = facesIterator->GetVertexIndex(2) - 1;
+		x = (int)(vertices[thirdPointIndex].x);
+		y = (int)(vertices[thirdPointIndex].y);
+		Point PointC(x, y);
 
-	drawTriangle(PointA, PointB, PointC);
+		drawTriangle(PointA, PointB, PointC);
+	}
 }
 
 //##############################
