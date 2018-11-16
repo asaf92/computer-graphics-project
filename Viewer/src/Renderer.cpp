@@ -153,15 +153,34 @@ void Renderer::Render(const Scene& scene)
 	if (activeModel != nullptr)
 	{
 		std::vector<glm::vec3>& vertices = activeModel->GetVerticesVector();
-		
-		for (std::vector<glm::vec3>::const_iterator verticesConstIterator = vertices.cbegin(); verticesConstIterator != vertices.end(); ++verticesConstIterator)
+		std::vector<Face>& faces = activeModel->GetFacesVector();
+
+		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
 		{
-			auto x = (int)(verticesConstIterator->x * (float) viewportWidth);
-			auto y = (int)(verticesConstIterator->y * (float)viewportHeight);
-			putPixel(x, y, glm::vec3(0.5, 0, 0));
+			drawAllTriangles(facesIterator, vertices);
 		}
 	}
 	drawTriangle(Point(1, 1), Point(100, 500), Point(800, 200));
+}
+
+void Renderer::drawAllTriangles(std::vector<Face>::iterator &facesIterator, std::vector<glm::vec3> & vertices)
+{
+	const int firstPointIndex = facesIterator->GetVertexIndex(0) - 1;
+	int x = (int)(vertices[firstPointIndex].x * (float)viewportWidth);
+	int y = (int)(vertices[firstPointIndex].y * (float)viewportHeight);
+	Point PointA(x, y);
+
+	const int secondPointIndex = facesIterator->GetVertexIndex(1) - 1;
+	x = (int)(vertices[secondPointIndex].x * (float)viewportWidth);
+	y = (int)(vertices[secondPointIndex].y * (float)viewportHeight);
+	Point PointB(x, y);
+
+	const int thirdPointIndex = facesIterator->GetVertexIndex(2) - 1;
+	x = (int)(vertices[thirdPointIndex].x * (float)viewportWidth);
+	y = (int)(vertices[thirdPointIndex].y * (float)viewportHeight);
+	Point PointC(x, y);
+
+	drawTriangle(PointA, PointB, PointC);
 }
 
 //##############################
