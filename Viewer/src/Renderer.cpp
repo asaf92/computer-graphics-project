@@ -155,32 +155,39 @@ void Renderer::Render(const Scene& scene)
 		std::vector<glm::vec3>& vertices = activeModel->GetVerticesVector();
 		std::vector<Face>& faces = activeModel->GetFacesVector();
 
-		drawAllTriangles(faces, vertices);
+		auto& minimums = activeModel->GetMinimumsVector();
+		auto& maximums = activeModel->GetMaximumVectors();
+		auto minX = minimums.x;
+		auto minY = minimums.y;
+		auto maxX = maximums.x;
+		auto maxY = maximums.y;
+
+		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
+		{
+			const int firstPointIndex = facesIterator->GetVertexIndex(0) - 1;
+			int x = (int)(vertices[firstPointIndex].x);
+			int y = (int)(vertices[firstPointIndex].y);
+			Point PointA(x, y);
+
+			const int secondPointIndex = facesIterator->GetVertexIndex(1) - 1;
+			x = (int)(vertices[secondPointIndex].x);
+			y = (int)(vertices[secondPointIndex].y);
+			Point PointB(x, y);
+
+			const int thirdPointIndex = facesIterator->GetVertexIndex(2) - 1;
+			x = (int)(vertices[thirdPointIndex].x);
+			y = (int)(vertices[thirdPointIndex].y);
+			Point PointC(x, y);
+
+			drawTriangle(PointA, PointB, PointC);
+		}
 	}
 	drawTriangle(Point(1, 1), Point(100, 500), Point(800, 200));
 }
 
 void Renderer::drawAllTriangles(std::vector<Face> & faces, std::vector<glm::vec3> & vertices)
 {
-	for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
-	{
-		const int firstPointIndex = facesIterator->GetVertexIndex(0) - 1;
-		int x = (int)(vertices[firstPointIndex].x);
-		int y = (int)(vertices[firstPointIndex].y);
-		Point PointA(x, y);
 
-		const int secondPointIndex = facesIterator->GetVertexIndex(1) - 1;
-		x = (int)(vertices[secondPointIndex].x);
-		y = (int)(vertices[secondPointIndex].y);
-		Point PointB(x, y);
-
-		const int thirdPointIndex = facesIterator->GetVertexIndex(2) - 1;
-		x = (int)(vertices[thirdPointIndex].x);
-		y = (int)(vertices[thirdPointIndex].y);
-		Point PointC(x, y);
-
-		drawTriangle(PointA, PointB, PointC);
-	}
 }
 
 //##############################

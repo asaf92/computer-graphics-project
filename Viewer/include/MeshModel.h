@@ -35,11 +35,11 @@ public:
 	const std::string& GetModelName();
 
 	// Add more methods/functionality as needed...
-
-	// Returns a const vertices vector reference
+	
+	//Getters
 	std::vector<glm::vec3>& GetVerticesVector() { return vertices; }
-	// Returns faces vector
 	std::vector<Face>& GetFacesVector() { return faces; }
-	// Returns the meshmodel center point
-	glm::vec3& GetCenterPoint() { return centerPoint; }
+	glm::vec3& GetCenterPoint()	   { return centerPoint; }
+	glm::vec3& GetMinimumsVector() { return minimums; }
+	glm::vec3& GetMaximumVectors() { return maximums; }
 };
