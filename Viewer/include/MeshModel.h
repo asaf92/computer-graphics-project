@@ -32,4 +32,7 @@ public:
 	const std::string& GetModelName();
 
 	// Add more methods/functionality as needed...
+
+	// Returns a const vertices vector reference
+	std::vector<glm::vec3>& GetVerticesVector() { return vertices; }
 };

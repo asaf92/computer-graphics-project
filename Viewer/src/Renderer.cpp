@@ -150,6 +150,15 @@ void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX,
 void Renderer::Render(const Scene& scene)
 {
 	auto activeModel = scene.GetActiveModel();
+	if (activeModel != nullptr)
+	{
+		std::vector<glm::vec3>& vertices = activeModel->GetVerticesVector();
+		
+		for (std::vector<glm::vec3>::const_iterator verticesConstIterator = vertices.cbegin(); verticesConstIterator != vertices.end(); ++verticesConstIterator)
+		{
+
+		}
+	}
 	drawTriangle(Point(1, 1), Point(100, 500), Point(800, 200));
 }
 

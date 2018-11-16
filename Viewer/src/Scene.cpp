@@ -23,7 +23,6 @@ std::shared_ptr<MeshModel> Scene::GetActiveModel() const
 
 	int index = GetActiveModelIndex();
 	return models[index];
-	// TODO: insert return statement here
 }
 
 const int Scene::GetModelCount() const
