@@ -35,4 +35,5 @@ public:
 
 	// Returns a const vertices vector reference
 	std::vector<glm::vec3>& GetVerticesVector() { return vertices; }
+	std::vector<Face>& GetFacesVector() { return faces; }
 };
