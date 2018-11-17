@@ -9,7 +9,6 @@ Scene::Scene() :
 	// Init first camera
 	AddCamera(*(new Camera()));
 	SetActiveCameraIndex(1);
-	cameras[GetActiveCameraIndex()].SetZoom(50);
 }
 
 Scene::~Scene()
