@@ -33,7 +33,7 @@ private:
 	void initOpenGLRendering();
 	void setXZeroToBeSmaller(Line & line, unsigned int &x0, unsigned int &y0, unsigned int &x1, unsigned int &y1);
 	void drawStraightLine(unsigned int &y0, unsigned int &y1, unsigned int x0, unsigned int x1, glm::vec3 & lineColor);
-	void drawAllTriangles(std::vector<Face> & faces, std::vector<glm::vec3> & vertices);
+	void drawAxis();
 
 public:
 	Renderer(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);

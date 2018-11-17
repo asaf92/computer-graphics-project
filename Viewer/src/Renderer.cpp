@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "InitShader.h"
 #include "MeshModel.h"
+#include "Utils.h"
 #include <imgui/imgui.h>
 #include <vector>
 #include <cmath>
@@ -149,17 +150,52 @@ void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX,
 
 void Renderer::Render(const Scene& scene)
 {
+	drawAxis();
 	if (scene.GetModelCount() == 0)
 	{
 		// Nothing to draw
 		return;
 	}
 
-	auto activeModel = scene.GetActiveModel();
 	const auto& models = scene.GetModelsVector();
 	const auto& cameras = scene.GetCamerasVector();
 	const auto& activeCamera = cameras[scene.GetActiveCameraIndex()];
+	const glm::mat4& viewMatrix = activeCamera.GetViewMatrix();
+	const glm::mat4& projectionMatrix = activeCamera.GetProjectionMatrix();
 
+	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator != models.end(); ++iterator)
+	{
+		auto currentModel = *iterator;
+		const glm::mat4& worldTransform = currentModel->GetWorldTransformation();
+		std::vector<glm::vec3>& vertices = currentModel->GetVerticesVector();
+		std::vector<Face>& faces = currentModel->GetFacesVector();
+
+		glm::mat4x4 transformMatrix = projectionMatrix *  viewMatrix * worldTransform;
+		// Go through every face and draw triangles of pipelined vertices
+		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
+		{
+			const int firstPointIndex  = facesIterator->GetVertexIndex(0) - 1; // -1 because the indices start with 1
+			const int secondPointIndex = facesIterator->GetVertexIndex(1) - 1;
+			const int thirdPointIndex  = facesIterator->GetVertexIndex(2) - 1;
+			glm::vec4 PointA = Utils::Vec4FromVec3(vertices[firstPointIndex]);
+			glm::vec4 PointB = Utils::Vec4FromVec3(vertices[secondPointIndex]);
+			glm::vec4 PointC = Utils::Vec4FromVec3(vertices[thirdPointIndex]);
+			PointA = transformMatrix * PointA;
+			PointB = transformMatrix * PointB;
+			PointC = transformMatrix * PointC;
+
+			drawTriangle(Point(PointA.x, PointA.y), Point(PointB.x, PointB.y), Point(PointC.x, PointC.y));
+		}
+	}
+}
+
+void Renderer::drawAxis()
+{
+	//TODO
+}
+
+void Renderer::demoDrawAllTriangles(const std::vector<std::shared_ptr<MeshModel>> & models, const Camera & activeCamera)
+{
 	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator != models.end(); ++iterator)
 	{
 		auto currentModel = *iterator;
@@ -177,7 +213,7 @@ void Renderer::Render(const Scene& scene)
 
 		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
 		{
-			const int firstPointIndex = facesIterator->GetVertexIndex(0) - 1;
+			const int firstPointIndex = facesIterator->GetVertexIndex(0) - 1; // -1 because the indices start with 1
 			int x = (int)((vertices[firstPointIndex].x + abs(minX)) / (deltaX)* zoom);
 			int y = (int)((vertices[firstPointIndex].y + abs(minY)) / (deltaY)* zoom);
 			Point PointA(x, y);
@@ -195,11 +231,6 @@ void Renderer::Render(const Scene& scene)
 			drawTriangle(PointA, PointB, PointC);
 		}
 	}
-}
-
-void Renderer::drawAllTriangles(std::vector<Face> & faces, std::vector<glm::vec3> & vertices)
-{
-
 }
 
 //##############################
