@@ -149,30 +149,37 @@ void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX,
 
 void Renderer::Render(const Scene& scene)
 {
+	if (scene.GetModelCount() == 0)
+	{
+		// Nothing to draw
+		return;
+	}
+
 	auto activeModel = scene.GetActiveModel();
+	const auto& models = scene.GetModelsVector();
 	const auto& cameras = scene.GetCamerasVector();
 	const auto& activeCamera = cameras[scene.GetActiveCameraIndex()];
 
-	if (activeModel != nullptr)
+	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator != models.end(); ++iterator)
 	{
-		std::vector<glm::vec3>& vertices = activeModel->GetVerticesVector();
-		std::vector<Face>& faces = activeModel->GetFacesVector();
-
-		auto& minimums = activeModel->GetMinimumsVector();
-		auto& maximums = activeModel->GetMaximumVectors();
+		auto currentModel = *iterator;
+		std::vector<glm::vec3>& vertices = currentModel->GetVerticesVector();
+		std::vector<Face>& faces = currentModel->GetFacesVector();
+		auto& minimums = currentModel->GetMinimumsVector();
+		auto& maximums = currentModel->GetMaximumVectors();
 		auto minX = minimums.x;
 		auto minY = minimums.y;
 		auto maxX = maximums.x;
 		auto maxY = maximums.y;
 		auto deltaX = maxX - minX;
 		auto deltaY = maxY - minY;
-		auto zoom = activeCamera.GetZoom();
+		auto zoom = activeCamera.GetZoom(); // For now we need a big zoom to be able to see anything
 
 		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
 		{
 			const int firstPointIndex = facesIterator->GetVertexIndex(0) - 1;
-			int x = (int)((vertices[firstPointIndex].x + abs(minX)) /(deltaX) * zoom);
-			int y = (int)((vertices[firstPointIndex].y + abs(minY)) /(deltaY) * zoom);
+			int x = (int)((vertices[firstPointIndex].x + abs(minX)) / (deltaX)* zoom);
+			int y = (int)((vertices[firstPointIndex].y + abs(minY)) / (deltaY)* zoom);
 			Point PointA(x, y);
 
 			const int secondPointIndex = facesIterator->GetVertexIndex(1) - 1;
@@ -188,7 +195,6 @@ void Renderer::Render(const Scene& scene)
 			drawTriangle(PointA, PointB, PointC);
 		}
 	}
-	drawTriangle(Point(1, 1), Point(100, 500), Point(800, 200));
 }
 
 void Renderer::drawAllTriangles(std::vector<Face> & faces, std::vector<glm::vec3> & vertices)

@@ -25,6 +25,7 @@ public:
 	~Scene();
 
 	void AddModel(const std::shared_ptr<MeshModel>& model);
+	const std::vector<std::shared_ptr<MeshModel>> GetModelsVector() const { return models; };
 	std::shared_ptr<MeshModel> GetActiveModel() const;
 	const int GetModelCount() const;
 
