@@ -23,7 +23,8 @@ public:
 	Camera(const glm::vec4& eye, const glm::vec4& at, const glm::vec4& up);
 	~Camera();
 
-	void SetCameraLookAt(const glm::vec4& eye, const glm::vec4& at, const glm::vec4& up);
+	// Sets the viewTransformation matrix
+	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 
 	void SetOrthographicProjection(
 		const float height,
