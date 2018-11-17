@@ -55,6 +55,6 @@ void Camera::SetPerspectiveProjection(
 	const float near,
 	const float far)
 {
-
+	projectionTransformation = glm::mat4x4(1); // For now make it the identity
 }
 

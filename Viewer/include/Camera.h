@@ -41,4 +41,8 @@ public:
 	void SetZoom(const float zoom) { this->zoom = zoom; };
 	float GetZoom() const { return zoom; }
 	// Add more methods/functionality as needed...
+
+	//Getters
+	const glm::mat4x4& GetViewMatrix() const { return viewTransformation; };
+	const glm::mat4x4& GetProjectionMatrix() const { return projectionTransformation; }
 };
