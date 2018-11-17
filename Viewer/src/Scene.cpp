@@ -6,6 +6,7 @@ Scene::Scene() :
 	activeCameraIndex(0),
 	activeModelIndex(0)
 {
+	// Init first camera
 	AddCamera(*(new Camera()));
 	SetActiveCameraIndex(1);
 	cameras[GetActiveCameraIndex()].SetZoom(50);
