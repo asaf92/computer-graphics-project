@@ -37,7 +37,7 @@ public:
 		const float near,
 		const float far);
 
-	void SetZoom(const float zoom);
-
+	void SetZoom(const float zoom) { this->zoom = zoom; };
+	float GetZoom() const { return zoom; }
 	// Add more methods/functionality as needed...
 };

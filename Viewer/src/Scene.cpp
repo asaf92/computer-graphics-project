@@ -6,7 +6,14 @@ Scene::Scene() :
 	activeCameraIndex(0),
 	activeModelIndex(0)
 {
+	AddCamera(*(new Camera()));
+	SetActiveCameraIndex(1);
+	cameras[GetActiveCameraIndex()].SetZoom(50);
+}
 
+Scene::~Scene()
+{
+	cameras.clear(); // This calls the destructor on every camera
 }
 
 void Scene::AddModel(const std::shared_ptr<MeshModel>& model)
@@ -33,6 +40,11 @@ const int Scene::GetModelCount() const
 void Scene::AddCamera(const Camera& camera)
 {
 	cameras.push_back(camera);
+}
+
+const std::vector<Camera>& Scene::GetCamerasVector() const
+{
+	return cameras;
 }
 
 const int Scene::GetCameraCount() const

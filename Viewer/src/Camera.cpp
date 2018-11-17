@@ -37,7 +37,3 @@ void Camera::SetPerspectiveProjection(
 
 }
 
-void Camera::SetZoom(const float zoom)
-{
-
-}

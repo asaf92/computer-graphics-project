@@ -22,12 +22,14 @@ private:
 
 public:
 	Scene();
+	~Scene();
 
 	void AddModel(const std::shared_ptr<MeshModel>& model);
 	std::shared_ptr<MeshModel> GetActiveModel() const;
 	const int GetModelCount() const;
 
 	void AddCamera(const Camera& camera);
+	const std::vector<Camera>& GetCamerasVector() const;
 	const int GetCameraCount() const;
 
 	void SetActiveCameraIndex(int index);
