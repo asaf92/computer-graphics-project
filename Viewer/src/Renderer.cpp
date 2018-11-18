@@ -197,10 +197,24 @@ void Renderer::Render(const Scene& scene)
 			PointA = transformMatrix * PointA;
 			PointB = transformMatrix * PointB;
 			PointC = transformMatrix * PointC;
+			PointA = PointA / PointA.w;
+			PointB = PointB / PointB.w;
+			PointC = PointC / PointC.w;
 
-			drawTriangle(Point(PointA.x, PointA.y), Point(PointB.x, PointB.y), Point(PointC.x, PointC.y));
+			drawTriangle(toScreenPixel(Point(PointA.x, PointA.y)), 
+						 toScreenPixel(Point(PointB.x, PointB.y)), 
+						 toScreenPixel(Point(PointC.x, PointC.y)));
 		}
 	}
+}
+
+// Takes a point in the range between -1 and 1 and translates it to a pixel
+Point Renderer::toScreenPixel(Point& point)
+{
+	Point out;
+	out.X = viewportWidth  * (point.X + 1) / 2;
+	out.Y = viewportHeight * (point.Y + 1) / 2;
+	return out;
 }
 
 void Renderer::drawAxis()

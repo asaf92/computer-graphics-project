@@ -34,6 +34,7 @@ private:
 	void setXZeroToBeSmaller(Line & line,  int &x0,  int &y0,  int &x1,  int &y1);
 	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
 	void drawAxis();
+	Point toScreenPixel(Point& point);
 
 public:
 	Renderer(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
