@@ -58,8 +58,8 @@ glm::mat4x4 MeshModel::GetScalingMatrix()
 {
 	glm::mat4x4 scale(1);
 	scale[0].x *= scaleSize;
-	scale[0].y *= scaleSize;
-	scale[0].z *= scaleSize;
+	scale[1].y *= scaleSize;
+	scale[2].z *= scaleSize;
 	return scale;
 }
 
