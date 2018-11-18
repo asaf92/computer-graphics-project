@@ -7,6 +7,7 @@
 #include <imgui/imgui.h>
 #include <vector>
 #include <cmath>
+#include <algorithm>
 
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 
@@ -66,7 +67,7 @@ void Renderer::ClearColorBuffer(const glm::vec3& color)
 
 void Renderer::drawLine(Line& line)
 {
-	unsigned int x0, x1, y0, y1;
+	int x0, x1, y0, y1;
 	glm::vec3& lineColor = glm::vec3(0, 0, 0);
 
 	setXZeroToBeSmaller(line, x0, y0, x1, y1);
@@ -80,9 +81,13 @@ void Renderer::drawLine(Line& line)
 	double deltaY = (double)y1 - (double)y0;
 	double deltaE = abs(deltaY / deltaX);
 	double Error  = 0.0;
-	int y = y0;
-	int x = x0;
 
+	// keeping everything in view range
+	int y = std::max(0,y0);
+	int x = std::max(0,x0);
+	x1 = std::min(x1, viewportWidth);
+	y1 = std::min(y1, viewportHeight);
+	
 	//Bresenham's algorithm
 	if (abs(line.GetSlope()) > 1)
 	{
@@ -107,7 +112,7 @@ void Renderer::drawLine(Line& line)
 			}
 		}
 		return;
-	}
+	}	
 
 	for (; x <= x1; x++)
 	{
@@ -307,7 +312,7 @@ void Renderer::SwapBuffers()
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
-void Renderer::setXZeroToBeSmaller(Line & line, unsigned int &x0, unsigned int &y0, unsigned int &x1, unsigned int &y1)
+void Renderer::setXZeroToBeSmaller(Line & line,  int &x0,  int &y0,  int &x1,  int &y1)
 {
 	if (line.PointA.X < line.PointB.X)
 	{
@@ -325,7 +330,7 @@ void Renderer::setXZeroToBeSmaller(Line & line, unsigned int &x0, unsigned int &
 	}
 }
 
-void Renderer::drawStraightLine(unsigned int &y0, unsigned int &y1, unsigned int x0, unsigned int x1, glm::vec3 & lineColor)
+void Renderer::drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor)
 {
 	if (y0 == y1)
 	{

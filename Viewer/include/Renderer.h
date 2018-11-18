@@ -31,8 +31,8 @@ private:
 
 	void createOpenGLBuffer();
 	void initOpenGLRendering();
-	void setXZeroToBeSmaller(Line & line, unsigned int &x0, unsigned int &y0, unsigned int &x1, unsigned int &y1);
-	void drawStraightLine(unsigned int &y0, unsigned int &y1, unsigned int x0, unsigned int x1, glm::vec3 & lineColor);
+	void setXZeroToBeSmaller(Line & line,  int &x0,  int &y0,  int &x1,  int &y1);
+	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
 	void drawAxis();
 
 public:
