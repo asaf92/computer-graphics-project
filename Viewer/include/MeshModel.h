@@ -15,15 +15,21 @@
 class MeshModel
 {
 protected:
+	// Protected members
 	std::vector<Face> faces;
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
-	
-	// 
-	static glm::mat4x4 GetTranslationMatrix(const glm::vec3& direction);
-	static glm::mat4x4 GetScalingMatrix(const int scalar);
-	static glm::mat4x4 GetRotateMatrix(const int degrees);
 	glm::mat4x4 worldTransform;
+	
+	// User inputs
+	glm::vec3 translationVector;
+	int scaleSize;
+	int rotateAngle;
+
+	// Member functions that return transformation matrices
+	glm::mat4x4 GetTranslationMatrix();
+	glm::mat4x4 GetScalingMatrix();
+	glm::mat4x4 GetRotateMatrix();
 	
 	// Stuff that I haven't figured out what to do with yet
 	glm::vec4 color;
@@ -38,7 +44,9 @@ public:
 
 	// Setters
 	void SetColor(const glm::vec4& color);
-
+	void SetTranslation(glm::vec3 direction) { translationVector = direction; }
+	void SetScaleSize(int scale) {scaleSize = scale; }
+	void SetRotationAngle(int angle) { rotateAngle = angle; }
 
 	//Getters
 	std::vector<glm::vec3>& GetVerticesVector() { return vertices; }
@@ -46,7 +54,7 @@ public:
 	glm::vec3& GetCenterPoint()	   { return centerPoint; }
 	glm::vec3& GetMinimumsVector() { return minimums; }
 	glm::vec3& GetMaximumVectors() { return maximums; }
-	const glm::mat4x4& GetWorldTransformation(const glm::vec3 direction, const int angle, const int size);
+	const glm::mat4x4& GetWorldTransformation();
 	const glm::vec4& GetColor() const;
 	const std::string& GetModelName();
 };
