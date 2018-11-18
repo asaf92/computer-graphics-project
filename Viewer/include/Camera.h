@@ -20,7 +20,7 @@ private:
 
 public:
 	Camera();
-	Camera(const glm::vec4& eye, const glm::vec4& at, const glm::vec4& up);
+	Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 	~Camera();
 
 	// Sets the viewTransformation matrix

@@ -5,18 +5,19 @@
 #include <iostream>
 
 
-Camera::Camera() : Camera::Camera(glm::vec4(0, 0, 1, 0),
-								  glm::vec4(0, 0, -1, 1),
-								  glm::vec4(0, 1, 0, 0))
+Camera::Camera() : Camera::Camera(glm::vec3(0, 0,-1),
+								  glm::vec3(0, 0, 0),
+								  glm::vec3(0, -1, 0))
 {
 
 }
 
-Camera::Camera(const glm::vec4& eye, const glm::vec4& at, const glm::vec4& up) :
+Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
 	zoom(1.0)
 {
 	SetCameraLookAt(eye, at, up);
-	projectionTransformation = glm::mat4x4(1);
+	//SetPerspectiveProjection(60.0f, 4.0f / 3.0f, 0.1f, 2.0f);
+	SetOrthographicProjection(60.0f, 4.0f / 3.0f, 0.1f, 2.0f);
 }
 
 Camera::~Camera()
@@ -53,7 +54,7 @@ void Camera::SetOrthographicProjection(
 	const float near,
 	const float far)
 {
-
+	projectionTransformation = glm::mat4x4(1);
 }
 
 void Camera::SetPerspectiveProjection(
