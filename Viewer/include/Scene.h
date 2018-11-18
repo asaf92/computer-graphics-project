@@ -40,4 +40,5 @@ public:
 	const int GetActiveModelIndex() const;
 
 	// Add more methods as needed...
+	void SetActiveModelInputs(glm::vec3& translation, int rotation, int scaling);
 };

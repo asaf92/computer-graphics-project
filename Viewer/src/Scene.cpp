@@ -79,3 +79,13 @@ const int Scene::GetActiveModelIndex() const
 {
 	return activeModelIndex;
 }
+
+void Scene::SetActiveModelInputs(glm::vec3 & translation, int rotation, int scaling)
+{
+	if (models.empty()) { return; }
+
+	auto activeModel = models[GetActiveModelIndex()];
+	activeModel->SetTranslation(translation);
+	activeModel->SetRotationAngle(rotation);
+	activeModel->SetScaleSize(scaling);
+}
