@@ -17,6 +17,7 @@ MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3
 	maximums(0),
 	centerPoint(0)
 {
+	worldTransform[3].w = 1;
 	for (std::vector<glm::vec3>::const_iterator iterator = vertices.cbegin(); iterator != vertices.end(); ++iterator)
 	{
 		// Init the minimums and maximums vector
@@ -41,13 +42,40 @@ MeshModel::~MeshModel()
 
 }
 
-void MeshModel::SetWorldTransformation(const glm::mat4x4& worldTransform)
+// AKA translate
+glm::mat4x4 MeshModel::GetTranslationMatrix(const glm::vec3 & direction) 
 {
-	this->worldTransform = worldTransform;
+	glm::mat4x4 translate(1);
+	translate[3].x = direction.x;
+	translate[3].y = direction.y;
+	translate[3].z = direction.z;
+	return translate;
 }
 
-const glm::mat4x4& MeshModel::GetWorldTransformation() const
+glm::mat4x4 MeshModel::GetScalingMatrix(const int scalar) 
 {
+	glm::mat4x4 scale(1);
+	scale[0].x *= scalar;
+	scale[0].y *= scalar;
+	scale[0].z *= scalar;
+	return scale;
+}
+
+glm::mat4x4 MeshModel::GetRotateMatrix(int degrees)
+{
+	// TODO- Implement
+	// For now just return Identity
+	return glm::mat4x4(1);
+}
+
+const glm::mat4x4& MeshModel::GetWorldTransformation(const glm::vec3 direction, const int angle, const int size)
+{
+	worldTransform = glm::mat4x4(1);
+	glm::mat4x4 translate = GetTranslationMatrix(direction);
+	glm::mat4x4 rotate	  = GetRotateMatrix(angle);
+	glm::mat4x4 scale     = GetScalingMatrix(size);
+
+	worldTransform = translate * rotate * scale;
 	return worldTransform;
 }
 
