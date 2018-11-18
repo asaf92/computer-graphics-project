@@ -26,6 +26,8 @@ glm::vec4 Utils::Vec4FromVec3(const glm::vec3& other)
 	out.y = other.y;
 	out.z = other.z;
 	out.w = 1;
+
+	return out;
 }
 
 MeshModel Utils::LoadMeshModel(const std::string& filePath)
