@@ -194,45 +194,6 @@ void Renderer::drawAxis()
 	//TODO
 }
 
-void Renderer::demoDrawAllTriangles(const std::vector<std::shared_ptr<MeshModel>> & models, const Camera & activeCamera)
-{
-	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator != models.end(); ++iterator)
-	{
-		auto currentModel = *iterator;
-		std::vector<glm::vec3>& vertices = currentModel->GetVerticesVector();
-		std::vector<Face>& faces = currentModel->GetFacesVector();
-		auto& minimums = currentModel->GetMinimumsVector();
-		auto& maximums = currentModel->GetMaximumVectors();
-		auto minX = minimums.x;
-		auto minY = minimums.y;
-		auto maxX = maximums.x;
-		auto maxY = maximums.y;
-		auto deltaX = maxX - minX;
-		auto deltaY = maxY - minY;
-		auto zoom = activeCamera.GetZoom(); // For now we need a big zoom to be able to see anything
-
-		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
-		{
-			const int firstPointIndex = facesIterator->GetVertexIndex(0) - 1; // -1 because the indices start with 1
-			int x = (int)((vertices[firstPointIndex].x + abs(minX)) / (deltaX)* zoom);
-			int y = (int)((vertices[firstPointIndex].y + abs(minY)) / (deltaY)* zoom);
-			Point PointA(x, y);
-
-			const int secondPointIndex = facesIterator->GetVertexIndex(1) - 1;
-			x = (int)((vertices[secondPointIndex].x + abs(minX)) / (deltaX)* zoom);
-			y = (int)((vertices[secondPointIndex].y + abs(minY)) / (deltaY)* zoom);
-			Point PointB(x, y);
-
-			const int thirdPointIndex = facesIterator->GetVertexIndex(2) - 1;
-			x = (int)((vertices[thirdPointIndex].x + abs(minX)) / (deltaX)* zoom);
-			y = (int)((vertices[thirdPointIndex].y + abs(minY)) / (deltaY)* zoom);
-			Point PointC(x, y);
-
-			drawTriangle(PointA, PointB, PointC);
-		}
-	}
-}
-
 //##############################
 //##OpenGL stuff. Don't touch.##
 //##############################
