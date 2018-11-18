@@ -39,6 +39,9 @@ public:
 	void SetActiveModelIndex(int index);
 	const int GetActiveModelIndex() const;
 
-	// Add more methods as needed...
+	// activeModel interaction
+	int GetActiveModelInputsScaling() const { return 1; }
+	int GetActiveModelInputsRotation() const { return 0; }
+	glm::vec3 GetActiveModelInputsTranslation() const { return glm::vec3(0,0,-3); }
 	void SetActiveModelInputs(glm::vec3& translation, int rotation, int scaling);
 };
