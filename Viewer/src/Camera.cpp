@@ -13,9 +13,10 @@ Camera::Camera() : Camera::Camera(glm::vec4(0, 0, 1, 0),
 }
 
 Camera::Camera(const glm::vec4& eye, const glm::vec4& at, const glm::vec4& up) :
-	zoom(50.0)
+	zoom(1.0)
 {
 	SetCameraLookAt(eye, at, up);
+	projectionTransformation = glm::mat4x4(1);
 }
 
 Camera::~Camera()
@@ -55,6 +56,6 @@ void Camera::SetPerspectiveProjection(
 	const float near,
 	const float far)
 {
-	projectionTransformation = glm::mat4x4(1); // For now make it the identity
+	projectionTransformation = glm::mat4x4(1);
 }
 
