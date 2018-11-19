@@ -16,7 +16,7 @@ MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3
 	worldTransform(glm::mat4x4(1)),
 	scaleSize(1.0f,1.0f,1.0f),
 	rotateAngle(0.0f),
-	translationVector(glm::vec3(0.0f,0.0f,-2.0f)),
+	translationVector(glm::vec3(0.0f,0.0f,4.0f)),
 	minimums(0),
 	maximums(0),
 	centerPoint(0)
