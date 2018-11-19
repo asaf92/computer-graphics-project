@@ -97,6 +97,8 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	ImGui::Text("Rotation");
 	ImGui::SliderFloat("Y Rotation", &newAngle, -180.0f, 180.0f);
 
+	ImGui::Text("x: %.2f y: %.2f z: %.2f", activeModelTranslationVector.x, activeModelTranslationVector.y, activeModelTranslationVector.z);
+
 	activeModel->SetTranslation(newTranslationVector);
 	activeModel->SetScaling(newScalingSizes);
 	activeModel->SetRotationAngle(newAngle);

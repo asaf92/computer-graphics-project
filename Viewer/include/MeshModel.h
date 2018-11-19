@@ -10,7 +10,9 @@
  * You can use Utils::LoadMeshModel to create instances of this class from .obj files.
  *
  * The way I implement this class is that the renderer will feed the move, rotate & scale inputs to 
- * the GetWorldTransform function and it will return a 4x4 transformation matrix. 
+ * the object and the getWorldTransform will return the 4x4 model->world transformation matrix. 
+ *
+ * Made by Asaf Agami 2018
  */
 class MeshModel
 {
@@ -31,10 +33,12 @@ protected:
 	glm::mat4x4 GetScalingMatrix();
 	glm::mat4x4 GetRotateMatrix();
 	
+	// Necessary for rotations
+	glm::vec3 centerPoint;
+
 	// Stuff that I haven't figured out what to do with yet
 	glm::vec4 color;
 	std::string modelName;
-	glm::vec3 centerPoint;
 	glm::vec3 minimums;
 	glm::vec3 maximums;
 

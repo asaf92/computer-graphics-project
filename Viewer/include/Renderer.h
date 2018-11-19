@@ -10,6 +10,8 @@
 
 /*
  * Renderer class.
+ *
+ * Made by Asaf Agami 2018
  */
 class Renderer
 {
