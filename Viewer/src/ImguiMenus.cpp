@@ -17,10 +17,10 @@ bool showDemoWindow = false;
 bool showAnotherWindow = false;
 
 // My Menu Bools
-bool showWorldTransform = false;
-bool showViewMatrix = false;
-bool showProjectionMatrix = false;
-bool showModelControls = false;
+static bool showWorldTransform = false;
+static bool showViewMatrix = false;
+static bool showProjectionMatrix = false;
+static bool showModelControls = false;
 
 glm::vec4 clearColor = glm::vec4(0.8f, 0.8f, 0.8f, 1.00f);
 
@@ -31,62 +31,75 @@ const glm::vec4& GetClearColor()
 
 void DrawMenus(ImGuiIO& io, Scene& scene)
 {
+	ImGui::ShowDemoWindow();
 	DisplayMenuBar(io,scene);
 
 	ImGui::Begin("Main Menu");
-	ImGui::Checkbox("World Transforamtion Matrix", &showWorldTransform);
-	ImGui::Checkbox("View Matrix", &showViewMatrix);
-	ImGui::Checkbox("Projection Matrix", &showProjectionMatrix);
-	ImGui::Checkbox("Show Model Controls", &showModelControls);
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::End();
-
-	if (showWorldTransform) 
-	{
-
-	}
-
-	if (showViewMatrix) 
-	{
 	
-	}
-
-	if (showProjectionMatrix) 
+	if (ImGui::CollapsingHeader("Transformation Matrices"))
 	{
-	
+		ImGui::Checkbox("World Transforamtion Matrix", &showWorldTransform); ImGui::SameLine(300.0f);
+		ImGui::Checkbox("View Matrix", &showViewMatrix); ImGui::SameLine(300.0f);
+		ImGui::Checkbox("Projection Matrix", &showProjectionMatrix);
 	}
 
-	if (showModelControls) 
+	if (ImGui::CollapsingHeader("Model Controls"))
 	{
 		ShowModelControls(io,scene);
 	}
+
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::End();
+
+	if (showWorldTransform) {}
+	if (showViewMatrix) {}
+	if (showProjectionMatrix) {}
+	if (showModelControls)					ShowModelControls(io,scene);
 }
 
 void ShowModelControls(ImGuiIO& io, Scene& scene)
 {
-	ImGui::Begin("Model Controls",&showModelControls);
+	static float worldRadius = -10.0f;
+	static float scalingSizesLimit = 5.0f;
+
 	if (scene.GetModelCount() == 0)
 	{
 		ImGui::Text("No models loaded");
-		ImGui::End();
 		return;
 	}
 
 	auto& activeModel = scene.GetActiveModel();
 	auto& activeModelTranslationVector = activeModel->GetTranslationVector();
+	auto& activeModelScalingSizes = activeModel->GetScalingVector();
 
-	float x = activeModelTranslationVector.x;
-	float y = activeModelTranslationVector.y;
-	float z = activeModelTranslationVector.z;
-	float worldRadius = -10.0f;
+	glm::vec3 newTranslationVector;
+	newTranslationVector.x = activeModelTranslationVector.x;
+	newTranslationVector.y = activeModelTranslationVector.y;
+	newTranslationVector.z = activeModelTranslationVector.z;
+
+	glm::vec3 newScalingSizes;
+	newScalingSizes.x = activeModelScalingSizes.x;
+	newScalingSizes.y = activeModelScalingSizes.y;
+	newScalingSizes.z = activeModelScalingSizes.z;
+
+	float newAngle = activeModel->GetRotationAngle();
 
 	ImGui::Text("Translation");
-	ImGui::SliderFloat("X",&x,-worldRadius,worldRadius);
-	ImGui::SliderFloat("Y",&y,-worldRadius,worldRadius);
-	ImGui::SliderFloat("Z",&z,-worldRadius,worldRadius);
+	ImGui::SliderFloat("X Translation",&newTranslationVector.x,-worldRadius,worldRadius);
+	ImGui::SliderFloat("Y Translation",&newTranslationVector.y,-worldRadius,worldRadius);
+	ImGui::SliderFloat("Z Translation",&newTranslationVector.z,-worldRadius,worldRadius);
 
-	activeModel->SetTranslation(glm::vec3(x, y, z));
-	ImGui::End();
+	ImGui::Text("Scaling");
+	ImGui::SliderFloat("X Scale", &newScalingSizes.x, 0, scalingSizesLimit);
+	ImGui::SliderFloat("Y Scale", &newScalingSizes.y, 0, scalingSizesLimit);
+	ImGui::SliderFloat("Z Scale", &newScalingSizes.z, 0, scalingSizesLimit);
+
+	ImGui::Text("Rotation");
+	ImGui::SliderFloat("Y Rotation", &newAngle, -180.0f, 180.0f);
+
+	activeModel->SetTranslation(newTranslationVector);
+	activeModel->SetScaling(newScalingSizes);
+	activeModel->SetRotationAngle(newAngle);
 }
 
 void DisplayMenuBar(ImGuiIO& io, Scene& scene)

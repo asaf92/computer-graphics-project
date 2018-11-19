@@ -23,8 +23,8 @@ protected:
 	
 	// User inputs
 	glm::vec3 translationVector;
-	int scaleSize;
-	int rotateAngle;
+	glm::vec3 scaleSize;
+	float rotateAngle;
 
 	// Member functions that return transformation matrices
 	glm::mat4x4 GetTranslationMatrix();
@@ -45,17 +45,21 @@ public:
 	// Setters
 	void SetColor(const glm::vec4& color);
 	void SetTranslation(glm::vec3 direction) { translationVector = direction; }
-	void SetScaleSize(int scale) {scaleSize = scale; }
-	void SetRotationAngle(int angle) { rotateAngle = angle; }
+	void SetScaling(glm::vec3 scale)         { scaleSize         = scale; }
+	void SetRotationAngle(int angle)         { rotateAngle       = angle; }
 
 	//Getters
 	std::vector<glm::vec3>& GetVerticesVector() { return vertices; }
 	std::vector<Face>& GetFacesVector() { return faces; }
-	glm::vec3& GetCenterPoint()	   { return centerPoint; }
-	glm::vec3& GetMinimumsVector() { return minimums; }
-	glm::vec3& GetMaximumVectors() { return maximums; }
 	const glm::mat4x4& GetWorldTransformation();
-	const glm::vec4& GetColor() const;
-	const std::string& GetModelName();
-	glm::vec3& GetTranslationVector() { return translationVector; }
+	const glm::vec4& GetColor()             const;
+	const std::string& GetModelName()       const  { return modelName; }
+	const glm::vec3& GetTranslationVector()	const  { return translationVector; }
+	const glm::vec3& GetScalingVector()     const  { return scaleSize; }
+	float GetRotationAngle()			    const  { return rotateAngle; }
+
+	// Not sure if needed
+	glm::vec3& GetCenterPoint()						{ return centerPoint; }
+	glm::vec3& GetMinimumsVector()					{ return minimums; }
+	glm::vec3& GetMaximumVectors()					{ return maximums; }
 };
