@@ -16,11 +16,104 @@
 bool showDemoWindow = false;
 bool showAnotherWindow = false;
 
+// My Menu Bools
+bool showWorldTransform = false;
+bool showViewMatrix = false;
+bool showProjectionMatrix = false;
+bool showModelControls = false;
+
 glm::vec4 clearColor = glm::vec4(0.8f, 0.8f, 0.8f, 1.00f);
 
 const glm::vec4& GetClearColor()
 {
 	return clearColor;
+}
+
+void DrawMenus(ImGuiIO& io, Scene& scene)
+{
+	DisplayMenuBar(io,scene);
+
+	ImGui::Begin("Main Menu");
+	ImGui::Checkbox("World Transforamtion Matrix", &showWorldTransform);
+	ImGui::Checkbox("View Matrix", &showViewMatrix);
+	ImGui::Checkbox("Projection Matrix", &showProjectionMatrix);
+	ImGui::Checkbox("Show Model Controls", &showModelControls);
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::End();
+
+	if (showWorldTransform) 
+	{
+
+	}
+
+	if (showViewMatrix) 
+	{
+	
+	}
+
+	if (showProjectionMatrix) 
+	{
+	
+	}
+
+	if (showModelControls) 
+	{
+		ShowModelControls(io,scene);
+	}
+}
+
+void ShowModelControls(ImGuiIO& io, Scene& scene)
+{
+	ImGui::Begin("Model Controls",&showModelControls);
+	if (scene.GetModelCount() == 0)
+	{
+		ImGui::Text("No models loaded");
+		ImGui::End();
+		return;
+	}
+
+	auto& activeModel = scene.GetActiveModel();
+	auto& activeModelTranslationVector = activeModel->GetTranslationVector();
+
+	float x = activeModelTranslationVector.x;
+	float y = activeModelTranslationVector.y;
+	float z = activeModelTranslationVector.z;
+	float worldRadius = -10.0f;
+
+	ImGui::Text("Translation");
+	ImGui::SliderFloat("X",&x,-worldRadius,worldRadius);
+	ImGui::SliderFloat("Y",&y,-worldRadius,worldRadius);
+	ImGui::SliderFloat("Z",&z,-worldRadius,worldRadius);
+
+	activeModel->SetTranslation(glm::vec3(x, y, z));
+	ImGui::End();
+}
+
+void DisplayMenuBar(ImGuiIO& io, Scene& scene)
+{
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoFocusOnAppearing;
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Load Model...", "CTRL+O"))
+			{
+				nfdchar_t *outPath = NULL;
+				nfdresult_t result = NFD_OpenDialog("obj;png,jpg", NULL, &outPath);
+				if (result == NFD_OKAY) {
+					scene.AddModel(std::make_shared<MeshModel>(Utils::LoadMeshModel(outPath)));
+					free(outPath);
+				}
+				else if (result == NFD_CANCEL) {
+				}
+				else {
+				}
+
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
 }
 
 void DrawImguiMenus(ImGuiIO& io, Scene& scene)
