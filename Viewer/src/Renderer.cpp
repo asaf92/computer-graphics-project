@@ -167,13 +167,6 @@ void Renderer::Render(const Scene& scene)
 	const auto& activeCamera = cameras[scene.GetActiveCameraIndex()];
 	const auto& activeModel = scene.GetActiveModel();
 
-	if (activeModel != nullptr)
-	{
-		activeModel->SetRotationAngle(scene.GetActiveModelInputsRotation());
-		activeModel->SetScaleSize(scene.GetActiveModelInputsScaling());
-		activeModel->SetTranslation(scene.GetActiveModelInputsTranslation());
-	}
-
 	const glm::mat4& viewMatrix = activeCamera.GetViewMatrix();
 	const glm::mat4& projectionMatrix = activeCamera.GetProjectionMatrix();
 
