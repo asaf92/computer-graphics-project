@@ -57,4 +57,5 @@ public:
 	const glm::mat4x4& GetWorldTransformation();
 	const glm::vec4& GetColor() const;
 	const std::string& GetModelName();
+	glm::vec3& GetTranslationVector() { return translationVector; }
 };
