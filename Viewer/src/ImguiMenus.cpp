@@ -16,11 +16,15 @@
 bool showDemoWindow = false;
 bool showAnotherWindow = false;
 
+// Statics
+static float worldRadius = -10.0f;
+
 // My Menu Bools
-static bool showWorldTransform = false;
-static bool showViewMatrix = false;
-static bool showProjectionMatrix = false;
-static bool showModelControls = false;
+static bool showWorldTransform =          false;
+static bool showViewMatrix =              false;
+static bool showProjectionMatrix =        false;
+static bool showModelControls =           false;
+static bool showCameraControls =          false;
 
 glm::vec4 clearColor = glm::vec4(0.8f, 0.8f, 0.8f, 1.00f);
 
@@ -48,18 +52,58 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		ShowModelControls(io,scene);
 	}
 
+	if (ImGui::CollapsingHeader("Camera Controls"))
+	{
+		ShowCameraControls(io, scene);
+	}
+
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 
 	if (showWorldTransform) {}
 	if (showViewMatrix) {}
 	if (showProjectionMatrix) {}
-	if (showModelControls)					ShowModelControls(io,scene);
+	if (showModelControls)					 ShowModelControls(io,scene);
+	if (showCameraControls)                  ShowCameraControls(io, scene);
+}
+
+
+void ShowCameraControls(ImGuiIO& io, Scene& scene)
+{
+	if (scene.GetCameraCount() == 0)
+	{
+		ImGui::Text("No cameras available");
+		return;
+	}
+
+	auto& activeCamera = scene.GetActiveCamera();
+	auto newCameraParameters = activeCamera.GetCameraParameters();
+
+	ImGui::Text("Look At");
+	ImGui::Text("Eye:");
+	ImGui::SliderFloat("Eye X", &newCameraParameters[0][0], -worldRadius, worldRadius);
+	ImGui::SliderFloat("Eye Y", &newCameraParameters[0][1], -worldRadius, worldRadius);
+	ImGui::SliderFloat("Eye Z", &newCameraParameters[0][2], -worldRadius, worldRadius);
+
+	ImGui::Text("At:");
+	ImGui::SliderFloat("At X", &newCameraParameters[1][0], -worldRadius, worldRadius);
+	ImGui::SliderFloat("At Y", &newCameraParameters[1][1], -worldRadius, worldRadius);
+	ImGui::SliderFloat("At Z", &newCameraParameters[1][2], -worldRadius, worldRadius);
+
+	ImGui::Text("Up:");
+	ImGui::SliderFloat("Up X", &newCameraParameters[2][0], -worldRadius, worldRadius);
+	ImGui::SliderFloat("Up Y", &newCameraParameters[2][1], -worldRadius, worldRadius);
+	ImGui::SliderFloat("Up Z", &newCameraParameters[2][2], -worldRadius, worldRadius);
+
+	ImGui::Text("Camera Poistion:");
+	ImGui::Text("X:%.2f Y:%.2f Z:%.2f", newCameraParameters[0],newCameraParameters[1],newCameraParameters[2]);
+
+	activeCamera.SetCameraLookAt(newCameraParameters[0], newCameraParameters[1], newCameraParameters[2]);
 }
 
 void ShowModelControls(ImGuiIO& io, Scene& scene)
 {
-	static float worldRadius = -10.0f;
+
 	static float scalingSizesLimit = 5.0f;
 
 	if (scene.GetModelCount() == 0)
