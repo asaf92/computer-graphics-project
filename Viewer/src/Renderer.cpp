@@ -156,7 +156,22 @@ void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX,
 
 void Renderer::Render(const Scene& scene)
 {
-	drawAxis();
+	const auto& cameras = scene.GetCamerasVector();
+	const auto& activeCamera = cameras[scene.GetActiveCameraIndex()];
+
+	const glm::mat4& viewMatrix = activeCamera.GetViewMatrix();
+	const glm::mat4& projectionMatrix = activeCamera.GetProjectionMatrix();
+
+	// draw axis
+	glm::vec4 xAxis(1, 0, 0, 1);
+	glm::vec4 yAxis(0, 1, 0, 1);
+	glm::vec4 zAxis(0, 0, 1, 1);
+	glm::vec4 center(0, 0, 0, 1);
+	
+	xAxis = projectionMatrix * viewMatrix * xAxis;
+	drawLine(Line(Point(0.0f, 0.0f), 
+				   toScreenPixel(Point(xAxis.x, xAxis.y))));
+
 	if (scene.GetModelCount() == 0)
 	{
 		// Nothing to draw
@@ -164,12 +179,8 @@ void Renderer::Render(const Scene& scene)
 	}
 
 	const auto& models = scene.GetModelsVector();
-	const auto& cameras = scene.GetCamerasVector();
-	const auto& activeCamera = cameras[scene.GetActiveCameraIndex()];
 	const auto& activeModel = scene.GetActiveModel();
-
-	const glm::mat4& viewMatrix = activeCamera.GetViewMatrix();
-	const glm::mat4& projectionMatrix = activeCamera.GetProjectionMatrix();
+	
 
 	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator != models.end(); ++iterator)
 	{
@@ -227,7 +238,7 @@ Point Renderer::toScreenPixel(Point& point)
 
 void Renderer::drawAxis()
 {
-	//TODO
+	
 }
 
 //##############################
