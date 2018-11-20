@@ -37,6 +37,7 @@ private:
 	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
 	void drawAxis();
 	Point toScreenPixel(Point& point);
+	bool Renderer::InRange(glm::vec4& point);
 
 public:
 	Renderer(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);

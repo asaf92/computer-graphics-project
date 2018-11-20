@@ -14,8 +14,10 @@
 class Camera
 {
 private:
+	glm::mat3x3 cameraParameters;
 	glm::mat4x4 viewTransformation;
 	glm::mat4x4 projectionTransformation;
+	glm::vec4 ProjectionValues;
 	float zoom;
 
 public:
@@ -25,6 +27,7 @@ public:
 
 	// Sets the viewTransformation matrix
 	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
+	glm::mat3x3& GetCameraParameters() { return cameraParameters; }
 
 	void SetOrthographicProjection(
 		const float height,
@@ -45,4 +48,17 @@ public:
 	//Getters
 	const glm::mat4x4& GetViewMatrix() const { return viewTransformation; };
 	const glm::mat4x4& GetProjectionMatrix() const { return projectionTransformation; }
+
+	// Projection Values
+	float GetFoV()			{ return ProjectionValues[0]; }
+	float GetAspectRatio()	{ return ProjectionValues[1]; }
+	float GetNear()			{ return ProjectionValues[2]; }
+	float GetFar()			{ return ProjectionValues[3]; }
+};
+
+struct ProjectionParameters {
+	float fov;
+	float aspect;
+	float zNear;
+	float zFar;
 };

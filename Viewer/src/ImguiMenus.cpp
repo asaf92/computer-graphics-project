@@ -3,6 +3,7 @@
 
 #include "ImguiMenus.h"
 #include "MeshModel.h"
+#include "Camera.h"
 #include "Utils.h"
 #include <cmath>
 #include <memory>
@@ -25,6 +26,7 @@ static bool showViewMatrix =              false;
 static bool showProjectionMatrix =        false;
 static bool showModelControls =           false;
 static bool showCameraControls =          false;
+static bool showProjectionControls =      false;
 
 glm::vec4 clearColor = glm::vec4(0.8f, 0.8f, 0.8f, 1.00f);
 
@@ -57,6 +59,11 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		ShowCameraControls(io, scene);
 	}
 
+	if (ImGui::CollapsingHeader("Projection Controls"))
+	{
+		ShowProjectionControls(io, scene);
+	}
+
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 
@@ -67,6 +74,32 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 	if (showCameraControls)                  ShowCameraControls(io, scene);
 }
 
+void ShowProjectionControls(ImGuiIO& io,Scene& scene)
+{
+	if (scene.GetCameraCount() == 0)
+	{
+		ImGui::Text("No cameras available");
+		return;
+	}
+
+	auto& activeCamera = scene.GetActiveCamera();
+	float fov = activeCamera.GetFoV();
+	float aspect = activeCamera.GetAspectRatio();
+	float zNear = activeCamera.GetNear();
+	float zFar = activeCamera.GetFar();
+
+	ImGui::Text("Projection");
+	ImGui::Text("Fov");
+	ImGui::SliderFloat("Fov", &fov,0, 180);
+
+	ImGui::Text("Near");
+	ImGui::SliderFloat("Near", &zNear, 0,100);
+
+	ImGui::Text("Far");
+	ImGui::SliderFloat("Far", &zFar, 0, 100);
+	
+	activeCamera.SetPerspectiveProjection(fov, aspect, zNear, zFar);
+}
 
 void ShowCameraControls(ImGuiIO& io, Scene& scene)
 {
@@ -96,7 +129,7 @@ void ShowCameraControls(ImGuiIO& io, Scene& scene)
 	ImGui::SliderFloat("Up Z", &newCameraParameters[2][2], -worldRadius, worldRadius);
 
 	ImGui::Text("Camera Poistion:");
-	ImGui::Text("X:%.2f Y:%.2f Z:%.2f", newCameraParameters[0],newCameraParameters[1],newCameraParameters[2]);
+	ImGui::Text("X:%.2f Y:%.2f Z:%.2f", newCameraParameters[0][0],newCameraParameters[0][1],newCameraParameters[0][2]);
 
 	activeCamera.SetCameraLookAt(newCameraParameters[0], newCameraParameters[1], newCameraParameters[2]);
 }

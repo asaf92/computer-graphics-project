@@ -8,6 +8,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <iostream>
 
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 
@@ -193,6 +194,7 @@ void Renderer::Render(const Scene& scene)
 			PointA = PointA / PointA.w;
 			PointB = PointB / PointB.w;
 			PointC = PointC / PointC.w;
+			if (!(InRange(PointA) && InRange(PointB) && InRange(PointC))) continue;
 
 			drawTriangle(toScreenPixel(Point(PointA.x, PointA.y)), 
 						 toScreenPixel(Point(PointB.x, PointB.y)), 
@@ -201,12 +203,25 @@ void Renderer::Render(const Scene& scene)
 	}
 }
 
+bool Renderer::InRange(glm::vec4& point)
+{
+	float ratioX = (point.x + 1) / 2;
+	float ratioY = (point.y + 1) / 2;
+	float ratioZ = (point.z + 1) / 2;
+	//if (point.x > 1 || point.x < -1 || point.y > 1 || point.y < -1 || point.z > 1 || point.z < -1) return false;
+	if (ratioX < 0 || ratioX > 1 || ratioY > 1 || ratioY < 0 ) return false;
+	return true;
+}
+
 // Takes a point in the range between -1 and 1 and translates it to a pixel
 Point Renderer::toScreenPixel(Point& point)
 {
 	Point out;
-	out.X = viewportWidth  * (point.X + 1) / 2;
-	out.Y = viewportHeight * (point.Y + 1) / 2;
+	float ratioX = (point.X + 1) / 2;
+	float ratioY = (point.Y + 1) / 2;
+
+	out.X = viewportWidth  * ratioX;
+	out.Y = viewportHeight * ratioY;
 	return out;
 }
 
