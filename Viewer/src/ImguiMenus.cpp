@@ -93,10 +93,10 @@ void ShowProjectionControls(ImGuiIO& io,Scene& scene)
 	ImGui::SliderFloat("Fov", &fov,0, 180);
 
 	ImGui::Text("Near");
-	ImGui::SliderFloat("Near", &zNear, 0,100);
+	ImGui::SliderFloat("Near", &zNear, 0,10);
 
 	ImGui::Text("Far");
-	ImGui::SliderFloat("Far", &zFar, 0, 100);
+	ImGui::SliderFloat("Far", &zFar, 0, 10);
 	
 	activeCamera.SetPerspectiveProjection(fov, aspect, zNear, zFar);
 }
