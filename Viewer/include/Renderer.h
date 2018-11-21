@@ -26,6 +26,7 @@ private:
 	void putPixel(int x, int y, const glm::vec3& color);
 	void createBuffers(int viewportWidth, int viewportHeight);
 	void drawLine(Line& line);
+	void drawLine(Line & line, const glm::vec3 & color);
 	void drawTriangle(const Point& PointA, const Point& PointB, const Point& PointC);
 
 	GLuint glScreenTex;
@@ -47,6 +48,10 @@ public:
 	void SwapBuffers();
 	void ClearColorBuffer(const glm::vec3& color);
 	void SetViewport(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
+
+	void draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4 & projectionMatrix, const glm::mat4x4 & viewMatrix);
+
+	void draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4 & projectionMatrix, const glm::mat4x4 & viewMatrix, const glm::vec3 & color);
 
 
 	// Add more methods/functionality as needed...

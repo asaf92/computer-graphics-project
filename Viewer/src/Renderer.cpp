@@ -68,8 +68,13 @@ void Renderer::ClearColorBuffer(const glm::vec3& color)
 
 void Renderer::drawLine(Line& line)
 {
+	drawLine(line, glm::vec3(0));
+}
+
+void Renderer::drawLine(Line& line, const glm::vec3& color)
+{
 	int x0, x1, y0, y1;
-	glm::vec3& lineColor = glm::vec3(0, 0, 0);
+	glm::vec3 lineColor = color;
 
 	setXZeroToBeSmaller(line, x0, y0, x1, y1);
 	if (y0 == y1 || x0 == x1)
@@ -154,6 +159,19 @@ void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX,
 	createOpenGLBuffer();
 }
 
+void Renderer::draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
+{
+	draw3DLine(PointA, PointB, projectionMatrix, viewMatrix, glm::vec3(0));
+}
+
+void Renderer::draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix, const glm::vec3& color)
+{
+	PointA = projectionMatrix * viewMatrix * PointA;
+	PointB = projectionMatrix * viewMatrix * PointB;
+	Line line = Line(toScreenPixel(Point(PointA.x, PointA.y)), toScreenPixel(Point(PointB.x, PointB.y)));
+	drawLine(line,color);
+}
+
 void Renderer::Render(const Scene& scene)
 {
 	const auto& cameras = scene.GetCamerasVector();
@@ -163,14 +181,14 @@ void Renderer::Render(const Scene& scene)
 	const glm::mat4& projectionMatrix = activeCamera.GetProjectionMatrix();
 
 	// draw axis
-	glm::vec4 xAxis(1, 0, 0, 1);
-	glm::vec4 yAxis(0, 1, 0, 1);
-	glm::vec4 zAxis(0, 0, 1, 1);
-	glm::vec4 center(0, 0, 0, 1);
+	glm::vec4 xAxis (0.3, 0.0, 0.0, 1.0);
+	glm::vec4 yAxis (0.0, 0.3, 0.0, 1.0);
+	glm::vec4 zAxis (0.0, 0.0, 0.3, 1.0);
+	glm::vec4 center(0.0, 0.0, 0.0, 1.0);
 	
-	xAxis = projectionMatrix * viewMatrix * xAxis;
-	drawLine(Line(Point(0.0f, 0.0f), 
-				   toScreenPixel(Point(xAxis.x, xAxis.y))));
+	draw3DLine(glm::vec4(0), xAxis, projectionMatrix , viewMatrix, glm::vec3(0,1,0));
+	draw3DLine(glm::vec4(0), yAxis, projectionMatrix , viewMatrix, glm::vec3(0,0,1));
+	draw3DLine(glm::vec4(0), zAxis, projectionMatrix , viewMatrix, glm::vec3(1,0,0));
 
 	if (scene.GetModelCount() == 0)
 	{
