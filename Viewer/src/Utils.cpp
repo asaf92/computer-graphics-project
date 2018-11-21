@@ -30,6 +30,17 @@ glm::vec4 Utils::Vec4FromVec3(const glm::vec3& other)
 	return out;
 }
 
+glm::vec4 Utils::Vec4FromVec3WithZero(const glm::vec3& other)
+{
+	glm::vec4 out;
+	out.x = other.x;
+	out.y = other.y;
+	out.z = other.z;
+	out.w = 0;
+
+	return out;
+}
+
 MeshModel Utils::LoadMeshModel(const std::string& filePath)
 {
 	std::vector<Face> faces;

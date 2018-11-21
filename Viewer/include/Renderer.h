@@ -37,7 +37,7 @@ private:
 	void setXZeroToBeSmaller(Line & line,  int &x0,  int &y0,  int &x1,  int &y1);
 	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
 	void drawAxis();
-	Point toScreenPixel(Point& point);
+	Point toScreenPixel(const Point& point) const;
 	bool Renderer::InRange(glm::vec4& point);
 
 public:

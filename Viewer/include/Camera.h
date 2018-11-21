@@ -28,18 +28,15 @@ public:
 	// Sets the viewTransformation matrix
 	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 	glm::mat3x3& GetCameraParameters() { return cameraParameters; }
-
-	void SetOrthographicProjection(
-		const float height,
-		const float aspectRatio,
-		const float near,
-		const float far);
+	void SetOrthographicProjection(float left, float right, float top, float bottom, float zNear, float zFar);
 
 	void SetPerspectiveProjection(
 		const float fovy,
 		const float aspect,
 		const float near,
 		const float far);
+
+	glm::mat4x4 CreateFrustum(float left, float right, float top, float bottom, float, float);
 
 	void SetZoom(const float zoom) { this->zoom = zoom; };
 	float GetZoom() const { return zoom; }

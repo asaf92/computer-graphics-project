@@ -144,9 +144,13 @@ void Renderer::drawLine(Line& line, const glm::vec3& color)
 
 void Renderer::drawTriangle(const Point& PointA,const Point& PointB, const Point& PointC)
 {
-	drawLine(Line(PointA,PointB));
-	drawLine(Line(PointB, PointC));
-	drawLine(Line(PointC, PointA));
+	Point Point_A = toScreenPixel(PointA);
+	Point Point_B = toScreenPixel(PointB);
+	Point Point_C = toScreenPixel(PointC);
+
+	drawLine(Line(Point_A, Point_B));
+	drawLine(Line(Point_B, Point_C));
+	drawLine(Line(Point_C, Point_A));
 }
 
 void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX, int viewportY)
@@ -168,6 +172,8 @@ void Renderer::draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4&
 {
 	PointA = projectionMatrix * viewMatrix * PointA;
 	PointB = projectionMatrix * viewMatrix * PointB;
+	PointA = PointA / PointA.w;
+	PointB = PointB / PointB.w;
 	Line line = Line(toScreenPixel(Point(PointA.x, PointA.y)), toScreenPixel(Point(PointB.x, PointB.y)));
 	drawLine(line,color);
 }
@@ -186,9 +192,9 @@ void Renderer::Render(const Scene& scene)
 	glm::vec4 zAxis (0.0, 0.0, 0.3, 1.0);
 	glm::vec4 center(0.0, 0.0, 0.0, 1.0);
 	
-	draw3DLine(glm::vec4(0), xAxis, projectionMatrix , viewMatrix, glm::vec3(0,1,0));
-	draw3DLine(glm::vec4(0), yAxis, projectionMatrix , viewMatrix, glm::vec3(0,0,1));
-	draw3DLine(glm::vec4(0), zAxis, projectionMatrix , viewMatrix, glm::vec3(1,0,0));
+	draw3DLine(center, xAxis, projectionMatrix , viewMatrix, glm::vec3(1,0,0));
+	draw3DLine(center, yAxis, projectionMatrix , viewMatrix, glm::vec3(0,1,0));
+	draw3DLine(center, zAxis, projectionMatrix , viewMatrix, glm::vec3(0,0,1));
 
 	if (scene.GetModelCount() == 0)
 	{
@@ -223,11 +229,11 @@ void Renderer::Render(const Scene& scene)
 			PointA = PointA / PointA.w;
 			PointB = PointB / PointB.w;
 			PointC = PointC / PointC.w;
-			if (!(InRange(PointA) && InRange(PointB) && InRange(PointC))) continue;
+			//if (!(InRange(PointA) && InRange(PointB) && InRange(PointC))) continue;
 
-			drawTriangle(toScreenPixel(Point(PointA.x, PointA.y)), 
-						 toScreenPixel(Point(PointB.x, PointB.y)), 
-						 toScreenPixel(Point(PointC.x, PointC.y)));
+			drawTriangle(Point(PointA.x, PointA.y), 
+						 Point(PointB.x, PointB.y), 
+						 Point(PointC.x, PointC.y));
 		}
 	}
 }
@@ -243,7 +249,7 @@ bool Renderer::InRange(glm::vec4& point)
 }
 
 // Takes a point in the range between -1 and 1 and translates it to a pixel
-Point Renderer::toScreenPixel(Point& point)
+Point Renderer::toScreenPixel(const Point& point) const
 {
 	Point out;
 	float ratioX = (point.X + 1) / 2;
