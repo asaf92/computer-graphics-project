@@ -17,7 +17,7 @@ Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
 {
 	SetCameraLookAt(eye, at, up);
 	SetPerspectiveProjection(90.0f, 4.0f / 3.0f, 0.1f, 4.0f);
-	//SetOrthographicProjection(60.0f, 4.0f / 3.0f, 0.1f, 2.0f);
+	//SetOrthographicProjection(90.0f, 4.0f / 3.0f, 0.1f, 2.0f);
 }
 
 Camera::~Camera()
@@ -66,6 +66,7 @@ void Camera::SetOrthographicProjection(
 	const float near,
 	const float far)
 {
+	IsOrthographic = true;
 	projectionTransformation = glm::mat4x4(1);
 }
 
@@ -75,6 +76,7 @@ void Camera::SetPerspectiveProjection(
 	const float near,
 	const float far)
 {
+	IsOrthographic = false;
 	ProjectionValues[0] = fovy;
 	ProjectionValues[1]= aspectRatio;
 	ProjectionValues[2]= near;

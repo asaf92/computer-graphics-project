@@ -54,6 +54,8 @@ public:
 	float GetAspectRatio()	{ return ProjectionValues[1]; }
 	float GetNear()			{ return ProjectionValues[2]; }
 	float GetFar()			{ return ProjectionValues[3]; }
+
+	bool IsOrthographic;
 };
 
 struct ProjectionParameters {
