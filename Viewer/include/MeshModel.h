@@ -22,16 +22,20 @@ protected:
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
 	glm::mat4x4 worldTransform;
-	
+	glm::mat4x4 rotateTransformation;
+
 	// User inputs
 	glm::vec3 translationVector;
 	glm::vec3 scaleSize;
-	float rotateAngle;
+	glm::vec3 rotateAngle;
 
 	// Member functions that return transformation matrices
 	glm::mat4x4 GetTranslationMatrix();
 	glm::mat4x4 GetScalingMatrix();
-	glm::mat4x4 GetRotateMatrix();
+	glm::mat4x4 GetRotationMatrix();
+	glm::mat4x4 GetXRotationMatrix();
+	glm::mat4x4 GetYRotationMatrix();
+	glm::mat4x4 GetZRotationMatrix();
 	
 	// Necessary for rotations
 	glm::vec3 centerPoint;
@@ -50,7 +54,8 @@ public:
 	void SetColor(const glm::vec4& color);
 	void SetTranslation(glm::vec3 direction) { translationVector = direction; }
 	void SetScaling(glm::vec3 scale)         { scaleSize         = scale; }
-	void SetRotationAngle(float angle)         { rotateAngle       = angle; }
+	void SetRotation(const glm::vec3& angle);
+	void Rotate(glm::vec3);
 
 	//Getters
 	std::vector<glm::vec3>& GetVerticesVector() { return vertices; }
@@ -60,7 +65,7 @@ public:
 	const std::string& GetModelName()       const  { return modelName; }
 	const glm::vec3& GetTranslationVector()	const  { return translationVector; }
 	const glm::vec3& GetScalingVector()     const  { return scaleSize; }
-	float GetRotationAngle()			    const  { return rotateAngle; }
+	//float GetRotationAngle()			    const  { return rotateAngle; }
 
 	// Not sure if needed
 	glm::vec3& GetCenterPoint()						{ return centerPoint; }

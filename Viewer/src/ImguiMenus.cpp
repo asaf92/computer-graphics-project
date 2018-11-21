@@ -159,7 +159,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	newScalingSizes.y = activeModelScalingSizes.y;
 	newScalingSizes.z = activeModelScalingSizes.z;
 
-	float newAngle = activeModel->GetRotationAngle();
+	glm::vec3 newAngle(0);
 
 	ImGui::Text("Translation");
 	ImGui::SliderFloat("X Translation",&newTranslationVector.x,-worldRadius,worldRadius);
@@ -172,13 +172,15 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	ImGui::SliderFloat("Z Scale", &newScalingSizes.z, 0, scalingSizesLimit);
 
 	ImGui::Text("Rotation");
-	ImGui::SliderFloat("Y Rotation", &newAngle, -180.0f, 180.0f);
+	ImGui::SliderFloat("X Rotation", &newAngle.x, -180.0f, 180.0f);
+	ImGui::SliderFloat("Y Rotation", &newAngle.y, -180.0f, 180.0f);
+	ImGui::SliderFloat("Z Rotation", &newAngle.z, -180.0f, 180.0f);
 
 	ImGui::Text("x: %.2f y: %.2f z: %.2f", activeModelTranslationVector.x, activeModelTranslationVector.y, activeModelTranslationVector.z);
 
 	activeModel->SetTranslation(newTranslationVector);
 	activeModel->SetScaling(newScalingSizes);
-	activeModel->SetRotationAngle(newAngle);
+	activeModel->SetRotation(newAngle);
 }
 
 void DisplayMenuBar(ImGuiIO& io, Scene& scene)
