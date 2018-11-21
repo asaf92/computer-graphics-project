@@ -17,8 +17,8 @@ Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
 	zoom(1.0)
 {
 	SetCameraLookAt(eye, at, up);
-	//SetPerspectiveProjection(60.0f, 4.0f / 3.0f, 0.1f, 9.0f);
-	SetOrthographicProjection(-2.0f,2.0f,-2.0f,2.0f,0.1f,2.0f);
+	SetPerspectiveProjection(60.0f, 4.0f / 3.0f, 0.1f, 9.0f);
+	//SetOrthographicProjection(-2.0f,2.0f,-2.0f,2.0f,0.1f,2.0f);
 }
 
 Camera::~Camera()
@@ -93,7 +93,7 @@ void Camera::SetPerspectiveProjection(
 	
 	float tanHalfFovy = tan(fov / 2.0f);
 
-	glm::mat4x4 result(0);
+	glm::mat4x4 result(1);
 
 	result[0][0] = 1.0f / (aspectRatio * tanHalfFovy);
 	result[1][1] = 1.0f / (tanHalfFovy);
