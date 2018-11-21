@@ -229,7 +229,7 @@ void Renderer::Render(const Scene& scene)
 			PointA = PointA / PointA.w;
 			PointB = PointB / PointB.w;
 			PointC = PointC / PointC.w;
-			//if (!(InRange(PointA) && InRange(PointB) && InRange(PointC))) continue;
+			if (!(InRange(PointA) && InRange(PointB) && InRange(PointC))) continue;
 
 			drawTriangle(Point(PointA.x, PointA.y), 
 						 Point(PointB.x, PointB.y), 
@@ -243,7 +243,7 @@ bool Renderer::InRange(glm::vec4& point)
 	float ratioX = (point.x + 1) / 2;
 	float ratioY = (point.y + 1) / 2;
 	float ratioZ = (point.z + 1) / 2;
-	//if (point.x > 1 || point.x < -1 || point.y > 1 || point.y < -1 || point.z > 1 || point.z < -1) return false;
+	if (point.x > 1 || point.x < -1 || point.y > 1 || point.y < -1 || point.z > 1 || point.z < -1) return false;
 	if (ratioX < 0 || ratioX > 1 || ratioY > 1 || ratioY < 0 ) return false;
 	return true;
 }

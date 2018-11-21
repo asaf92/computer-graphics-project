@@ -18,7 +18,7 @@ bool showDemoWindow = false;
 bool showAnotherWindow = false;
 
 // Statics
-static float worldRadius = -10.0f;
+static float worldRadius = 3.0f;
 
 // My Menu Bools
 static bool showWorldTransform =          false;
@@ -148,6 +148,9 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	auto& activeModel = scene.GetActiveModel();
 	auto& activeModelTranslationVector = activeModel->GetTranslationVector();
 	auto& activeModelScalingSizes = activeModel->GetScalingVector();
+	auto& models = scene.GetModelsVector();
+	const auto& index = scene.GetActiveModelIndex();
+	std::vector<std::string> names;
 
 	glm::vec3 newTranslationVector;
 	newTranslationVector.x = activeModelTranslationVector.x;
@@ -175,6 +178,14 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	ImGui::SliderFloat("X Rotation", &newAngle.x, -180.0f, 180.0f);
 	ImGui::SliderFloat("Y Rotation", &newAngle.y, -180.0f, 180.0f);
 	ImGui::SliderFloat("Z Rotation", &newAngle.z, -180.0f, 180.0f);
+	
+	if (ImGui::Button("Next Model"))
+	{
+		if (index + 1 == models.size())
+			scene.SetActiveModelIndex(1);
+		else
+			scene.SetActiveModelIndex(index + 1);
+	}
 
 	ImGui::Text("x: %.2f y: %.2f z: %.2f", activeModelTranslationVector.x, activeModelTranslationVector.y, activeModelTranslationVector.z);
 

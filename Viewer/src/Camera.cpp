@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-Camera::Camera() : Camera::Camera(glm::vec3(0, 0,-3),
+Camera::Camera() : Camera::Camera(glm::vec3(3, 3,-3),
 								  glm::vec3(0, 0, 0),
 								  glm::vec3(0, 1, 0))
 {
@@ -63,16 +63,13 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
 void Camera::SetOrthographicProjection(float left, float right, float top, float bottom, float zNear, float zFar)
 {
 	IsOrthographic = true;
-	projectionTransformation = glm::mat4x4(1);
-
-
-		/*glm::mat4x4(
+	/*projectionTransformation = glm::mat4x4(
 		{
 
 			{2.0f / (right - left) ,0,0,0},
 			{0,2.0f / (top - bottom) ,0,0},
 			{0,0,-2.0f / (zFar - zNear),0},
-			{ -(right + left) / (right - left) , -(bottom + top) / (top - bottom) , -(zFar + zNear) / (zFar - zNear),1}
+			{ -(right + left) / (right - left) , -(bottom + top) / (top - bottom) , -(zFar + zNear) / (zFar - zNear),1} //http://learnwebgl.brown37.net/08_projections/projections_ortho.html
 
 		});*/
 }
