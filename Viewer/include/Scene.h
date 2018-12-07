@@ -7,6 +7,7 @@
 #include <memory>
 #include "MeshModel.h"
 #include "Camera.h"
+#include "ProjectionType.h"
 
 /*
  * Scene class.
@@ -19,6 +20,7 @@ private:
 
 	int activeCameraIndex;
 	int activeModelIndex;
+	ProjectionType activeProjectionType;
 
 public:
 	Scene();
@@ -40,5 +42,6 @@ public:
 	void SetActiveModelIndex(int index);
 	const int GetActiveModelIndex() const;
 
-	// activeModel interaction
+	void SelectProjectionType(ProjectionType selection) { activeProjectionType = selection; }
+	const ProjectionType GetProjectionType() const { return activeProjectionType; }
 };

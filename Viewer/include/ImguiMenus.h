@@ -1,9 +1,11 @@
 #pragma once
 #include <imgui/imgui.h>
 #include "Scene.h"
+#include "ProjectionType.h"
 
 void DrawMenus(ImGuiIO& io, Scene& scene);
 void ShowProjectionControls(ImGuiIO & io, Scene & scene);
+void ShowPerspectiveProjectionControls(Camera & activeCamera);
 void DrawImguiMenus(ImGuiIO& io, Scene& scene);
 void ShowModelControls(ImGuiIO& io, Scene& scene);
 void ShowCameraControls(ImGuiIO& io, Scene& scene);

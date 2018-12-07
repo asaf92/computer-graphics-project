@@ -82,7 +82,18 @@ void ShowProjectionControls(ImGuiIO& io,Scene& scene)
 		return;
 	}
 
+	int selection = scene.GetProjectionType();
+	ImGui::RadioButton("Ortographic Projection", &selection, Ortographic);
+	ImGui::RadioButton("Perspective Projection", &selection, Perspective);
+	ImGui::RadioButton("No Projection"		   , &selection, None);
+	scene.SelectProjectionType((ProjectionType)selection);
+
 	auto& activeCamera = scene.GetActiveCamera();
+	ShowPerspectiveProjectionControls(activeCamera);
+}
+
+void ShowPerspectiveProjectionControls(Camera & activeCamera)
+{
 	float fov = activeCamera.GetFoV();
 	float aspect = activeCamera.GetAspectRatio();
 	float zNear = activeCamera.GetNear();
@@ -90,14 +101,14 @@ void ShowProjectionControls(ImGuiIO& io,Scene& scene)
 
 	ImGui::Text("Projection");
 	ImGui::Text("Fov");
-	ImGui::SliderFloat("Fov", &fov,0, 180);
+	ImGui::SliderFloat("Fov", &fov, 0, 180);
 
 	ImGui::Text("Near");
-	ImGui::SliderFloat("Near", &zNear, 0,10);
+	ImGui::SliderFloat("Near", &zNear, 0, 10);
 
 	ImGui::Text("Far");
 	ImGui::SliderFloat("Far", &zFar, 0, 10);
-	
+
 	activeCamera.SetPerspectiveProjection(fov, aspect, zNear, zFar);
 }
 
