@@ -21,9 +21,6 @@ bool showAnotherWindow = false;
 static float worldRadius = 3.0f;
 
 // My Menu Bools
-static bool showWorldTransform =          false;
-static bool showViewMatrix =              false;
-static bool showProjectionMatrix =        false;
 static bool showModelControls =           false;
 static bool showCameraControls =          false;
 static bool showProjectionControls =      false;
@@ -44,9 +41,7 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 	
 	if (ImGui::CollapsingHeader("Transformation Matrices"))
 	{
-		ImGui::Checkbox("World Transforamtion Matrix", &showWorldTransform); ImGui::SameLine(300.0f);
-		ImGui::Checkbox("View Matrix", &showViewMatrix); ImGui::SameLine(300.0f);
-		ImGui::Checkbox("Projection Matrix", &showProjectionMatrix);
+		ShowTransformationMatrices(io,scene);
 	}
 
 	if (ImGui::CollapsingHeader("Model Controls"))
@@ -67,11 +62,37 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 
-	if (showWorldTransform) {}
-	if (showViewMatrix) {}
-	if (showProjectionMatrix) {}
 	if (showModelControls)					 ShowModelControls(io,scene);
 	if (showCameraControls)                  ShowCameraControls(io, scene);
+}
+
+void ShowTransformationMatrices(ImGuiIO& io, Scene& scene)
+{
+	if (scene.GetCameraCount() == 0) { return; }
+	const auto& activeCamera =     scene.GetActiveCamera();
+	const auto& projectionMatrix = activeCamera.GetProjectionMatrix();
+	const auto& viewMatrix =       activeCamera.GetViewMatrix();
+
+	ImGui::Text("Projection Matrix: ");
+	ImGui::Text("%.2f   %.2f   %.2f   %.2f ", projectionMatrix[0][0], projectionMatrix[0][1], projectionMatrix[0][2], projectionMatrix[0][3]);
+	ImGui::Text("%.2f   %.2f   %.2f   %.2f ", projectionMatrix[1][0], projectionMatrix[1][1], projectionMatrix[1][2], projectionMatrix[1][3]);
+	ImGui::Text("%.2f   %.2f   %.2f   %.2f ", projectionMatrix[2][0], projectionMatrix[2][1], projectionMatrix[2][2], projectionMatrix[2][3]);
+	ImGui::Text("%.2f   %.2f   %.2f   %.2f ", projectionMatrix[3][0], projectionMatrix[3][1], projectionMatrix[3][2], projectionMatrix[3][3]);
+
+	ImGui::Text("View Matrix: ");
+	ImGui::Text("%.2f   %.2f   %.2f   %.2f ", viewMatrix[0][0], viewMatrix[0][1], viewMatrix[0][2], viewMatrix[0][3]);
+	ImGui::Text("%.2f   %.2f   %.2f   %.2f ", viewMatrix[1][0], viewMatrix[1][1], viewMatrix[1][2], viewMatrix[1][3]);
+	ImGui::Text("%.2f   %.2f   %.2f   %.2f ", viewMatrix[2][0], viewMatrix[2][1], viewMatrix[2][2], viewMatrix[2][3]);
+	ImGui::Text("%.2f   %.2f   %.2f   %.2f ", viewMatrix[3][0], viewMatrix[3][1], viewMatrix[3][2], viewMatrix[3][3]);
+
+	if (scene.GetModelCount() == 0){ return; }
+	const auto& activeModel = scene.GetActiveModel();
+	const auto& worldMatrix = activeModel->GetWorldTransformation();
+	ImGui::Text("World Matrix: ");
+	ImGui::Text("%.2f   %.2f   %.2f   %.2f ", worldMatrix[0][0], worldMatrix[0][1], worldMatrix[0][2], worldMatrix[0][3]);
+	ImGui::Text("%.2f   %.2f   %.2f   %.2f ", worldMatrix[1][0], worldMatrix[1][1], worldMatrix[1][2], worldMatrix[1][3]);
+	ImGui::Text("%.2f   %.2f   %.2f   %.2f ", worldMatrix[2][0], worldMatrix[2][1], worldMatrix[2][2], worldMatrix[2][3]);
+	ImGui::Text("%.2f   %.2f   %.2f   %.2f ", worldMatrix[3][0], worldMatrix[3][1], worldMatrix[3][2], worldMatrix[3][3]);
 }
 
 void ShowProjectionControls(ImGuiIO& io,Scene& scene)

@@ -4,6 +4,7 @@
 #include "ProjectionType.h"
 
 void DrawMenus(ImGuiIO& io, Scene& scene);
+void ShowTransformationMatrices(ImGuiIO& io, Scene& scene);
 void ShowProjectionControls(ImGuiIO & io, Scene & scene);
 void ShowOrtographicProjectionControls(Camera & activeCamera);
 void ShowPerspectiveProjectionControls(Camera & activeCamera);
