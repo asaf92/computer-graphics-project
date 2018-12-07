@@ -178,12 +178,14 @@ void Renderer::draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4&
 	drawLine(line,color);
 }
 
-void Renderer::Render(const Scene& scene)
+void Renderer::Render(Scene& scene)
 {
-	const auto& cameras = scene.GetCamerasVector();
-	const auto& activeCamera = cameras[scene.GetActiveCameraIndex()];
+	auto& cameras = scene.GetCamerasVector();
+	auto& activeCamera = scene.GetActiveCamera();
 
 	const glm::mat4& viewMatrix = activeCamera.GetViewMatrix();
+
+	activeCamera.RenderProjectionMatrix();
 	const glm::mat4& projectionMatrix = activeCamera.GetProjectionMatrix();
 
 	drawAxis(projectionMatrix, viewMatrix);

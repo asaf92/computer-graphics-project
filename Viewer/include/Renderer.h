@@ -37,14 +37,13 @@ private:
 	void setXZeroToBeSmaller(Line & line,  int &x0,  int &y0,  int &x1,  int &y1);
 	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
 	Point toScreenPixel(const Point& point) const;
-	bool Renderer::InRange(glm::vec4& point);
 	void drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
 
 public:
 	Renderer(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
 	~Renderer();
 
-	void Render(const Scene& scene);
+	void Render(Scene& scene);
 	void SwapBuffers();
 	void ClearColorBuffer(const glm::vec3& color);
 	void SetViewport(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);

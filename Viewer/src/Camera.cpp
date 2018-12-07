@@ -16,7 +16,7 @@ Camera::Camera() : Camera::Camera(glm::vec3(3, 3,-3),
 Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
 	zoom(1.0)
 {
-	orthographicProjectionParameters = { 0.0f ,0.0f ,0.0f ,0.0f ,0.0f ,0.0f };
+	orthographicProjectionParameters = { -5.0f ,5.0f ,-5.0f ,5.0f ,-5.0f ,5.0f };
 	SetCameraLookAt(eye, at, up);
 	SetPerspectiveProjection(60.0f, 4.0f / 3.0f, 0.1f, 9.0f);
 	//SetOrthographicProjection(-2.0f,2.0f,-2.0f,2.0f,0.1f,2.0f);
@@ -61,9 +61,20 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
 	viewTransformation = viewMatrix;
 }
 
+void Camera::SetOrthographicProjection()
+{
+	SetOrthographicProjection(orthographicProjectionParameters.left, 
+							  orthographicProjectionParameters.right, 
+							  orthographicProjectionParameters.top, 
+							  orthographicProjectionParameters.bottom, 
+							  orthographicProjectionParameters.zNear, 
+							  orthographicProjectionParameters.zFar
+	);
+}
+
 void Camera::SetOrthographicProjection(float left, float right, float top, float bottom, float zNear, float zFar)
 {
-	/*projectionTransformation = glm::mat4x4(
+	projectionTransformation = glm::mat4x4(
 		{
 
 			{2.0f / (right - left) ,0,0,0},
@@ -71,7 +82,12 @@ void Camera::SetOrthographicProjection(float left, float right, float top, float
 			{0,0,-2.0f / (zFar - zNear),0},
 			{ -(right + left) / (right - left) , -(bottom + top) / (top - bottom) , -(zFar + zNear) / (zFar - zNear),1} //http://learnwebgl.brown37.net/08_projections/projections_ortho.html
 
-		});*/
+		});
+}
+
+void Camera::SetPerspectiveProjection()
+{
+	SetPerspectiveProjection(ProjectionValues[0],ProjectionValues[1],ProjectionValues[2],ProjectionValues[3]);
 }
 
 void Camera::SetPerspectiveProjection(
@@ -118,6 +134,21 @@ glm::mat4x4 Camera::CreateFrustum(float left, float right, float top, float bott
 		{(right + left)/(right - left), (top + bottom) / (top - bottom), -(far+near)/(far - near), -1 },
 		{0,0,-2.0f*far*near / (far-near),0}
 	);
+}
+
+void Camera::RenderProjectionMatrix()
+{
+	switch (activeProjectionType)
+	{
+	case Perspective:
+		SetPerspectiveProjection();
+		break;
+	case Ortographic:
+		SetOrthographicProjection();
+		break;
+	case None:
+		projectionTransformation = glm::mat4x4(1);
+	}
 }
 
 const OrthographicProjectionParameters Camera::GetOrthographicProjectionParameters() const

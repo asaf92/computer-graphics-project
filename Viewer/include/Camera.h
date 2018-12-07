@@ -23,8 +23,8 @@ struct PerspectiveProjectionParameters {
 struct OrthographicProjectionParameters {
 	float left;
 	float right;
-	float top;
 	float bottom;
+	float top;
 	float zNear;
 	float zFar;
 };
@@ -39,6 +39,8 @@ private:
 	OrthographicProjectionParameters orthographicProjectionParameters;
 	ProjectionType activeProjectionType;
 	float zoom;
+	void SetOrthographicProjection(float left, float right, float top, float bottom, float zNear, float zFar);
+	glm::mat4x4 CreateFrustum(float left, float right, float top, float bottom, float, float);
 
 public:
 	Camera();
@@ -47,14 +49,14 @@ public:
 
 	// Sets the viewTransformation matrix
 	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
+	void SetOrthographicProjection();
 	glm::mat3x3& GetCameraParameters() { return cameraParameters; }
-	void SetOrthographicProjection(float left, float right, float top, float bottom, float zNear, float zFar);
-	void SetPerspectiveProjection(const float fovy,const float aspect,const float near,const float far);
-	glm::mat4x4 CreateFrustum(float left, float right, float top, float bottom, float, float);
+	void SetPerspectiveProjection();
+	void RenderProjectionMatrix();
 	void SetZoom(const float zoom) { this->zoom = zoom; };
 	float GetZoom() const { return zoom; }
 
-	const glm::mat4x4& GetViewMatrix() const { return viewTransformation; };
+	const glm::mat4x4& GetViewMatrix() const { return viewTransformation; }
 	const glm::mat4x4& GetProjectionMatrix() const { return projectionTransformation; }
 
 	// Projection
@@ -68,5 +70,8 @@ public:
 
 	const OrthographicProjectionParameters GetOrthographicProjectionParameters() const;
 	void SetOrthographicProjectionParameters(OrthographicProjectionParameters parameters);
+
+	// Move this later to private
+	void SetPerspectiveProjection(const float fovy,const float aspect,const float near,const float far);
 };
 
