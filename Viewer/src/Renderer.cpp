@@ -186,15 +186,7 @@ void Renderer::Render(const Scene& scene)
 	const glm::mat4& viewMatrix = activeCamera.GetViewMatrix();
 	const glm::mat4& projectionMatrix = activeCamera.GetProjectionMatrix();
 
-	// draw axis
-	glm::vec4 xAxis (0.3, 0.0, 0.0, 1.0);
-	glm::vec4 yAxis (0.0, 0.3, 0.0, 1.0);
-	glm::vec4 zAxis (0.0, 0.0, 0.3, 1.0);
-	glm::vec4 center(0.0, 0.0, 0.0, 1.0);
-	
-	draw3DLine(center, xAxis, projectionMatrix , viewMatrix, glm::vec3(1,0,0));
-	draw3DLine(center, yAxis, projectionMatrix , viewMatrix, glm::vec3(0,1,0));
-	draw3DLine(center, zAxis, projectionMatrix , viewMatrix, glm::vec3(0,0,1));
+	drawAxis(projectionMatrix, viewMatrix);
 
 	if (scene.GetModelCount() == 0)
 	{
@@ -229,7 +221,6 @@ void Renderer::Render(const Scene& scene)
 			PointA = PointA / PointA.w;
 			PointB = PointB / PointB.w;
 			PointC = PointC / PointC.w;
-			if (!(InRange(PointA) && InRange(PointB) && InRange(PointC))) continue;
 
 			drawTriangle(Point(PointA.x, PointA.y), 
 						 Point(PointB.x, PointB.y), 
@@ -238,14 +229,16 @@ void Renderer::Render(const Scene& scene)
 	}
 }
 
-bool Renderer::InRange(glm::vec4& point)
+void Renderer::drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix)
 {
-	float ratioX = (point.x + 1) / 2;
-	float ratioY = (point.y + 1) / 2;
-	float ratioZ = (point.z + 1) / 2;
-	if (point.x > 1 || point.x < -1 || point.y > 1 || point.y < -1 || point.z > 1 || point.z < -1) return false;
-	if (ratioX < 0 || ratioX > 1 || ratioY > 1 || ratioY < 0 ) return false;
-	return true;
+	glm::vec4 xAxis(0.3, 0.0, 0.0, 1.0);
+	glm::vec4 yAxis(0.0, 0.3, 0.0, 1.0);
+	glm::vec4 zAxis(0.0, 0.0, 0.3, 1.0);
+	glm::vec4 center(0.0, 0.0, 0.0, 1.0);
+
+	draw3DLine(center, xAxis, projectionMatrix, viewMatrix, glm::vec3(1, 0, 0));
+	draw3DLine(center, yAxis, projectionMatrix, viewMatrix, glm::vec3(0, 1, 0));
+	draw3DLine(center, zAxis, projectionMatrix, viewMatrix, glm::vec3(0, 0, 1));
 }
 
 // Takes a point in the range between -1 and 1 and translates it to a pixel
@@ -258,11 +251,6 @@ Point Renderer::toScreenPixel(const Point& point) const
 	out.X = viewportWidth  * ratioX;
 	out.Y = viewportHeight * ratioY;
 	return out;
-}
-
-void Renderer::drawAxis()
-{
-	
 }
 
 //##############################
