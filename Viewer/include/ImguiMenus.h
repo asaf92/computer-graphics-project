@@ -5,6 +5,7 @@
 
 void DrawMenus(ImGuiIO& io, Scene& scene);
 void ShowProjectionControls(ImGuiIO & io, Scene & scene);
+void ShowOrtographicProjectionControls(Camera & activeCamera);
 void ShowPerspectiveProjectionControls(Camera & activeCamera);
 void DrawImguiMenus(ImGuiIO& io, Scene& scene);
 void ShowModelControls(ImGuiIO& io, Scene& scene);

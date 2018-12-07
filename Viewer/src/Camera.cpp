@@ -16,6 +16,7 @@ Camera::Camera() : Camera::Camera(glm::vec3(3, 3,-3),
 Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
 	zoom(1.0)
 {
+	orthographicProjectionParameters = { 0.0f ,0.0f ,0.0f ,0.0f ,0.0f ,0.0f };
 	SetCameraLookAt(eye, at, up);
 	SetPerspectiveProjection(60.0f, 4.0f / 3.0f, 0.1f, 9.0f);
 	//SetOrthographicProjection(-2.0f,2.0f,-2.0f,2.0f,0.1f,2.0f);
@@ -62,7 +63,6 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
 
 void Camera::SetOrthographicProjection(float left, float right, float top, float bottom, float zNear, float zFar)
 {
-	IsOrthographic = true;
 	/*projectionTransformation = glm::mat4x4(
 		{
 
@@ -80,7 +80,6 @@ void Camera::SetPerspectiveProjection(
 	const float near,
 	const float far)
 {
-	IsOrthographic = false;
 	ProjectionValues[0] = fovy;
 	ProjectionValues[1]= aspectRatio;
 	ProjectionValues[2]= near;
@@ -119,4 +118,14 @@ glm::mat4x4 Camera::CreateFrustum(float left, float right, float top, float bott
 		{(right + left)/(right - left), (top + bottom) / (top - bottom), -(far+near)/(far - near), -1 },
 		{0,0,-2.0f*far*near / (far-near),0}
 	);
+}
+
+const OrthographicProjectionParameters Camera::GetOrthographicProjectionParameters() const
+{
+	return orthographicProjectionParameters;
+}
+
+void Camera::SetOrthographicProjectionParameters(OrthographicProjectionParameters parameters)
+{
+	orthographicProjectionParameters = parameters;
 }

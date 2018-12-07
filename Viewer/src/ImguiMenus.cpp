@@ -82,14 +82,46 @@ void ShowProjectionControls(ImGuiIO& io,Scene& scene)
 		return;
 	}
 
-	int selection = scene.GetProjectionType();
+	auto& activeCamera = scene.GetActiveCamera();
+	int selection = activeCamera.GetProjectionType();
+	ImGui::Text("Projection");
 	ImGui::RadioButton("Ortographic Projection", &selection, Ortographic);
 	ImGui::RadioButton("Perspective Projection", &selection, Perspective);
 	ImGui::RadioButton("No Projection"		   , &selection, None);
-	scene.SelectProjectionType((ProjectionType)selection);
+	activeCamera.SelectProjectionType((ProjectionType)selection);
 
-	auto& activeCamera = scene.GetActiveCamera();
-	ShowPerspectiveProjectionControls(activeCamera);
+	switch (activeCamera.GetProjectionType()) 
+	{
+	case Ortographic:
+		ShowOrtographicProjectionControls(activeCamera);
+		break;
+	case Perspective:
+		ShowPerspectiveProjectionControls(activeCamera);
+		break;
+	case None:
+	default:
+		break;
+	}
+}
+
+void ShowOrtographicProjectionControls(Camera& activeCamera)
+{
+	OrthographicProjectionParameters parameters = activeCamera.GetOrthographicProjectionParameters();
+	
+	ImGui::Text("Left");
+	ImGui::SliderFloat("Left",   &parameters.left,   -worldRadius, worldRadius);
+	ImGui::Text("Right");		 	  
+	ImGui::SliderFloat("Right",  &parameters.right,  -worldRadius, worldRadius);
+	ImGui::Text("Top");			 
+	ImGui::SliderFloat("Top",    &parameters.top,    -worldRadius, worldRadius);
+	ImGui::Text("Bottom");
+	ImGui::SliderFloat("Bottom", &parameters.bottom, -worldRadius, worldRadius);
+	ImGui::Text("Near");
+	ImGui::SliderFloat("Near",   &parameters.zNear,  -worldRadius, worldRadius);
+	ImGui::Text("Far");							    
+	ImGui::SliderFloat("Far",    &parameters.zFar,   -worldRadius, worldRadius);
+
+	activeCamera.SetOrthographicProjectionParameters(parameters);
 }
 
 void ShowPerspectiveProjectionControls(Camera & activeCamera)
@@ -99,7 +131,6 @@ void ShowPerspectiveProjectionControls(Camera & activeCamera)
 	float zNear = activeCamera.GetNear();
 	float zFar = activeCamera.GetFar();
 
-	ImGui::Text("Projection");
 	ImGui::Text("Fov");
 	ImGui::SliderFloat("Fov", &fov, 0, 180);
 
