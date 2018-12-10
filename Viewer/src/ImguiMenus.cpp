@@ -147,21 +147,22 @@ void ShowOrtographicProjectionControls(Camera& activeCamera)
 
 void ShowPerspectiveProjectionControls(Camera & activeCamera)
 {
+	PerspectiveProjectionParameters parameters = activeCamera.GetPerspectiveProjectionParameters();
 	float fov = activeCamera.GetFoV();
 	float aspect = activeCamera.GetAspectRatio();
 	float zNear = activeCamera.GetNear();
 	float zFar = activeCamera.GetFar();
 
 	ImGui::Text("Fov");
-	ImGui::SliderFloat("Fov", &fov, 0, 180);
+	ImGui::SliderFloat("Fov", &parameters.fov, 0, 180);
 
 	ImGui::Text("Near");
-	ImGui::SliderFloat("Near", &zNear, 0, 10);
+	ImGui::SliderFloat("Near", &parameters.zNear, 0, 10);
 
 	ImGui::Text("Far");
-	ImGui::SliderFloat("Far", &zFar, 0, 10);
+	ImGui::SliderFloat("Far", &parameters.zFar, 0, 10);
 
-	activeCamera.SetPerspectiveProjection(fov, aspect, zNear, zFar);
+	activeCamera.SetPerspectiveProjectionParameters(parameters);
 }
 
 void ShowCameraControls(ImGuiIO& io, Scene& scene)
@@ -173,28 +174,29 @@ void ShowCameraControls(ImGuiIO& io, Scene& scene)
 	}
 
 	auto& activeCamera = scene.GetActiveCamera();
-	auto newCameraParameters = activeCamera.GetCameraParameters();
+	//newCameraParameters = activeCamera.GetCameraParameters();
+	auto newLookAtParameters = activeCamera.GetLookAtParameters();
 
 	ImGui::Text("Look At");
 	ImGui::Text("Eye:");
-	ImGui::SliderFloat("Eye X", &newCameraParameters[0][0], -worldRadius, worldRadius);
-	ImGui::SliderFloat("Eye Y", &newCameraParameters[0][1], -worldRadius, worldRadius);
-	ImGui::SliderFloat("Eye Z", &newCameraParameters[0][2], -worldRadius, worldRadius);
+	ImGui::SliderFloat("Eye X", &newLookAtParameters.eye.x, -worldRadius, worldRadius);
+	ImGui::SliderFloat("Eye Y", &newLookAtParameters.eye.y, -worldRadius, worldRadius);
+	ImGui::SliderFloat("Eye Z", &newLookAtParameters.eye.z, -worldRadius, worldRadius);
 
 	ImGui::Text("At:");
-	ImGui::SliderFloat("At X", &newCameraParameters[1][0], -worldRadius, worldRadius);
-	ImGui::SliderFloat("At Y", &newCameraParameters[1][1], -worldRadius, worldRadius);
-	ImGui::SliderFloat("At Z", &newCameraParameters[1][2], -worldRadius, worldRadius);
+	ImGui::SliderFloat("At X", &newLookAtParameters.at.x, -worldRadius, worldRadius);
+	ImGui::SliderFloat("At Y", &newLookAtParameters.at.y, -worldRadius, worldRadius);
+	ImGui::SliderFloat("At Z", &newLookAtParameters.at.z, -worldRadius, worldRadius);
 
 	ImGui::Text("Up:");
-	ImGui::SliderFloat("Up X", &newCameraParameters[2][0], -worldRadius, worldRadius);
-	ImGui::SliderFloat("Up Y", &newCameraParameters[2][1], -worldRadius, worldRadius);
-	ImGui::SliderFloat("Up Z", &newCameraParameters[2][2], -worldRadius, worldRadius);
+	ImGui::SliderFloat("Up X", &newLookAtParameters.up.x, -worldRadius, worldRadius);
+	ImGui::SliderFloat("Up Y", &newLookAtParameters.up.y, -worldRadius, worldRadius);
+	ImGui::SliderFloat("Up Z", &newLookAtParameters.up.z, -worldRadius, worldRadius);
 
 	ImGui::Text("Camera Poistion:");
-	ImGui::Text("X:%.2f Y:%.2f Z:%.2f", newCameraParameters[0][0],newCameraParameters[0][1],newCameraParameters[0][2]);
+	ImGui::Text("X:%.2f Y:%.2f Z:%.2f", newLookAtParameters.eye.x,newLookAtParameters.eye.y,newLookAtParameters.eye.z);
 
-	activeCamera.SetCameraLookAt(newCameraParameters[0], newCameraParameters[1], newCameraParameters[2]);
+	activeCamera.SetCameraLookAt(newLookAtParameters.eye, newLookAtParameters.at, newLookAtParameters.up);
 }
 
 void ShowModelControls(ImGuiIO& io, Scene& scene)

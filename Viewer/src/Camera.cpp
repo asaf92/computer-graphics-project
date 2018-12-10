@@ -16,10 +16,11 @@ Camera::Camera() : Camera::Camera(glm::vec3(3, 3,-3),
 Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
 	zoom(1.0)
 {
-	orthographicProjectionParameters = { -5.0f ,5.0f ,-5.0f ,5.0f ,-5.0f ,5.0f };
+	orthographicProjectionParameters = { -1.0f ,1.0f ,-1.0f ,1.0f ,-1.0f ,1.0f };
+	perspectiveProjectionParameters = { 60.0f, 4 / 3, 1.0f,4.0f };
 	SetCameraLookAt(eye, at, up);
-	SetPerspectiveProjection(60.0f, 4.0f / 3.0f, 0.1f, 9.0f);
-	//SetOrthographicProjection(-2.0f,2.0f,-2.0f,2.0f,0.1f,2.0f);
+	projectionTransformation = glm::mat4x4(1);
+	activeProjectionType = None;
 }
 
 Camera::~Camera()
@@ -28,35 +29,31 @@ Camera::~Camera()
 
 void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up)
 {
-	cameraParameters[0] = eye;
-	cameraParameters[1] = at;
-	cameraParameters[2] = up;
-	
-	// In order to keep looking straight:
-	// cameraParameters[1][2] = cameraParameters[0][2];
+	lookAtParameters.eye = eye;
+	lookAtParameters.at = at;
+	lookAtParameters.up = up;
 
 	glm::vec3 straight = glm::normalize(at - eye);
-	glm::vec3 upVector = glm::normalize(up);
 	glm::vec3 right = glm::normalize(glm::cross(up, straight));
-	upVector = glm::normalize(glm::cross(straight,right));
+	glm::vec3 upVector = glm::normalize(glm::cross(straight,right));
 
 	glm::mat4x4 viewMatrix(1);
 	viewMatrix[0][0] = right.x;
-	viewMatrix[0][1] = right.y;
-	viewMatrix[0][2] = right.z;
-	viewMatrix[0][3] = glm::dot(-right, eye);
-	viewMatrix[1][0] = upVector.x;
+	viewMatrix[1][0] = right.y;
+	viewMatrix[2][0] = right.z;
+	viewMatrix[0][1] = upVector.x;
 	viewMatrix[1][1] = upVector.y;
-	viewMatrix[1][2] = upVector.z;
-	viewMatrix[1][3] = glm::dot(-upVector, eye);
-	viewMatrix[2][0] = -straight.x;
-	viewMatrix[2][1] = -straight.y;
+	viewMatrix[2][1] = upVector.z;
+	viewMatrix[0][2] = -straight.x;
+	viewMatrix[1][2] = -straight.y;
 	viewMatrix[2][2] = -straight.z;
-	viewMatrix[2][3] = glm::dot(-straight, eye);
 	viewMatrix[3][0] = 0.0f;
 	viewMatrix[3][1] = 0.0f;
 	viewMatrix[3][2] = 0.0f;
 	viewMatrix[3][3] = 1.0f;
+	viewMatrix[0][3] = -glm::dot(right, eye);
+	viewMatrix[1][3] = -glm::dot(upVector, eye);
+	viewMatrix[2][3] = -glm::dot(straight, eye);
 
 	viewTransformation = viewMatrix;
 }
@@ -87,7 +84,7 @@ void Camera::SetOrthographicProjection(float left, float right, float top, float
 
 void Camera::SetPerspectiveProjection()
 {
-	SetPerspectiveProjection(ProjectionValues[0],ProjectionValues[1],ProjectionValues[2],ProjectionValues[3]);
+	SetPerspectiveProjection(perspectiveProjectionParameters.fov, perspectiveProjectionParameters.aspect, perspectiveProjectionParameters.zNear, perspectiveProjectionParameters.zFar);
 }
 
 void Camera::SetPerspectiveProjection(
@@ -96,10 +93,10 @@ void Camera::SetPerspectiveProjection(
 	const float near,
 	const float far)
 {
-	ProjectionValues[0] = fovy;
-	ProjectionValues[1]= aspectRatio;
-	ProjectionValues[2]= near;
-	ProjectionValues[3]= far;
+	perspectiveProjectionParameters.fov = fovy;
+	perspectiveProjectionParameters.aspect= aspectRatio;
+	perspectiveProjectionParameters.zNear= near;
+	perspectiveProjectionParameters.zFar= far;
 
 	float fov = fovy * 0.01745329251994329576923690768489f; // pi/180
 	

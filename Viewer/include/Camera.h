@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include "MeshModel.h"
 #include "ProjectionType.h"
+#include "LookAtParameters.h"
 
 /*
  * Camera class. This class takes care of all the camera transformations and manipulations.
@@ -32,11 +33,11 @@ struct OrthographicProjectionParameters {
 class Camera
 {
 private:
-	glm::mat3x3 cameraParameters;
+	LookAtParameters lookAtParameters;
 	glm::mat4x4 viewTransformation;
 	glm::mat4x4 projectionTransformation;
-	glm::vec4 ProjectionValues;
 	OrthographicProjectionParameters orthographicProjectionParameters;
+	PerspectiveProjectionParameters perspectiveProjectionParameters;
 	ProjectionType activeProjectionType;
 	float zoom;
 	void SetOrthographicProjection(float left, float right, float top, float bottom, float zNear, float zFar);
@@ -48,9 +49,9 @@ public:
 	~Camera();
 
 	// Sets the viewTransformation matrix
+	LookAtParameters GetLookAtParameters() const { return lookAtParameters; }
 	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 	void SetOrthographicProjection();
-	glm::mat3x3& GetCameraParameters() { return cameraParameters; }
 	void SetPerspectiveProjection();
 	void RenderProjectionMatrix();
 	void SetZoom(const float zoom) { this->zoom = zoom; };
@@ -63,13 +64,15 @@ public:
 	void SelectProjectionType(ProjectionType selection) { activeProjectionType = selection; }
 	const ProjectionType GetProjectionType() const { return activeProjectionType; }
 
-	float GetFoV()			{ return ProjectionValues[0]; }
-	float GetAspectRatio()	{ return ProjectionValues[1]; }
-	float GetNear()			{ return ProjectionValues[2]; }
-	float GetFar()			{ return ProjectionValues[3]; }
+	float GetFoV()			{ return perspectiveProjectionParameters.fov; }
+	float GetAspectRatio()	{ return perspectiveProjectionParameters.aspect; }
+	float GetNear()			{ return perspectiveProjectionParameters.zNear; }
+	float GetFar()			{ return perspectiveProjectionParameters.zFar; }
 
 	const OrthographicProjectionParameters GetOrthographicProjectionParameters() const;
 	void SetOrthographicProjectionParameters(OrthographicProjectionParameters parameters);
+	const PerspectiveProjectionParameters GetPerspectiveProjectionParameters() const { return perspectiveProjectionParameters; };
+	void SetPerspectiveProjectionParameters(PerspectiveProjectionParameters parameters) { perspectiveProjectionParameters = parameters; };
 
 	// Move this later to private
 	void SetPerspectiveProjection(const float fovy,const float aspect,const float near,const float far);
