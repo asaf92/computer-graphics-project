@@ -69,8 +69,8 @@ public:
 	float GetNear()			{ return perspectiveProjectionParameters.zNear; }
 	float GetFar()			{ return perspectiveProjectionParameters.zFar; }
 
-	const OrthographicProjectionParameters GetOrthographicProjectionParameters() const;
-	void SetOrthographicProjectionParameters(OrthographicProjectionParameters parameters);
+	const OrthographicProjectionParameters GetOrthographicProjectionParameters() const { return orthographicProjectionParameters; };
+	void SetOrthographicProjectionParameters(OrthographicProjectionParameters parameters) { orthographicProjectionParameters = parameters; };
 	const PerspectiveProjectionParameters GetPerspectiveProjectionParameters() const { return perspectiveProjectionParameters; };
 	void SetPerspectiveProjectionParameters(PerspectiveProjectionParameters parameters) { perspectiveProjectionParameters = parameters; };
 

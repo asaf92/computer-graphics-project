@@ -148,12 +148,3 @@ void Camera::RenderProjectionMatrix()
 	}
 }
 
-const OrthographicProjectionParameters Camera::GetOrthographicProjectionParameters() const
-{
-	return orthographicProjectionParameters;
-}
-
-void Camera::SetOrthographicProjectionParameters(OrthographicProjectionParameters parameters)
-{
-	orthographicProjectionParameters = parameters;
-}
