@@ -94,7 +94,7 @@ void ShowTransformationMatrices(ImGuiIO& io, Scene& scene)
 		{
 			PrintMatrix(projectionMatrix, "Perspective Projection Matrix");
 			auto perspectiveParameters = activeCamera.GetPerspectiveProjectionParameters();
-			compare = glm::perspective(perspectiveParameters.fov, perspectiveParameters.aspect, perspectiveParameters.zNear, perspectiveParameters.zFar);
+			compare = glm::perspective(perspectiveParameters.fov * 0.01745329251994329576923690768489f, perspectiveParameters.aspect, perspectiveParameters.zNear, perspectiveParameters.zFar);
 			PrintMatrix(compare, "Libary Perspective Matrix");
 		}
 		else if (projectionType == Ortographic)
