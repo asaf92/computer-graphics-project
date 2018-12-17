@@ -134,7 +134,7 @@ void ShowTransformationMatrices(ImGuiIO& io, Scene& scene)
 		auto& up = parameters.up;
 		glm::mat4 compare = glm::lookAt(eye, at, up);
 		PrintMatrix(compare, "Libary lookAt Matrix");
-		if (compare != projectionMatrix)
+		if (compare != viewMatrix)
 		{
 			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Libary matrix != MeshViewer matrix!");
 		}
