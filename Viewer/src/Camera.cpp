@@ -32,28 +32,28 @@ void Camera::SetCameraLookAt()
 	SetCameraLookAt(lookAtParameters.eye, lookAtParameters.at, lookAtParameters.up);
 }
 
-void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up)
+void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& upParameter)
 {
 	if (useLibraryViewMatrix)
 	{
-		viewTransformation = glm::lookAt(eye, at, up);
+		viewTransformation = glm::lookAt(eye, at, upParameter);
 		return;
 	}
 
 	lookAtParameters.eye = eye;
 	lookAtParameters.at = at;
-	lookAtParameters.up = up;
+	lookAtParameters.up = upParameter;
 
-	glm::vec3 straight = glm::normalize(at - eye);
-	glm::vec3 right = glm::normalize(glm::cross(up, straight));
-	glm::vec3 upVector = glm::cross(straight,right);
+	glm::vec3 straight(glm::normalize(at - eye));
+	glm::vec3 right(glm::normalize(glm::cross(straight,upParameter)));
+	glm::vec3 upVector(glm::cross(right,straight));
 
 	glm::mat4 viewMatrix =
 	{
-		glm::vec4(right.x,up.x,straight.x,at.x),
-		glm::vec4(right.y,up.y,straight.y,at.y),
-		glm::vec4(right.z,up.z,straight.z,at.z),
-		glm::vec4(-glm::dot(right,eye),-glm::dot(upVector,eye),-glm::dot(straight,eye),1)
+		glm::vec4(right.x,upVector.x,-straight.x,0),
+		glm::vec4(right.y,upVector.y,-straight.y,0),
+		glm::vec4(right.z,upVector.z,-straight.z,0),
+		glm::vec4(-glm::dot(right,eye),-glm::dot(upVector,eye),glm::dot(straight,eye),1)
 	};
 
 	viewTransformation = viewMatrix;
