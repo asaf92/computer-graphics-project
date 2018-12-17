@@ -51,6 +51,7 @@ public:
 	Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 	~Camera();
 
+
 	// Library matrices overriding
 	void SetUseLibraryProjectionMatrix(bool value) { useLibraryProjectionMatrix = value; }
 	bool GetUseLibraryProjectionMatrix() { return useLibraryProjectionMatrix; }
@@ -59,6 +60,7 @@ public:
 
 	// Sets the viewTransformation matrix
 	LookAtParameters GetLookAtParameters() const { return lookAtParameters; }
+	void SetCameraLookAt();
 	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 	void SetOrthographicProjection();
 	void SetPerspectiveProjection();

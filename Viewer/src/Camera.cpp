@@ -27,6 +27,11 @@ Camera::~Camera()
 {
 }
 
+void Camera::SetCameraLookAt()
+{
+	SetCameraLookAt(lookAtParameters.eye, lookAtParameters.at, lookAtParameters.up);
+}
+
 void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up)
 {
 	if (useLibraryViewMatrix)

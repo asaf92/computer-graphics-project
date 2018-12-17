@@ -136,6 +136,7 @@ void ShowTransformationMatrices(ImGuiIO& io, Scene& scene)
 	}
 	activeCamera.SetUseLibraryProjectionMatrix(useLibraryProjectionMatrix);
 	activeCamera.SetUseLibraryViewMatrix(useLibraryViewMatrix);
+	activeCamera.SetCameraLookAt(); // Update camera
 
 	if (scene.GetModelCount() == 0){ return; }
 	const auto& activeModel = scene.GetActiveModel();
