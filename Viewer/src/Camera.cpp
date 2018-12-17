@@ -37,23 +37,13 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
 	glm::vec3 right = glm::normalize(glm::cross(up, straight));
 	glm::vec3 upVector = glm::normalize(glm::cross(straight,right));
 
-	glm::mat4x4 viewMatrix(1);
-	viewMatrix[0][0] = right.x;
-	viewMatrix[1][0] = right.y;
-	viewMatrix[2][0] = right.z;
-	viewMatrix[0][1] = upVector.x;
-	viewMatrix[1][1] = upVector.y;
-	viewMatrix[2][1] = upVector.z;
-	viewMatrix[0][2] = -straight.x;
-	viewMatrix[1][2] = -straight.y;
-	viewMatrix[2][2] = -straight.z;
-	viewMatrix[3][0] = 0.0f;
-	viewMatrix[3][1] = 0.0f;
-	viewMatrix[3][2] = 0.0f;
-	viewMatrix[3][3] = 1.0f;
-	viewMatrix[0][3] = -glm::dot(right, eye);
-	viewMatrix[1][3] = -glm::dot(upVector, eye);
-	viewMatrix[2][3] = -glm::dot(straight, eye);
+	glm::mat4 viewMatrix =
+	{
+		glm::vec4(right.x,right.y,right.z,0),
+		glm::vec4(up.x,up.y,up.z,0),
+		glm::vec4(straight.x,straight.y,straight.z,0),
+		glm::vec4(-glm::dot(right,eye),-glm::dot(upVector,eye),-glm::dot(straight,eye),1)
+	};
 
 	viewTransformation = viewMatrix;
 }
@@ -111,16 +101,6 @@ void Camera::SetPerspectiveProjection(
 	result[3][2] = (2.0f * far * near) / (near - far);
 	
 	projectionTransformation = result;
-	//float height = near * glm::tan(glm::radians(fovy)) / 2.0f;
-	//float width = height * aspectRatio;
-	//float left = -width;
-	//float right = width;
-	//float bottom = -height;
-	//float top = height;
-	//float zNear = near;
-	//float zFar = far;
-
-	//projectionTransformation = CreateFrustum(left, right, top, bottom, zNear, zFar);
 }
 
 glm::mat4x4 Camera::CreateFrustum(float left, float right, float top, float bottom, float near, float far)
