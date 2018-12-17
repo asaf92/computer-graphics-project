@@ -205,18 +205,33 @@ void Renderer::Render(Scene& scene)
 		auto currentModel = *iterator;
 		const glm::mat4& worldTransform = currentModel->GetWorldTransformation();
 		std::vector<glm::vec3>& vertices = currentModel->GetVerticesVector();
+		const auto& normals = currentModel->GetNormalsVector();
 		std::vector<Face>& faces = currentModel->GetFacesVector();
 
 		glm::mat4x4 transformMatrix = projectionMatrix *  viewMatrix * worldTransform;
-		// Go through every face and draw triangles of pipelined vertices
+		
+		// Looping through all faces
 		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
 		{
-			const int firstPointIndex  = facesIterator->GetVertexIndex(0) - 1; // -1 because the indices start with 1
-			const int secondPointIndex = facesIterator->GetVertexIndex(1) - 1;
-			const int thirdPointIndex  = facesIterator->GetVertexIndex(2) - 1;
-			glm::vec4 PointA = Utils::Vec4FromVec3(vertices[firstPointIndex]);
-			glm::vec4 PointB = Utils::Vec4FromVec3(vertices[secondPointIndex]);
-			glm::vec4 PointC = Utils::Vec4FromVec3(vertices[thirdPointIndex]);
+			// These 3 integers will be used later for normals as well
+			int firstIndex  = facesIterator->GetVertexIndex(0) - 1; // -1 because the indices start with 1
+			int secondIndex = facesIterator->GetVertexIndex(1) - 1;
+			int thirdIndex  = facesIterator->GetVertexIndex(2) - 1;
+			glm::vec4 PointA = Utils::Vec4FromVec3(vertices[firstIndex]);
+			glm::vec4 PointB = Utils::Vec4FromVec3(vertices[secondIndex]);
+			glm::vec4 PointC = Utils::Vec4FromVec3(vertices[thirdIndex]);
+			glm::vec4 PointANormalTip;
+			glm::vec4 PointBNormalTip;
+			glm::vec4 PointCNormalTip;
+
+			if (scene.GetShowNormals() == true)
+			{
+				// It's important to assign the value before PointA goes thorugh model to world transformation
+				PointANormalTip = PointA;
+				PointBNormalTip = PointB;
+				PointCNormalTip = PointC;
+			}
+
 			PointA = transformMatrix * PointA;
 			PointB = transformMatrix * PointB;
 			PointC = transformMatrix * PointC;
@@ -227,6 +242,24 @@ void Renderer::Render(Scene& scene)
 			drawTriangle(Point(PointA.x, PointA.y), 
 						 Point(PointB.x, PointB.y), 
 						 Point(PointC.x, PointC.y));
+
+			if (scene.GetShowNormals() == false) { continue; }
+			float drawLength = 0.05f;
+			firstIndex = facesIterator->GetNormalIndex(0) - 1; // -1 because the indices start with 1
+			secondIndex = facesIterator->GetNormalIndex(1) - 1;
+			thirdIndex = facesIterator->GetNormalIndex(2) - 1;
+			PointANormalTip += Utils::Vec4FromVec3(normals[firstIndex]) * drawLength;
+			PointBNormalTip += Utils::Vec4FromVec3(normals[secondIndex])* drawLength;
+			PointCNormalTip += Utils::Vec4FromVec3(normals[thirdIndex]) * drawLength;
+			PointANormalTip = transformMatrix * PointANormalTip;
+			PointBNormalTip = transformMatrix * PointBNormalTip;
+			PointCNormalTip = transformMatrix * PointCNormalTip;
+			PointANormalTip = PointANormalTip / PointANormalTip.w;
+			PointBNormalTip = PointBNormalTip / PointBNormalTip.w;
+			PointCNormalTip = PointCNormalTip / PointCNormalTip.w;
+			draw3DLine(PointA, PointANormalTip, glm::mat4(1), glm::mat4(1),glm::vec3(1));
+			draw3DLine(PointB, PointBNormalTip, glm::mat4(1), glm::mat4(1),glm::vec3(1));
+			draw3DLine(PointC, PointCNormalTip, glm::mat4(1), glm::mat4(1),glm::vec3(1));
 		}
 	}
 }

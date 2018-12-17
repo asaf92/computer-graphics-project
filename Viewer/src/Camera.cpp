@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-Camera::Camera() : Camera::Camera(glm::vec3(3, 3,-3),
+Camera::Camera() : Camera::Camera(glm::vec3(1, 1,-1),
 								  glm::vec3(0, 0, 0),
 								  glm::vec3(0, 1, 0))
 {

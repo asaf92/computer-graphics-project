@@ -49,9 +49,7 @@ public:
 	void SetViewport(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
 
 	void draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4 & projectionMatrix, const glm::mat4x4 & viewMatrix);
-
 	void draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4 & projectionMatrix, const glm::mat4x4 & viewMatrix, const glm::vec3 & color);
-
 
 	// Add more methods/functionality as needed...
 };

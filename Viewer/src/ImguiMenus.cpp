@@ -24,6 +24,7 @@ static float worldRadius = 3.0f;
 static bool showModelControls =           false;
 static bool showCameraControls =          false;
 static bool showProjectionControls =      false;
+static bool showNormals =				  false;
 
 glm::vec4 clearColor = glm::vec4(0.8f, 0.8f, 0.8f, 1.00f);
 
@@ -39,6 +40,12 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 
 	ImGui::Begin("Main Menu");
 	
+	if (ImGui::CollapsingHeader("General"))
+	{
+		ImGui::Checkbox("Show normal vectors", &showNormals);
+		scene.SetShowNormals(showNormals);
+	}
+
 	if (ImGui::CollapsingHeader("Transformation Matrices"))
 	{
 		ShowTransformationMatrices(io,scene);

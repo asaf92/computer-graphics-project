@@ -21,6 +21,8 @@ private:
 	int activeCameraIndex;
 	int activeModelIndex;
 
+	bool showNormals = false;
+
 public:
 	Scene();
 	~Scene();
@@ -41,4 +43,6 @@ public:
 	void SetActiveModelIndex(int index);
 	const int GetActiveModelIndex() const;
 
+	void SetShowNormals(bool value) { showNormals = value; }
+	bool GetShowNormals() const { return showNormals; }
 };

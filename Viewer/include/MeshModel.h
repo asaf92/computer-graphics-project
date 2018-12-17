@@ -59,6 +59,7 @@ public:
 
 	//Getters
 	std::vector<glm::vec3>& GetVerticesVector() { return vertices; }
+	const std::vector<glm::vec3>& GetNormalsVector() { return normals; }
 	std::vector<Face>& GetFacesVector() { return faces; }
 	const glm::mat4x4& GetWorldTransformation();
 	const glm::vec4& GetColor()             const;
