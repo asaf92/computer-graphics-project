@@ -20,7 +20,7 @@ Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
 	perspectiveProjectionParameters = { 60.0f, 4 / 3, 1.0f,4.0f };
 	SetCameraLookAt(eye, at, up);
 	projectionTransformation = glm::mat4x4(1);
-	activeProjectionType = None;
+	activeProjectionType = Perspective;
 }
 
 Camera::~Camera()
@@ -29,19 +29,25 @@ Camera::~Camera()
 
 void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up)
 {
+	if (useLibraryViewMatrix)
+	{
+		viewTransformation = glm::lookAt(eye, at, up);
+		return;
+	}
+
 	lookAtParameters.eye = eye;
 	lookAtParameters.at = at;
 	lookAtParameters.up = up;
 
 	glm::vec3 straight = glm::normalize(at - eye);
 	glm::vec3 right = glm::normalize(glm::cross(up, straight));
-	glm::vec3 upVector = glm::normalize(glm::cross(straight,right));
+	glm::vec3 upVector = glm::cross(straight,right);
 
 	glm::mat4 viewMatrix =
 	{
-		glm::vec4(right.x,right.y,right.z,0),
-		glm::vec4(up.x,up.y,up.z,0),
-		glm::vec4(straight.x,straight.y,straight.z,0),
+		glm::vec4(right.x,up.x,straight.x,at.x),
+		glm::vec4(right.y,up.y,straight.y,at.y),
+		glm::vec4(right.z,up.z,straight.z,at.z),
 		glm::vec4(-glm::dot(right,eye),-glm::dot(upVector,eye),-glm::dot(straight,eye),1)
 	};
 
@@ -74,7 +80,13 @@ void Camera::SetOrthographicProjection(float left, float right, float top, float
 
 void Camera::SetPerspectiveProjection()
 {
+	if (useLibraryProjectionMatrix) 
+	{
+		projectionTransformation = glm::perspective(perspectiveProjectionParameters.fov * 0.01745329251994329576923690768489f, perspectiveProjectionParameters.aspect, perspectiveProjectionParameters.zNear, perspectiveProjectionParameters.zFar);
+		return;
+	}
 	SetPerspectiveProjection(perspectiveProjectionParameters.fov, perspectiveProjectionParameters.aspect, perspectiveProjectionParameters.zNear, perspectiveProjectionParameters.zFar);
+
 }
 
 void Camera::SetPerspectiveProjection(
@@ -100,6 +112,13 @@ void Camera::SetPerspectiveProjection(
 	result[2][3] = -1.0f;
 	result[3][2] = (2.0f * far * near) / (near - far);
 	
+	//glm::mat4 compare = {
+	//	(),
+	//	(),
+	//	(),
+	//	()
+	//}
+
 	projectionTransformation = result;
 }
 

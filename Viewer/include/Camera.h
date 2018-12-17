@@ -42,11 +42,19 @@ private:
 	float zoom;
 	void SetOrthographicProjection(float left, float right, float top, float bottom, float zNear, float zFar);
 	glm::mat4x4 CreateFrustum(float left, float right, float top, float bottom, float, float);
+	bool useLibraryProjectionMatrix = false;
+	bool useLibraryViewMatrix = false;
 
 public:
 	Camera();
 	Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 	~Camera();
+
+	// Library matrices overriding
+	void SetUseLibraryProjectionMatrix(bool value) { useLibraryProjectionMatrix = value; }
+	bool GetUseLibraryProjectionMatrix() { return useLibraryProjectionMatrix; }
+	void SetUseLibraryViewMatrix(bool value) { useLibraryViewMatrix = value; }
+	bool GetUseLibraryViewMatrix() { return useLibraryViewMatrix; }
 
 	// Sets the viewTransformation matrix
 	LookAtParameters GetLookAtParameters() const { return lookAtParameters; }

@@ -78,17 +78,70 @@ void PrintMatrix(const glm::mat4x4& matrix, const char* name)
 void ShowTransformationMatrices(ImGuiIO& io, Scene& scene)
 {
 	if (scene.GetCameraCount() == 0) { return; }
-	const auto& activeCamera =     scene.GetActiveCamera();
+	auto& activeCamera =     scene.GetActiveCamera();
 	const auto& projectionMatrix = activeCamera.GetProjectionMatrix();
 	const auto& viewMatrix =       activeCamera.GetViewMatrix();
+	const auto& projectionType = activeCamera.GetProjectionType();
 
-	PrintMatrix(projectionMatrix, "Projection Matrix");
-	PrintMatrix(viewMatrix, "View Matrix");
+	bool useLibraryProjectionMatrix = activeCamera.GetUseLibraryProjectionMatrix();
+	bool useLibraryViewMatrix = activeCamera.GetUseLibraryViewMatrix();
+
+	glm::mat4 compare = glm::mat4(1);
+
+	if (ImGui::TreeNode("Projection Matrix"))
+	{
+		if (projectionType  == Perspective)
+		{
+			PrintMatrix(projectionMatrix, "Perspective Projection Matrix");
+			auto perspectiveParameters = activeCamera.GetPerspectiveProjectionParameters();
+			compare = glm::perspective(perspectiveParameters.fov, perspectiveParameters.aspect, perspectiveParameters.zNear, perspectiveParameters.zFar);
+			PrintMatrix(compare, "Libary Perspective Matrix");
+		}
+		else if (projectionType == Ortographic)
+		{
+			PrintMatrix(projectionMatrix, "Orthographic Projection Matrix");
+			auto ortographicParameters = activeCamera.GetOrthographicProjectionParameters();
+			compare = glm::ortho(ortographicParameters.left, ortographicParameters.right, ortographicParameters.bottom, ortographicParameters.top, ortographicParameters.zNear, ortographicParameters.zFar);
+			PrintMatrix(compare, "Libary Ortographic Matrix");
+		}
+		else
+		{
+			ImGui::Text("No projection type specified!");
+		}
+
+
+		if (compare != projectionMatrix)
+		{
+			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Libary matrix != MeshViewer matrix!");
+		}
+		ImGui::Checkbox("Use library matrix", &useLibraryProjectionMatrix);
+		ImGui::TreePop();
+	}
+	if(ImGui::TreeNode("View Matrix"))
+	{
+		PrintMatrix(viewMatrix, "View Matrix");
+		auto& activeCamera = scene.GetActiveCamera();
+		LookAtParameters parameters = activeCamera.GetLookAtParameters();
+		auto& eye = parameters.eye;
+		auto& at = parameters.at;
+		auto& up = parameters.up;
+		glm::mat4 compare = glm::lookAt(eye, at, up);
+		PrintMatrix(compare, "Libary lookAt Matrix");
+		if (compare != projectionMatrix)
+		{
+			ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Libary matrix != MeshViewer matrix!");
+		}
+		ImGui::Checkbox("Use library matrix", &useLibraryViewMatrix);
+		ImGui::TreePop();
+	}
+	activeCamera.SetUseLibraryProjectionMatrix(useLibraryProjectionMatrix);
+	activeCamera.SetUseLibraryViewMatrix(useLibraryViewMatrix);
 
 	if (scene.GetModelCount() == 0){ return; }
 	const auto& activeModel = scene.GetActiveModel();
 	const auto& worldMatrix = activeModel->GetWorldTransformation();
 	PrintMatrix(worldMatrix, "World Matrix");
+
 }
 
 void ShowProjectionControls(ImGuiIO& io,Scene& scene)
