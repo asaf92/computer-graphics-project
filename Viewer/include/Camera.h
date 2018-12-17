@@ -44,6 +44,7 @@ private:
 	glm::mat4x4 CreateFrustum(float left, float right, float top, float bottom, float, float);
 	bool useLibraryProjectionMatrix = false;
 	bool useLibraryViewMatrix = false;
+	void SetPerspectiveProjection(const float fovy,const float aspect,const float near,const float far);
 
 public:
 	Camera();
@@ -82,7 +83,5 @@ public:
 	const PerspectiveProjectionParameters GetPerspectiveProjectionParameters() const { return perspectiveProjectionParameters; };
 	void SetPerspectiveProjectionParameters(PerspectiveProjectionParameters parameters) { perspectiveProjectionParameters = parameters; };
 
-	// Move this later to private
-	void SetPerspectiveProjection(const float fovy,const float aspect,const float near,const float far);
 };
 

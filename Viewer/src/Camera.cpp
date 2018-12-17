@@ -82,7 +82,7 @@ void Camera::SetPerspectiveProjection()
 {
 	if (useLibraryProjectionMatrix) 
 	{
-		projectionTransformation = glm::perspective(perspectiveProjectionParameters.fov * 0.01745329251994329576923690768489f, perspectiveProjectionParameters.aspect, perspectiveProjectionParameters.zNear, perspectiveProjectionParameters.zFar);
+		projectionTransformation = glm::perspective((perspectiveProjectionParameters.fov * 0.01745329251994329576923690768489f), perspectiveProjectionParameters.aspect, perspectiveProjectionParameters.zNear, perspectiveProjectionParameters.zFar);
 		return;
 	}
 	SetPerspectiveProjection(perspectiveProjectionParameters.fov, perspectiveProjectionParameters.aspect, perspectiveProjectionParameters.zNear, perspectiveProjectionParameters.zFar);
@@ -90,27 +90,22 @@ void Camera::SetPerspectiveProjection()
 }
 
 void Camera::SetPerspectiveProjection(
-	const float fovy,
-	const float aspectRatio,
-	const float near,
-	const float far)
+	float fov,
+	float aspectRatio,
+	float near,
+	float far)
 {
-	perspectiveProjectionParameters.fov = fovy;
-	perspectiveProjectionParameters.aspect= aspectRatio;
-	perspectiveProjectionParameters.zNear= near;
-	perspectiveProjectionParameters.zFar= far;
+	fov = fov  * 0.01745329251994329576923690768489f;
 
-	float fov = fovy * 0.01745329251994329576923690768489f; // pi/180
-	
 	float tanHalfFovy = tan(fov / 2.0f);
 
-	glm::mat4x4 result(1);
+	glm::mat4x4 result(0);
 
 	result[0][0] = 1.0f / (aspectRatio * tanHalfFovy);
 	result[1][1] = 1.0f / (tanHalfFovy);
-	result[2][2] = (far + near) / (near - far);
+	result[2][2] = -(far + near) / (far - near);
 	result[2][3] = -1.0f;
-	result[3][2] = (2.0f * far * near) / (near - far);
+	result[3][2] = -(2.0f * far * near) / (far - near);
 	
 	//glm::mat4 compare = {
 	//	(),
