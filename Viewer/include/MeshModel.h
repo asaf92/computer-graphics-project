@@ -55,7 +55,6 @@ public:
 	void SetTranslation(glm::vec3 direction) { translationVector = direction; }
 	void SetScaling(glm::vec3 scale)         { scaleSize         = scale; }
 	void SetRotation(const glm::vec3& angle);
-	void Rotate(glm::vec3);
 
 	//Getters
 	std::vector<glm::vec3>& GetVerticesVector() { return vertices; }
