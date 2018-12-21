@@ -258,21 +258,38 @@ void ShowCameraControls(ImGuiIO& io, Scene& scene)
 
 void ShowModelControls(ImGuiIO& io, Scene& scene)
 {
-
-	static float scalingSizesLimit = 5.0f;
-
 	if (scene.GetModelCount() == 0)
 	{
 		ImGui::Text("No models loaded");
 		return;
 	}
 
+	int selectedModelIndex = scene.GetActiveModelIndex();
+	static float scalingSizesLimit = 5.0f;
 	auto& activeModel = scene.GetActiveModel();
 	auto& activeModelTranslationVector = activeModel->GetTranslationVector();
 	auto& activeModelScalingSizes = activeModel->GetScalingVector();
 	auto& models = scene.GetModelsVector();
-	const auto& index = scene.GetActiveModelIndex();
-	std::vector<std::string> names;
+
+	static int selection_mask = (1 << 2);
+	for (int i = 0; i < models.size(); i++)
+	{
+		ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((selection_mask & (1 << i)) ? ImGuiTreeNodeFlags_Selected : 0);
+		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
+		const char* modelName = models[i]->GetModelName().c_str();
+		ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, modelName);
+		if (ImGui::IsItemClicked())
+			selectedModelIndex = i;
+	}
+	if (selectedModelIndex != -1)
+	{
+		// Update selection state. Process outside of tree loop to avoid visual inconsistencies during the clicking-frame.
+		if (ImGui::GetIO().KeyCtrl)
+			selection_mask ^= (1 << selectedModelIndex);          // CTRL+click to toggle
+		else //if (!(selection_mask & (1 << node_clicked))) // Depending on selection behavior you want, this commented bit preserve selection when clicking on item that is part of the selection
+			selection_mask = (1 << selectedModelIndex);           // Click to single-select
+	}
+
 
 	glm::vec3 newTranslationVector;
 	newTranslationVector.x = activeModelTranslationVector.x;
@@ -301,19 +318,24 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	ImGui::SliderFloat("Y Rotation", &newAngle.y, -180.0f, 180.0f);
 	ImGui::SliderFloat("Z Rotation", &newAngle.z, -180.0f, 180.0f);
 	
-	if (ImGui::Button("Next Model"))
-	{
-		if (index + 1 == models.size())
-			scene.SetActiveModelIndex(1);
-		else
-			scene.SetActiveModelIndex(index + 1);
-	}
+
+	// Leaf: The only reason we have a TreeNode at all is to allow selection of the leaf. Otherwise we can use BulletText() or TreeAdvanceToLabelPos()+Text().
+	
+
+	//if (ImGui::Button("Next Model"))
+	//{
+	//	if (index + 1 == models.size())
+	//		scene.SetActiveModelIndex(1);
+	//	else
+	//		scene.SetActiveModelIndex(index + 1);
+	//}
 
 	ImGui::Text("x: %.2f y: %.2f z: %.2f", activeModelTranslationVector.x, activeModelTranslationVector.y, activeModelTranslationVector.z);
 
 	activeModel->SetTranslation(newTranslationVector);
 	activeModel->SetScaling(newScalingSizes);
 	activeModel->SetRotation(newAngle);
+	scene.SetActiveModelIndex(selectedModelIndex);
 }
 
 void DisplayMenuBar(ImGuiIO& io, Scene& scene)
