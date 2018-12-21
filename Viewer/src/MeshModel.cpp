@@ -8,19 +8,21 @@
 #include <algorithm>
 #include <math.h>
 
-MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::string& modelName) :
+
+MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const glm::vec4& color, std::string& name) :
 	faces(faces),
 	vertices(vertices),
 	normals(normals),
-	modelName(modelName),
+	modelName(name),
 	worldTransform(glm::mat4x4(1)),
 	scaleSize(1.0f, 1.0f, 1.0f),
 	rotateAngle(0.0f),
 	rotateTransformation(1),
-	translationVector(glm::vec3(0.0f,0.0f,0.0f)),
+	translationVector(glm::vec3(0.0f, 0.0f, 0.0f)),
 	minimums(0),
 	maximums(0),
-	centerPoint(0)
+	centerPoint(0),
+	color(color)
 {
 	for (std::vector<glm::vec3>::const_iterator iterator = vertices.cbegin(); iterator != vertices.end(); ++iterator)
 	{

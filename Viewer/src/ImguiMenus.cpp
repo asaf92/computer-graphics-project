@@ -270,8 +270,10 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	auto& activeModelTranslationVector = activeModel->GetTranslationVector();
 	auto& activeModelScalingSizes = activeModel->GetScalingVector();
 	auto& models = scene.GetModelsVector();
+	auto color = activeModel->GetColor();
 
 	static int selection_mask = (1 << 2);
+	ImGui::Text("Model Selection");
 	for (int i = 0; i < models.size(); i++)
 	{
 		ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((selection_mask & (1 << i)) ? ImGuiTreeNodeFlags_Selected : 0);
@@ -289,6 +291,9 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 		else //if (!(selection_mask & (1 << node_clicked))) // Depending on selection behavior you want, this commented bit preserve selection when clicking on item that is part of the selection
 			selection_mask = (1 << selectedModelIndex);           // Click to single-select
 	}
+
+	ImGui::Text("Color");
+	ImGui::ColorEdit3("MyColor##1", (float*)&color);
 
 
 	glm::vec3 newTranslationVector;
@@ -335,6 +340,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	activeModel->SetTranslation(newTranslationVector);
 	activeModel->SetScaling(newScalingSizes);
 	activeModel->SetRotation(newAngle);
+	activeModel->SetColor(color);
 	scene.SetActiveModelIndex(selectedModelIndex);
 }
 

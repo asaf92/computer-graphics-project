@@ -141,16 +141,15 @@ void Renderer::drawLine(Line& line, const glm::vec3& color)
 	}
 }
 
-
-void Renderer::drawTriangle(const Point& PointA,const Point& PointB, const Point& PointC)
+void Renderer::drawTriangle(const Point & PointA, const Point & PointB, const Point & PointC, const glm::vec3 color)
 {
 	Point Point_A = toScreenPixel(PointA);
 	Point Point_B = toScreenPixel(PointB);
 	Point Point_C = toScreenPixel(PointC);
 
-	drawLine(Line(Point_A, Point_B));
-	drawLine(Line(Point_B, Point_C));
-	drawLine(Line(Point_C, Point_A));
+	drawLine(Line(Point_A, Point_B),color);
+	drawLine(Line(Point_B, Point_C),color);
+	drawLine(Line(Point_C, Point_A),color);
 }
 
 void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX, int viewportY)
@@ -207,6 +206,8 @@ void Renderer::Render(Scene& scene)
 		std::vector<glm::vec3>& vertices = currentModel->GetVerticesVector();
 		const auto& normals = currentModel->GetNormalsVector();
 		std::vector<Face>& faces = currentModel->GetFacesVector();
+		auto& colorVector = currentModel->GetColor();
+		glm::vec4 color = glm::vec4(colorVector[0], colorVector[1], colorVector[2], 255);
 
 		glm::mat4x4 transformMatrix = projectionMatrix *  viewMatrix * worldTransform;
 		
@@ -241,7 +242,8 @@ void Renderer::Render(Scene& scene)
 
 			drawTriangle(Point(PointA.x, PointA.y), 
 						 Point(PointB.x, PointB.y), 
-						 Point(PointC.x, PointC.y));
+						 Point(PointC.x, PointC.y),
+						 color);
 
 			if (scene.GetShowNormals() == false) { continue; }
 			float drawLength = 0.05f;

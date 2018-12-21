@@ -27,7 +27,8 @@ private:
 	void createBuffers(int viewportWidth, int viewportHeight);
 	void drawLine(Line& line);
 	void drawLine(Line & line, const glm::vec3 & color);
-	void drawTriangle(const Point& PointA, const Point& PointB, const Point& PointC);
+	void drawTriangle(const Point& PointA, const Point& PointB, const Point& PointC) { drawTriangle(PointA,PointB,PointC,glm::vec3(0)); }
+	void drawTriangle(const Point& PointA, const Point& PointB, const Point& PointC, const glm::vec3 color);
 
 	GLuint glScreenTex;
 	GLuint glScreenVtc;

@@ -27,6 +27,7 @@ protected:
 	// User inputs
 	glm::vec3 translationVector;
 	glm::vec3 scaleSize;
+	glm::vec4 color;
 	glm::vec3 rotateAngle;
 
 	// Member functions that return transformation matrices
@@ -41,13 +42,14 @@ protected:
 	glm::vec3 centerPoint;
 
 	// Stuff that I haven't figured out what to do with yet
-	glm::vec4 color;
 	std::string modelName;
 	glm::vec3 minimums;
 	glm::vec3 maximums;
 
 public:
-	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::string& modelName = "");
+	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, std::string& name) : MeshModel(faces, vertices, normals, glm::vec4(0.9f,0.9f,0.0f,1.0f), name) {}
+	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const glm::vec4& color) : MeshModel(faces, vertices, normals, color, std::string("")) {}
+	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const glm::vec4& color, std::string& name );
 	virtual ~MeshModel();
 
 	// Setters
@@ -65,7 +67,6 @@ public:
 	const std::string& GetModelName()       const  { return modelName; }
 	const glm::vec3& GetTranslationVector()	const  { return translationVector; }
 	const glm::vec3& GetScalingVector()     const  { return scaleSize; }
-	//float GetRotationAngle()			    const  { return rotateAngle; }
 
 	// Not sure if needed
 	glm::vec3& GetCenterPoint()						{ return centerPoint; }
