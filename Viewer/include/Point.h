@@ -2,9 +2,9 @@
 
 struct Point
 {
-	double X;
-	double Y;
+	float X;
+	float Y;
 
 	Point() : X(0), Y(0) {}
-	Point(double x, double y) :X(x), Y(y) {}
+	Point(float x, float y) :X(x), Y(y) {}
 };
