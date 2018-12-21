@@ -22,6 +22,7 @@ private:
 	int activeModelIndex;
 
 	bool showNormals = false;
+	bool fillTriangles = true;
 
 public:
 	Scene();
@@ -43,6 +44,9 @@ public:
 	void SetActiveModelIndex(int index);
 	const int GetActiveModelIndex() const;
 
-	void SetShowNormals(bool value) { showNormals = value; }
+	void SetShowNormals(const bool value) { showNormals = value; }
 	bool GetShowNormals() const { return showNormals; }
+
+	void SetFillTriangles(const bool value) { fillTriangles = value; }
+	bool GetFillTriangles() const { return fillTriangles; }
 };

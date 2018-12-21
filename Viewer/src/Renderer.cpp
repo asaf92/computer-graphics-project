@@ -13,9 +13,10 @@
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 
 
-Renderer::Renderer(int viewportWidth, int viewportHeight, int viewportX, int viewportY) :
+Renderer::Renderer(Scene& scene, int viewportWidth, int viewportHeight, int viewportX, int viewportY) :
 	colorBuffer(nullptr),
-	zBuffer(nullptr)
+	zBuffer(nullptr),
+	scene(scene)
 {
 	initOpenGLRendering();
 	SetViewport(viewportWidth, viewportHeight, viewportX, viewportY);
@@ -141,15 +142,34 @@ void Renderer::drawLine(Line& line, const glm::vec3& color)
 	}
 }
 
+/* Function to scan min/max of X and Y values of 3 different Points fast*/
+XYBorders Renderer::minMax(const Point & A, const Point & B, const Point & C) const
+{
+	XYBorders out;
+	out.minX = (float)std::min(A.X, std::min(B.X, C.X));
+	out.minY = (float)std::min(A.Y, std::min(B.Y, C.Y));
+	out.maxX = (float)std::max(A.X, std::min(B.X, C.X));
+	out.maxY = (float)std::max(A.Y, std::min(B.Y, C.Y));
+
+	return out;
+}
+
+void Renderer::fillTriangle(const Point & PointA, const Point & PointB, const Point & PointC,const XYBorders& borders, const glm::vec3 color)
+{
+
+}
+
 void Renderer::drawTriangle(const Point & PointA, const Point & PointB, const Point & PointC, const glm::vec3 color)
 {
+	XYBorders borders = minMax(PointA, PointB, PointC);
 	Point Point_A = toScreenPixel(PointA);
 	Point Point_B = toScreenPixel(PointB);
 	Point Point_C = toScreenPixel(PointC);
-
+	
 	drawLine(Line(Point_A, Point_B),color);
 	drawLine(Line(Point_B, Point_C),color);
 	drawLine(Line(Point_C, Point_A),color);
+	
 }
 
 void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX, int viewportY)
@@ -177,7 +197,7 @@ void Renderer::draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4&
 	drawLine(line,color);
 }
 
-void Renderer::Render(Scene& scene)
+void Renderer::Render()
 {
 	auto& cameras = scene.GetCamerasVector();
 	auto& activeCamera = scene.GetActiveCamera();

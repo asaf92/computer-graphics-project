@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include "Line.h"
+#include "XYBorders.h"
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -16,6 +17,7 @@
 class Renderer
 {
 private:
+	Scene& scene;
 	float *colorBuffer;
 	float *zBuffer;
 	int viewportWidth;
@@ -27,6 +29,8 @@ private:
 	void createBuffers(int viewportWidth, int viewportHeight);
 	void drawLine(Line& line);
 	void drawLine(Line & line, const glm::vec3 & color);
+	XYBorders minMax(const Point& A, const Point& B, const Point& C) const;
+	void fillTriangle(const Point & PointA, const Point & PointB, const Point & PointC, const XYBorders & borders, const glm::vec3 color);
 	void drawTriangle(const Point& PointA, const Point& PointB, const Point& PointC) { drawTriangle(PointA,PointB,PointC,glm::vec3(0)); }
 	void drawTriangle(const Point& PointA, const Point& PointB, const Point& PointC, const glm::vec3 color);
 
@@ -41,10 +45,10 @@ private:
 	void drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
 
 public:
-	Renderer(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
+	Renderer(Scene& scene, int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
 	~Renderer();
 
-	void Render(Scene& scene);
+	void Render();
 	void SwapBuffers();
 	void ClearColorBuffer(const glm::vec3& color);
 	void SetViewport(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
@@ -54,3 +58,4 @@ public:
 
 	// Add more methods/functionality as needed...
 };
+

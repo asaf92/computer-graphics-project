@@ -48,8 +48,8 @@ int main(int argc, char **argv)
 	glfwGetFramebufferSize(window, &frameBufferWidth, &frameBufferHeight);
 
 	// Create the renderer and the scene
-	Renderer renderer = Renderer(frameBufferWidth, frameBufferHeight);
 	Scene scene = Scene();
+	Renderer renderer = Renderer(scene,frameBufferWidth, frameBufferHeight);
 
 	// Setup ImGui
 	ImGuiIO& io = SetupDearImgui(window);
@@ -139,7 +139,7 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 	renderer.ClearColorBuffer(GetClearColor());
 
 	// Render the scene
-	renderer.Render(scene);
+	renderer.Render();
 
 	// Swap buffers
 	renderer.SwapBuffers();
