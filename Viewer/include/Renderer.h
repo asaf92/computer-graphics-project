@@ -31,6 +31,8 @@ private:
 	void drawLine(Line & line, const glm::vec3 & color);
 	XYBorders minMax(const Point& A, const Point& B, const Point& C) const;
 	void fillTriangle(const Point & PointA, const Point & PointB, const Point & PointC, const XYBorders & borders, const glm::vec3 color);
+	float CalcWOneValue(const Point & A, const Point & B, const Point & C, int y, int x);
+	float CalcWTwoValue(const Point & A, const Point & B, const Point & C, int y, float w1);
 	void drawTriangle(const Point& PointA, const Point& PointB, const Point& PointC) { drawTriangle(PointA,PointB,PointC,glm::vec3(0)); }
 	void drawTriangle(const Point& PointA, const Point& PointB, const Point& PointC, const glm::vec3 color);
 

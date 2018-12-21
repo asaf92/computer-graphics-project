@@ -154,21 +154,56 @@ XYBorders Renderer::minMax(const Point & A, const Point & B, const Point & C) co
 	return out;
 }
 
-void Renderer::fillTriangle(const Point & PointA, const Point & PointB, const Point & PointC,const XYBorders& borders, const glm::vec3 color)
+void Renderer::fillTriangle(const Point& A, const Point& B, const Point& C,const XYBorders& borders, const glm::vec3 color)
 {
-
+	float w1, w2;
+	for (int x = borders.minX; x < borders.maxX; x++)
+	{
+		for (int y = borders.minY; y < borders.maxY; y++)
+		{
+			// This is the algorithm in the module (https://www.youtube.com/watch?v=HYAgJN3x4GA)
+			w1 = CalcWOneValue(A, B, C, x,y);
+			if (w1 < 0.0f || w1 > 1.0f) continue;
+			w2 = CalcWTwoValue(A,B,C,y,w1);
+			if (w2 < 0.0f || w2 > 1.0f) continue;
+			if ((w1 + w2) <= 1.0f) // No need to check that it's negative because in this point both w1 and w2 are non-negative
+			{
+				putPixel(x, y,color);
+			}
+		}
+	}
 }
 
-void Renderer::drawTriangle(const Point & PointA, const Point & PointB, const Point & PointC, const glm::vec3 color)
+float Renderer::CalcWTwoValue(const Point & A, const Point & B, const Point & C, int y, float w1)
 {
-	XYBorders borders = minMax(PointA, PointB, PointC);
-	Point Point_A = toScreenPixel(PointA);
-	Point Point_B = toScreenPixel(PointB);
-	Point Point_C = toScreenPixel(PointC);
+	return (y - A.Y - w1 * (B.Y - A.Y))
+		/
+		   (C.Y - A.Y);
+}
+
+float Renderer::CalcWOneValue(const Point & A, const Point & B, const Point & C, int x, int y)
+{
+	return (A.X*(C.Y - A.Y) + (y - A.Y)*(C.X - A.X) - x * (C.Y - A.Y))
+		/
+		   ((B.Y - A.Y)*(C.X - A.X) - (B.X - A.X)*(C.Y - A.Y));
+}
+
+void Renderer::drawTriangle(const Point & parameterPointA, const Point & parameterPointB, const Point & parameterPointC, const glm::vec3 color)
+{
 	
-	drawLine(Line(Point_A, Point_B),color);
-	drawLine(Line(Point_B, Point_C),color);
-	drawLine(Line(Point_C, Point_A),color);
+	Point screenPointA = toScreenPixel(parameterPointA);
+	Point screenPointB = toScreenPixel(parameterPointB);
+	Point screenPointC = toScreenPixel(parameterPointC);
+	
+	drawLine(Line(screenPointA, screenPointB),color);
+	drawLine(Line(screenPointB, screenPointC),color);
+	drawLine(Line(screenPointC, screenPointA),color);
+
+	if (scene.GetFillTriangles()) 
+	{
+		XYBorders borders = minMax(screenPointA, screenPointB, screenPointC);
+		fillTriangle(screenPointA, screenPointB, screenPointC, borders, color);
+	}
 	
 }
 
