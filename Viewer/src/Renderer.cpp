@@ -20,6 +20,16 @@ Renderer::Renderer(Scene& scene, int viewportWidth, int viewportHeight, int view
 {
 	initOpenGLRendering();
 	SetViewport(viewportWidth, viewportHeight, viewportX, viewportY);
+	float maxFloat = 10000.0f;
+	zBuffer = new float*[viewportHeight];
+	for (int i = 0; i < viewportHeight; i++)
+	{
+		zBuffer[i] = new float[viewportWidth];
+		for (int j = 0; j < viewportWidth; j++)
+		{
+			zBuffer[i][j] = maxFloat;
+		}
+	}
 }
 
 Renderer::~Renderer()
@@ -27,6 +37,14 @@ Renderer::~Renderer()
 	if (colorBuffer)
 	{
 		delete[] colorBuffer;
+	}
+	if (zBuffer != nullptr)
+	{
+		for (int i = 0; i < viewportHeight; i++)
+		{
+			delete[] zBuffer[i];
+		}
+		delete[] zBuffer;
 	}
 }
 

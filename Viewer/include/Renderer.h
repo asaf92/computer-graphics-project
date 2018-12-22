@@ -19,7 +19,7 @@ class Renderer
 private:
 	Scene& scene;
 	float *colorBuffer;
-	float *zBuffer;
+	float **zBuffer;
 	int viewportWidth;
 	int viewportHeight;
 	int viewportX;
