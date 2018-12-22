@@ -18,15 +18,6 @@ Renderer::Renderer(Scene& scene, int viewportWidth, int viewportHeight, int view
 	zBuffer(nullptr),
 	scene(scene)
 {
-	zBuffer = new float*[viewportHeight];
-	for (int i = 0; i < viewportHeight; i++)
-	{
-		zBuffer[i] = new float[viewportWidth];
-		for (int j = 0; j < viewportWidth; j++)
-		{
-			zBuffer[i][j] = maxZ;
-		}
-	}
 	initOpenGLRendering();
 	SetViewport(viewportWidth, viewportHeight, viewportX, viewportY);
 }
@@ -37,36 +28,41 @@ Renderer::~Renderer()
 	{
 		delete[] colorBuffer;
 	}
-	if (zBuffer != nullptr)
+	if (zBuffer)
 	{
-		for (int i = 0; i < viewportHeight; i++)
-		{
-			delete[] zBuffer[i];
-		}
 		delete[] zBuffer;
 	}
 }
 
-void Renderer::putPixel(int i, int j, const glm::vec3& color)
+void Renderer::putPixel(int i, int j, const glm::vec3& color,float z = 0.0f)
 {
 	if (i < 0) return; if (i >= viewportWidth) return;
 	if (j < 0) return; if (j >= viewportHeight) return;
+	/*if (zBuffer[INDEX(viewportWidth, i, j, 0)] < z) return;*/
+
 	colorBuffer[INDEX(viewportWidth, i, j, 0)] = color.x;
 	colorBuffer[INDEX(viewportWidth, i, j, 1)] = color.y;
 	colorBuffer[INDEX(viewportWidth, i, j, 2)] = color.z;
 }
 
-void Renderer::putPixel(const int x, const int y, float z, const glm::vec3 & color)
-{
-	if (zBuffer[x][y] < z) return;
-	putPixel(x, y, color);
-}
-
 void Renderer::createBuffers(int viewportWidth, int viewportHeight)
 {
+	if (zBuffer)
+	{
+		delete[] zBuffer;
+	}
 	if (colorBuffer)
 	{
 		delete[] colorBuffer;
+	}
+
+	zBuffer = new float[3 * viewportWidth * viewportHeight];
+	for (int x = 0; x < viewportWidth; x++)
+	{
+		for (int y = 0; y < viewportHeight; y++)
+		{
+			zBuffer[INDEX(viewportWidth,x,y,0)] = maxZ;
+		}
 	}
 
 	colorBuffer = new float[3* viewportWidth * viewportHeight];
@@ -77,6 +73,8 @@ void Renderer::createBuffers(int viewportWidth, int viewportHeight)
 			putPixel(x, y, glm::vec3(0.0f, 0.0f, 0.0f));
 		}
 	}
+
+
 }
 
 void Renderer::ClearColorBuffer(const glm::vec3& color)
@@ -96,7 +94,7 @@ void Renderer::clearZBuffer()
 	{
 		for (int j = 0; j < viewportWidth; j++)
 		{
-			zBuffer[i][j] = maxZ;
+			zBuffer[INDEX(viewportWidth,i,j,0)] = maxZ;
 		}
 	}
 }
@@ -108,69 +106,77 @@ void Renderer::drawLine(Line& line)
 
 void Renderer::drawLine(Line& line, const glm::vec3& color)
 {
-	int x0, x1, y0, y1;
-	glm::vec3 lineColor = color;
-
-	setXZeroToBeSmaller(line, x0, y0, x1, y1);
-	if (y0 == y1 || x0 == x1)
+	float deltaX;
+	float deltaY;
+	float deltaE;
+	float Error;
+	int x;
+	int y;
+	if (abs(line.GetSlope()) < 1)
 	{
-		drawStraightLine(y0, y1, x0, x1, lineColor);
-		return;
-	}
+		line.SetAToHaveSmallerXValue();
+		deltaX = line.PointB.X - line.PointA.X;
+		deltaY = line.PointB.Y - line.PointA.Y;
+		deltaE = abs(deltaY / deltaX);
+		Error = 0.0;
 
-	double deltaX = (double)x1 - (double)x0;
-	double deltaY = (double)y1 - (double)y0;
-	double deltaE = abs(deltaY / deltaX);
-	double Error  = 0.0;
-
-	// keeping everything in view range
-	int y = std::max(0,y0);
-	int x = std::max(0,x0);
-	x1 = std::min(x1, viewportWidth);
-	y1 = std::min(y1, viewportHeight);
-	
-	//Bresenham's algorithm
-	if (abs(line.GetSlope()) > 1)
-	{
-		deltaE = abs(deltaX / deltaY);
-		for (; y <= y1; y++)
+		//// keeping everything in view range
+		//int x = std::max(0, line.PointA.X);
+		//int y = std::max(0, line.PointA.Y);
+		//x1 = std::min(x1, viewportWidth);
+		//y1 = std::min(y1, viewportHeight);
+		x = (int)floor(line.PointA.X);
+		y = (int)floor(line.PointA.Y);
+		for (; x <= line.PointB.X; x++)
 		{
-			putPixel(x, y, lineColor);
+			putPixel(x, y, color);
 			Error = Error + deltaE;
-			if (Error >= 0.5)
+			if (Error >= 0.5f)
 			{
-				if (deltaX < 0)
+				if (deltaY < 0.0f)
 				{
-					x--;
-					Error = Error - 1.0;
+					y--;
+					Error = Error - 1.0f;
 				}
 
-				if (deltaX > 0)
+				if (deltaY > 0)
 				{
-					x++;
-					Error = Error - 1.0;
+					y++;
+					Error = Error - 1.0f;
 				}
 			}
 		}
 		return;
-	}	
+	}
+	line.SetAToHaveSmallerYValue();
+	deltaX = line.PointB.X - line.PointA.X;
+	deltaY = line.PointB.Y - line.PointA.Y;
+	deltaE = abs(deltaX / deltaY);
+	Error = 0.0;
 
-	for (; x <= x1; x++)
+	//// keeping everything in view range
+	//int x = std::max(0, line.PointA.X);
+	//int y = std::max(0, line.PointA.Y);
+	//x1 = std::min(x1, viewportWidth);
+	//y1 = std::min(y1, viewportHeight);
+	x = (int)floor(line.PointA.X);
+	y = (int)floor(line.PointA.Y);
+	for (; y <= line.PointB.Y; y++)
 	{
-		putPixel(x, y, lineColor);
+		putPixel(x, y, color);
 		Error = Error + deltaE;
-		if (Error >= 0.5)
+		if (Error >= 0.5f)
 		{
-			if (deltaY < 0)
+			if (deltaX < 0.0f)
 			{
-				y--;
-				Error = Error - 1.0;
+				x--;
+				Error = Error - 1.0f;
 			}
 
-			if (deltaY > 0)
+			if (deltaX > 0)
 			{
-				y++;
-				Error = Error - 1.0;
+				x++;
+				Error = Error - 1.0f;
 			}
 		}
 	}
@@ -491,24 +497,6 @@ void Renderer::SwapBuffers()
 
 	// Finally renders the data.
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-}
-
-void Renderer::setXZeroToBeSmaller(Line & line,  int &x0,  int &y0,  int &x1,  int &y1)
-{
-	if (line.PointA.X < line.PointB.X)
-	{
-		x0 = (int)floor(line.PointA.X);
-		y0 = (int)floor(line.PointA.Y);
-		x1 = (int)floor(line.PointB.X);
-		y1 = (int)floor(line.PointB.Y);
-	}
-	else
-	{
-		x0 = (int)floor(line.PointB.X);
-		y0 = (int)floor(line.PointB.Y);
-		x1 = (int)floor(line.PointA.X);
-		y1 = (int)floor(line.PointA.Y);
-	}
 }
 
 void Renderer::drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor)

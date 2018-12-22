@@ -19,15 +19,14 @@ class Renderer
 private:
 	Scene& scene;
 	float *colorBuffer;
-	float **zBuffer;
+	float *zBuffer;
 	int viewportWidth;
 	int viewportHeight;
 	int viewportX;
 	int viewportY;
 	const float maxZ = 10000.0f;
 
-	void putPixel(int x, int y, const glm::vec3& color);
-	void putPixel(const int x, const int y, float z, const glm::vec3& color);
+	void putPixel(int x, int y, const glm::vec3& color,float z);
 	void createBuffers(int viewportWidth, int viewportHeight);
 	void drawLine(Line& line);
 	void drawLine(Line & line, const glm::vec3 & color);
@@ -43,7 +42,6 @@ private:
 
 	void createOpenGLBuffer();
 	void initOpenGLRendering();
-	void setXZeroToBeSmaller(Line & line,  int &x0,  int &y0,  int &x1,  int &y1);
 	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
 	Point toScreenPixel(const Point& point) const;
 	void drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);

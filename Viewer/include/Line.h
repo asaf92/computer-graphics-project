@@ -10,10 +10,8 @@ public:
 
 	Point PointA;
 	Point PointB;
-	double GetSlope() { return _slope; }
-	double GetShift() { return _shift; }
+	float GetSlope();
 
-private:
-	double _slope;
-	double _shift;
+	void SetAToHaveSmallerXValue();
+	void SetAToHaveSmallerYValue();
 };

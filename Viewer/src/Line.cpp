@@ -8,16 +8,33 @@ Line::Line(const Point& a, const Point& b)
 	PointB.X = b.X;
 	PointB.Y = b.Y;
 
-	// y = mx+n -> m= (y2-y1)/(x2-x1)
-	_slope = (b.Y - a.Y) / (a.X - b.X);
-
-	// y=mx+n -> n=y-mx
-	_shift = a.Y - _slope * a.X;
 
 }
 
 Line::Line()
 {
-	_slope = 0;
-	_shift = 0;
+
+}
+
+float Line::GetSlope()
+{
+	return (PointB.Y - PointA.Y) / (PointA.X - PointB.X);
+}
+
+void Line::SetAToHaveSmallerXValue()
+{
+	if (PointA.X < PointB.X) return;
+	// simply swap the two if needed
+	Point tmp = PointA;
+	PointA = PointB;
+	PointB = tmp;
+}
+
+void Line::SetAToHaveSmallerYValue()
+{
+	if (PointA.Y < PointB.Y) return;
+	// simply swap the two if needed
+	Point tmp = PointA;
+	PointA = PointB;
+	PointB = tmp;
 }
