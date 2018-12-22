@@ -175,9 +175,9 @@ XYBorders Renderer::minMax(const Point & A, const Point & B, const Point & C) co
 void Renderer::fillTriangle(const Point& A, const Point& B, const Point& C,const XYBorders& borders, const glm::vec3 color)
 {
 	float w1, w2;
-	for (int x = borders.minX; x < borders.maxX; x++)
+	for (int x = (int)floor(borders.minX); x < (int)ceil(borders.maxX); x++)
 	{
-		for (int y = borders.minY; y < borders.maxY; y++)
+		for (int y = (int)floor(borders.minY); y < (int)ceil(borders.maxY); y++)
 		{
 			// This is the algorithm in the module (https://www.youtube.com/watch?v=HYAgJN3x4GA)
 			w1 = CalcWOneValue(A, B, C, x,y);
@@ -480,17 +480,17 @@ void Renderer::setXZeroToBeSmaller(Line & line,  int &x0,  int &y0,  int &x1,  i
 {
 	if (line.PointA.X < line.PointB.X)
 	{
-		x0 = line.PointA.X;
-		y0 = line.PointA.Y;
-		x1 = line.PointB.X;
-		y1 = line.PointB.Y;
+		x0 = (int)floor(line.PointA.X);
+		y0 = (int)floor(line.PointA.Y);
+		x1 = (int)floor(line.PointB.X);
+		y1 = (int)floor(line.PointB.Y);
 	}
 	else
 	{
-		x0 = line.PointB.X;
-		y0 = line.PointB.Y;
-		x1 = line.PointA.X;
-		y1 = line.PointA.Y;
+		x0 = (int)floor(line.PointB.X);
+		y0 = (int)floor(line.PointB.Y);
+		x1 = (int)floor(line.PointA.X);
+		y1 = (int)floor(line.PointA.Y);
 	}
 }
 
