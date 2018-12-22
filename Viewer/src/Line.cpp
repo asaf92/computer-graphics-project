@@ -21,4 +21,3 @@ Line::Line()
 	_slope = 0;
 	_shift = 0;
 }
-

@@ -18,8 +18,6 @@ Renderer::Renderer(Scene& scene, int viewportWidth, int viewportHeight, int view
 	zBuffer(nullptr),
 	scene(scene)
 {
-	initOpenGLRendering();
-	SetViewport(viewportWidth, viewportHeight, viewportX, viewportY);
 	zBuffer = new float*[viewportHeight];
 	for (int i = 0; i < viewportHeight; i++)
 	{
@@ -29,6 +27,8 @@ Renderer::Renderer(Scene& scene, int viewportWidth, int viewportHeight, int view
 			zBuffer[i][j] = maxZ;
 		}
 	}
+	initOpenGLRendering();
+	SetViewport(viewportWidth, viewportHeight, viewportX, viewportY);
 }
 
 Renderer::~Renderer()
@@ -262,7 +262,7 @@ void Renderer::draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4&
 	PointB = projectionMatrix * viewMatrix * PointB;
 	PointA = PointA / PointA.w;
 	PointB = PointB / PointB.w;
-	Line line = Line(toScreenPixel(Point(PointA.x, PointA.y)), toScreenPixel(Point(PointB.x, PointB.y)));
+	Line line = Line(toScreenPixel(Point(PointA)), toScreenPixel(Point(PointB)));
 	drawLine(line,color);
 }
 
@@ -329,9 +329,9 @@ void Renderer::Render()
 			PointB = PointB / PointB.w;
 			PointC = PointC / PointC.w;
 
-			drawTriangle(Point(PointA.x, PointA.y), 
-						 Point(PointB.x, PointB.y), 
-						 Point(PointC.x, PointC.y),
+			drawTriangle(Point(PointA), 
+						 Point(PointB), 
+						 Point(PointC),
 						 color);
 
 			if (scene.GetShowNormals() == false) { continue; }
@@ -376,6 +376,7 @@ Point Renderer::toScreenPixel(const Point& point) const
 
 	out.X = viewportWidth  * ratioX;
 	out.Y = viewportHeight * ratioY;
+	out.Z = point.Z;
 	return out;
 }
 
