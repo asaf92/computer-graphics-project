@@ -24,8 +24,10 @@ private:
 	int viewportHeight;
 	int viewportX;
 	int viewportY;
+	const float maxZ = 10000.0f;
 
 	void putPixel(int x, int y, const glm::vec3& color);
+	void putPixel(const int x, const int y, float z, const glm::vec3& color);
 	void createBuffers(int viewportWidth, int viewportHeight);
 	void drawLine(Line& line);
 	void drawLine(Line & line, const glm::vec3 & color);
@@ -45,6 +47,7 @@ private:
 	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
 	Point toScreenPixel(const Point& point) const;
 	void drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
+	void clearZBuffer();
 
 public:
 	Renderer(Scene& scene, int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);

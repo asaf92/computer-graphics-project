@@ -20,14 +20,13 @@ Renderer::Renderer(Scene& scene, int viewportWidth, int viewportHeight, int view
 {
 	initOpenGLRendering();
 	SetViewport(viewportWidth, viewportHeight, viewportX, viewportY);
-	float maxFloat = 10000.0f;
 	zBuffer = new float*[viewportHeight];
 	for (int i = 0; i < viewportHeight; i++)
 	{
 		zBuffer[i] = new float[viewportWidth];
 		for (int j = 0; j < viewportWidth; j++)
 		{
-			zBuffer[i][j] = maxFloat;
+			zBuffer[i][j] = maxZ;
 		}
 	}
 }
@@ -57,6 +56,12 @@ void Renderer::putPixel(int i, int j, const glm::vec3& color)
 	colorBuffer[INDEX(viewportWidth, i, j, 2)] = color.z;
 }
 
+void Renderer::putPixel(const int x, const int y, float z, const glm::vec3 & color)
+{
+	if (zBuffer[x][y] < z) return;
+	putPixel(x, y, color);
+}
+
 void Renderer::createBuffers(int viewportWidth, int viewportHeight)
 {
 	if (colorBuffer)
@@ -81,6 +86,17 @@ void Renderer::ClearColorBuffer(const glm::vec3& color)
 		for (int j = 0; j < viewportHeight; j++)
 		{
 			putPixel(i, j, color);
+		}
+	}
+}
+
+void Renderer::clearZBuffer()
+{
+	for (int i = 0; i < viewportHeight; i++)
+	{
+		for (int j = 0; j < viewportWidth; j++)
+		{
+			zBuffer[i][j] = maxZ;
 		}
 	}
 }
