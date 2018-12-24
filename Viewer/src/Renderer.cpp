@@ -195,8 +195,8 @@ XYBorders Renderer::minMax(const Point & A, const Point & B, const Point & C) co
 	XYBorders out;
 	out.minX = (float)std::min(A.X, std::min(B.X, C.X));
 	out.minY = (float)std::min(A.Y, std::min(B.Y, C.Y));
-	out.maxX = (float)std::max(A.X, std::min(B.X, C.X));
-	out.maxY = (float)std::max(A.Y, std::min(B.Y, C.Y));
+	out.maxX = (float)std::max(A.X, std::max(B.X, C.X));
+	out.maxY = (float)std::max(A.Y, std::max(B.Y, C.Y));
 
 	return out;
 }
@@ -206,18 +206,29 @@ void Renderer::fillTriangle(const Point& A, const Point& B, const Point& C,const
 	float w1, w2;
 	float z = A.Z +B.Z + C.Z;
 	z /= 3;
-	for (int x = (int)floor(borders.minX); x < (int)ceil(borders.maxX); x++)
+	int minX = (int)floor(borders.minX);
+	int maxX = (int)ceil(borders.maxX);
+	int minY = (int)floor(borders.minY);
+	int maxY = (int)ceil(borders.maxY);
+	for (int x = minX; x < maxX; x++)
 	{
-		for (int y = (int)floor(borders.minY); y < (int)ceil(borders.maxY); y++)
+		for (int y = minY; y < maxY; y++)
 		{
-			// This is the algorithm in the module (https://www.youtube.com/watch?v=HYAgJN3x4GA)
-			w1 = CalcWOneValue(A, B, C, x,y);
-			if (w1 < -1.0f || w1 > 1.0f) continue;
-			w2 = CalcWTwoValue(A,B,C,y,w1);
-			if (w2 < -1.0f || w2 > 1.0f) continue;
-			if ((w1 + w2) <= 1.0f) // No need to check that it's negative because in this point both w1 and w2 are non-negative
+			try 
 			{
-				putPixel(x, y,color,z);
+				// This is the algorithm in the module (https://www.youtube.com/watch?v=HYAgJN3x4GA)
+				w1 = CalcWOneValue(A, B, C, x,y);
+				if (w1 < 0.0f || w1 > 1.0f) continue;
+				w2 = CalcWTwoValue(A,B,C,y,w1);
+				if (w2 < 0.0f || w2 > 1.0f) continue;
+				if ((w1 + w2) <= 1.0f) // No need to check that it's negative because in this point both w1 and w2 are non-negative
+				{
+					putPixel(x, y,color,z);
+				}
+			}
+			catch(std::exception ex)
+			{
+				std::cout << "Exception thrown in fillTriangle" << std::endl << ex.what();
 			}
 		}
 	}
@@ -225,13 +236,15 @@ void Renderer::fillTriangle(const Point& A, const Point& B, const Point& C,const
 
 float Renderer::CalcWTwoValue(const Point & A, const Point & B, const Point & C, int y, float w1)
 {
-	return (y - A.Y - w1 * (B.Y - A.Y))
-		/
-		   (C.Y - A.Y);
+	if (C.Y == A.Y) return 0.0f;
+	float nominator = ((float)y - A.Y - (w1 * (B.Y - A.Y)));
+	float denominator = (C.Y - A.Y);
+	return nominator / denominator;
 }
 
 float Renderer::CalcWOneValue(const Point & A, const Point & B, const Point & C, int x, int y)
 {
+	if (A.Y == B.Y) return 0.0f;
 	return (A.X*(C.Y - A.Y) + (y - A.Y)*(C.X - A.X) - x * (C.Y - A.Y))
 		/
 		   ((B.Y - A.Y)*(C.X - A.X) - (B.X - A.X)*(C.Y - A.Y));
@@ -244,7 +257,7 @@ void Renderer::drawTriangle(const Point & parameterPointA, const Point & paramet
 	Point screenPointB = toScreenPixel(parameterPointB);
 	Point screenPointC = toScreenPixel(parameterPointC);
 	
-	if ((!screenPointA.IsInFrame(viewportWidth, viewportHeight)) || (!screenPointB.IsInFrame(viewportWidth, viewportHeight)) || (!screenPointC.IsInFrame(viewportWidth, viewportHeight)))
+	if ((!screenPointA.IsInFrame((float)viewportWidth, (float)viewportHeight)) || (!screenPointB.IsInFrame((float)viewportWidth, (float)viewportHeight)) || (!screenPointC.IsInFrame((float)viewportWidth, (float)viewportHeight)))
 	{
 		return;
 	}
