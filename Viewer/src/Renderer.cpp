@@ -107,6 +107,39 @@ void Renderer::drawLine(Line& line)
 
 void Renderer::drawLine(Line& line, const glm::vec3& color)
 {
+	if (line.IsVertical())
+	{
+		const int x = line.PointA.X;
+		float z;
+		line.SetAToHaveSmallerYValue();
+		z = line.PointA.Z;
+		const int minY = (int)floor(line.PointA.Y);
+		const int maxY = (int)ceil(line.PointB.Y);
+		const float zStep = (line.PointB.Z - line.PointA.Z) / (line.PointB.Y - line.PointA.Y);
+		for (int y = minY; y < maxY; y++)
+		{
+			putPixel(x, y, color, z);
+			z += zStep;
+		}
+		return;
+	}
+	if (line.IsHorizontal())
+	{
+		const int y = line.PointA.Y;
+		float z;
+		line.SetAToHaveSmallerXValue();
+		z = line.PointA.Z;
+		const int minX = (int)floor(line.PointA.X);
+		const int maxX = (int)ceil(line.PointB.X);
+		const float zStep = (line.PointB.Z - line.PointA.Z) / (line.PointB.X - line.PointA.X);
+		for (int x = minX; x < maxX; x++)
+		{
+			putPixel(x, y, color, z);
+			z += zStep;
+		}
+		return;
+	}
+
 	float deltaX;
 	float deltaY;
 	float deltaZ;
@@ -116,7 +149,8 @@ void Renderer::drawLine(Line& line, const glm::vec3& color)
 	int x;
 	int y;
 	float z;
-	if (abs(line.GetSlope()) < 1)
+	float slope = line.GetSlope();
+	if (abs(slope) < 1)
 	{
 		line.SetAToHaveSmallerXValue();
 		deltaX = line.PointB.X - line.PointA.X;
