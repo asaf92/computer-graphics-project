@@ -12,7 +12,7 @@ Line::Line()
 	
 }
 
-float Line::GetSlope()
+float Line::GetSlope() const
 {
 	return (PointB.Y - PointA.Y) / (PointA.X - PointB.X);
 }

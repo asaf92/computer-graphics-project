@@ -10,7 +10,7 @@ public:
 
 	Point PointA;
 	Point PointB;
-	float GetSlope();
+	float GetSlope() const;
 
 	void SetAToHaveSmallerXValue();
 	void SetAToHaveSmallerYValue();
