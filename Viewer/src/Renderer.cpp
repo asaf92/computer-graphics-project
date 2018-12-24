@@ -235,6 +235,10 @@ void Renderer::drawTriangle(const Point & parameterPointA, const Point & paramet
 	Point screenPointB = toScreenPixel(parameterPointB);
 	Point screenPointC = toScreenPixel(parameterPointC);
 	
+	if ((!screenPointA.IsInFrame(viewportWidth, viewportHeight)) || (!screenPointB.IsInFrame(viewportWidth, viewportHeight)) || (!screenPointC.IsInFrame(viewportWidth, viewportHeight)))
+	{
+		return;
+	}
 	drawLine(Line(screenPointA, screenPointB),color);
 	drawLine(Line(screenPointB, screenPointC),color);
 	drawLine(Line(screenPointC, screenPointA),color);

@@ -3,17 +3,13 @@
 
 Line::Line(const Point& a, const Point& b)
 {
-	PointA.X = a.X;
-	PointA.Y = a.Y;
-	PointB.X = b.X;
-	PointB.Y = b.Y;
-
-
+	PointA = a;
+	PointB = b;
 }
 
 Line::Line()
 {
-
+	
 }
 
 float Line::GetSlope()
