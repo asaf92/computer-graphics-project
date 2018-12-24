@@ -244,26 +244,25 @@ void Renderer::fillTriangle(const Point& A, const Point& B, const Point& C,const
 	int maxX = (int)ceil(borders.maxX);
 	int minY = (int)floor(borders.minY);
 	int maxY = (int)ceil(borders.maxY);
+	bool triangleHit = false;
 	for (int x = minX; x < maxX; x++)
 	{
+		triangleHit = false;
 		for (int y = minY; y < maxY; y++)
 		{
-			try 
+			// This is the algorithm in the module (https://www.youtube.com/watch?v=HYAgJN3x4GA)
+			w1 = CalcWOneValue(A, B, C, x,y);
+			if (w1 < 0.0f || w1 > 1.0f) continue;
+			w2 = CalcWTwoValue(A,B,C,y,w1);
+			if (w2 < 0.0f || w2 > 1.0f) continue;
+			if ((w1 + w2) <= 1.0f) // No need to check that it's negative because in this point both w1 and w2 are non-negative
 			{
-				// This is the algorithm in the module (https://www.youtube.com/watch?v=HYAgJN3x4GA)
-				w1 = CalcWOneValue(A, B, C, x,y);
-				if (w1 < 0.0f || w1 > 1.0f) continue;
-				w2 = CalcWTwoValue(A,B,C,y,w1);
-				if (w2 < 0.0f || w2 > 1.0f) continue;
-				if ((w1 + w2) <= 1.0f) // No need to check that it's negative because in this point both w1 and w2 are non-negative
-				{
-					putPixel(x, y,color,z);
-				}
+				putPixel(x, y,color,z);
+				triangleHit = true;
 			}
-			catch(std::exception ex)
-			{
-				std::cout << "Exception thrown in fillTriangle" << std::endl << ex.what();
-			}
+			else if (triangleHit) break; // This is an optimization. After drawing some pixels in the triangle and finding that the next y
+										 // value is not inside the triangle, we can assert that the rest of the Y values will also 
+										 // not be in the triangle
 		}
 	}
 }
