@@ -52,9 +52,9 @@ const int Scene::GetCameraCount() const
 	return cameras.size();
 }
 
-void Scene::SetActiveCameraIndex(int index)
+void Scene::SetActiveCameraIndex(const int pIndex)
 {
-	// implementation suggestion...
+	unsigned int index = (unsigned int) pIndex;
 	if (index >= 0 && index < cameras.size())
 	{
 		activeCameraIndex = index;
@@ -66,9 +66,9 @@ const int Scene::GetActiveCameraIndex() const
 	return activeCameraIndex;
 }
 
-void Scene::SetActiveModelIndex(int index)
+void Scene::SetActiveModelIndex(const int pIndex)
 {
-	// implementation suggestion...
+	unsigned int index = (unsigned int)pIndex;
 	if (index >= 0 && index < models.size())
 	{
 		activeModelIndex = index;

@@ -37,11 +37,11 @@ public:
 	const std::vector<Camera>& GetCamerasVector() const;
 	const int GetCameraCount() const;
 
-	void SetActiveCameraIndex(int index);
+	void SetActiveCameraIndex(const int index);
 	const int GetActiveCameraIndex() const;
 	Camera& GetActiveCamera() { return cameras[GetActiveCameraIndex()]; }
 
-	void SetActiveModelIndex(int index);
+	void SetActiveModelIndex(const int index);
 	const int GetActiveModelIndex() const;
 
 	void SetShowNormals(const bool value) { showNormals = value; }
