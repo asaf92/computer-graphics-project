@@ -109,7 +109,7 @@ void Renderer::drawLine(Line& line, const glm::vec3& color)
 {
 	if (line.IsVertical())
 	{
-		const int x = line.PointA.X;
+		const int x = (int)floor(line.PointA.X);
 		float z;
 		line.SetAToHaveSmallerYValue();
 		z = line.PointA.Z;
@@ -125,7 +125,7 @@ void Renderer::drawLine(Line& line, const glm::vec3& color)
 	}
 	if (line.IsHorizontal())
 	{
-		const int y = line.PointA.Y;
+		const int y = (int)round(line.PointA.Y);
 		float z;
 		line.SetAToHaveSmallerXValue();
 		z = line.PointA.Z;
@@ -240,10 +240,10 @@ void Renderer::fillTriangle(const Point& A, const Point& B, const Point& C,const
 	float w1, w2;
 	float z = A.Z +B.Z + C.Z;
 	z /= 3;
-	int minX = (int)floor(borders.minX);
-	int maxX = (int)ceil(borders.maxX);
-	int minY = (int)floor(borders.minY);
-	int maxY = (int)ceil(borders.maxY);
+	const int minX = (int)floor(borders.minX);
+	const int maxX = (int)ceil(borders.maxX);
+	const int minY = (int)floor(borders.minY);
+	const int maxY = (int)ceil(borders.maxY);
 	bool triangleHit = false;
 	for (int x = minX; x < maxX; x++)
 	{
