@@ -12,6 +12,7 @@
 
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 
+const float Renderer::maxZ = 1000.0f;
 
 Renderer::Renderer(Scene& scene, int viewportWidth, int viewportHeight, int viewportX, int viewportY) :
 	colorBuffer(nullptr),
@@ -34,12 +35,12 @@ Renderer::~Renderer()
 	}
 }
 
-void Renderer::putPixel(int i, int j, const glm::vec3& color,float z = 0.0f)
+void Renderer::putPixel(const int i, const int j, const glm::vec3& color,const float z = maxZ)
 {
 	if (i < 0) return; if (i >= viewportWidth) return;
 	if (j < 0) return; if (j >= viewportHeight) return;
-	/*if (zBuffer[INDEX(viewportWidth, i, j, 0)] < z) return;*/
-
+	if (zBuffer[INDEX(viewportWidth, i, j, 0)] < z) return;
+	zBuffer[INDEX(viewportWidth, i, j, 0)] = z;
 	colorBuffer[INDEX(viewportWidth, i, j, 0)] = color.x;
 	colorBuffer[INDEX(viewportWidth, i, j, 1)] = color.y;
 	colorBuffer[INDEX(viewportWidth, i, j, 2)] = color.z;
@@ -88,11 +89,11 @@ void Renderer::ClearColorBuffer(const glm::vec3& color)
 	}
 }
 
-void Renderer::clearZBuffer()
+void Renderer::ClearZBuffer()
 {
-	for (int i = 0; i < viewportHeight; i++)
+	for (int i = 0; i < viewportWidth; i++)
 	{
-		for (int j = 0; j < viewportWidth; j++)
+		for (int j = 0; j < viewportHeight; j++)
 		{
 			zBuffer[INDEX(viewportWidth,i,j,0)] = maxZ;
 		}
@@ -108,28 +109,29 @@ void Renderer::drawLine(Line& line, const glm::vec3& color)
 {
 	float deltaX;
 	float deltaY;
+	float deltaZ;
+	float zStep;
 	float deltaE;
 	float Error;
 	int x;
 	int y;
+	float z;
 	if (abs(line.GetSlope()) < 1)
 	{
 		line.SetAToHaveSmallerXValue();
 		deltaX = line.PointB.X - line.PointA.X;
 		deltaY = line.PointB.Y - line.PointA.Y;
+		deltaZ = line.PointB.Z - line.PointA.Z;
+		zStep = deltaZ / (float)deltaX;
 		deltaE = abs(deltaY / deltaX);
 		Error = 0.0;
 
-		//// keeping everything in view range
-		//int x = std::max(0, line.PointA.X);
-		//int y = std::max(0, line.PointA.Y);
-		//x1 = std::min(x1, viewportWidth);
-		//y1 = std::min(y1, viewportHeight);
 		x = (int)floor(line.PointA.X);
 		y = (int)floor(line.PointA.Y);
+		z = line.PointA.Z;
 		for (; x <= line.PointB.X; x++)
 		{
-			putPixel(x, y, color);
+			putPixel(x, y, color,z);
 			Error = Error + deltaE;
 			if (Error >= 0.5f)
 			{
@@ -145,12 +147,15 @@ void Renderer::drawLine(Line& line, const glm::vec3& color)
 					Error = Error - 1.0f;
 				}
 			}
+			z += zStep;
 		}
 		return;
 	}
 	line.SetAToHaveSmallerYValue();
 	deltaX = line.PointB.X - line.PointA.X;
 	deltaY = line.PointB.Y - line.PointA.Y;
+	deltaZ = line.PointB.Z - line.PointA.Z;
+	zStep = deltaZ / (float)deltaX;
 	deltaE = abs(deltaX / deltaY);
 	Error = 0.0;
 
@@ -161,9 +166,10 @@ void Renderer::drawLine(Line& line, const glm::vec3& color)
 	//y1 = std::min(y1, viewportHeight);
 	x = (int)floor(line.PointA.X);
 	y = (int)floor(line.PointA.Y);
+	z = line.PointA.Z;
 	for (; y <= line.PointB.Y; y++)
 	{
-		putPixel(x, y, color);
+		putPixel(x, y, color, z);
 		Error = Error + deltaE;
 		if (Error >= 0.5f)
 		{
@@ -179,6 +185,7 @@ void Renderer::drawLine(Line& line, const glm::vec3& color)
 				Error = Error - 1.0f;
 			}
 		}
+		z += zStep;
 	}
 }
 
@@ -197,18 +204,20 @@ XYBorders Renderer::minMax(const Point & A, const Point & B, const Point & C) co
 void Renderer::fillTriangle(const Point& A, const Point& B, const Point& C,const XYBorders& borders, const glm::vec3 color)
 {
 	float w1, w2;
+	float z = A.Z +B.Z + C.Z;
+	z /= 3;
 	for (int x = (int)floor(borders.minX); x < (int)ceil(borders.maxX); x++)
 	{
 		for (int y = (int)floor(borders.minY); y < (int)ceil(borders.maxY); y++)
 		{
 			// This is the algorithm in the module (https://www.youtube.com/watch?v=HYAgJN3x4GA)
 			w1 = CalcWOneValue(A, B, C, x,y);
-			if (w1 < 0.0f || w1 > 1.0f) continue;
+			if (w1 < -1.0f || w1 > 1.0f) continue;
 			w2 = CalcWTwoValue(A,B,C,y,w1);
-			if (w2 < 0.0f || w2 > 1.0f) continue;
+			if (w2 < -1.0f || w2 > 1.0f) continue;
 			if ((w1 + w2) <= 1.0f) // No need to check that it's negative because in this point both w1 and w2 are non-negative
 			{
-				putPixel(x, y,color);
+				putPixel(x, y,color,z);
 			}
 		}
 	}
