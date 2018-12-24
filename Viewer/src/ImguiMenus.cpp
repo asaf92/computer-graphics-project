@@ -272,9 +272,15 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	auto& models = scene.GetModelsVector();
 	auto color = activeModel->GetColor();
 
+	// Uniform Material variables
+	auto& uniformMaterial = activeModel->GetUniformMaterial();
+	auto ambientColor = uniformMaterial.GetAmbientColor();
+	auto specularColor = uniformMaterial.GetSpecularColor();
+	auto diffuseColor = uniformMaterial.GetDiffuseColor();
+
 	static int selection_mask = (1 << 2);
 	ImGui::Text("Model Selection");
-	for (int i = 0; i < models.size(); i++)
+	for (unsigned int i = 0, modelsSize = models.size(); i < modelsSize; i++)
 	{
 		ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((selection_mask & (1 << i)) ? ImGuiTreeNodeFlags_Selected : 0);
 		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
@@ -294,7 +300,6 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 
 	ImGui::Text("Color");
 	ImGui::ColorEdit3("MyColor##1", (float*)&color);
-
 
 	glm::vec3 newTranslationVector;
 	newTranslationVector.x = activeModelTranslationVector.x;
@@ -322,18 +327,17 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	ImGui::SliderFloat("X Rotation", &newAngle.x, -180.0f, 180.0f);
 	ImGui::SliderFloat("Y Rotation", &newAngle.y, -180.0f, 180.0f);
 	ImGui::SliderFloat("Z Rotation", &newAngle.z, -180.0f, 180.0f);
-	
 
-	// Leaf: The only reason we have a TreeNode at all is to allow selection of the leaf. Otherwise we can use BulletText() or TreeAdvanceToLabelPos()+Text().
-	
-
-	//if (ImGui::Button("Next Model"))
-	//{
-	//	if (index + 1 == models.size())
-	//		scene.SetActiveModelIndex(1);
-	//	else
-	//		scene.SetActiveModelIndex(index + 1);
-	//}
+	if (ImGui::TreeNode("Uniform Material"))
+	{
+		ImGui::Text("Ambient Color");
+		ImGui::ColorEdit3("Ambient", (float*)&ambientColor);
+		ImGui::Text("Specular Color");
+		ImGui::ColorEdit3("Specular", (float*)&specularColor);
+		ImGui::Text("Diffuse Color");
+		ImGui::ColorEdit3("Diffuse", (float*)&diffuseColor);
+		ImGui::TreePop();
+	}
 
 	ImGui::Text("x: %.2f y: %.2f z: %.2f", activeModelTranslationVector.x, activeModelTranslationVector.y, activeModelTranslationVector.z);
 
@@ -341,6 +345,9 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	activeModel->SetScaling(newScalingSizes);
 	activeModel->SetRotation(newAngle);
 	activeModel->SetColor(color);
+	uniformMaterial.SetAmbientColor(ambientColor);
+	uniformMaterial.SetSpecularColor(specularColor);
+	uniformMaterial.SetDiffuseColor(diffuseColor);
 	scene.SetActiveModelIndex(selectedModelIndex);
 }
 

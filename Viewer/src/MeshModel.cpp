@@ -22,7 +22,8 @@ MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3
 	minimums(0),
 	maximums(0),
 	centerPoint(0),
-	color(color)
+	color(color),
+	uniformMaterial(Material())
 {
 	for (std::vector<glm::vec3>::const_iterator iterator = vertices.cbegin(); iterator != vertices.end(); ++iterator)
 	{
@@ -86,7 +87,7 @@ glm::mat4x4 MeshModel::GetRotationMatrix()
 
 glm::mat4x4 MeshModel::GetXRotationMatrix()
 {
-	float pi = atan(1) * 4;
+	float pi = atan(1.0f) * 4.0f;
 
 	glm::mat4x4 rotationMatrix(1);
 	glm::mat4x4 translateToCenter(1);
@@ -109,7 +110,7 @@ glm::mat4x4 MeshModel::GetXRotationMatrix()
 
 glm::mat4x4 MeshModel::GetYRotationMatrix()
 {
-	float pi = atan(1) * 4;
+	float pi = atan(1.0f) * 4.0f;
 	
 	glm::mat4x4 rotationMatrix(1);
 	glm::mat4x4 translateToCenter(1);
@@ -132,7 +133,7 @@ glm::mat4x4 MeshModel::GetYRotationMatrix()
 
 glm::mat4x4 MeshModel::GetZRotationMatrix()
 {
-	float pi = atan(1) * 4;
+	float pi = atan(1.0f) * 4.0f;
 
 	glm::mat4x4 rotationMatrix(1);
 	glm::mat4x4 translateToCenter(1);
