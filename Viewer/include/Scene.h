@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <chrono>
 #include "MeshModel.h"
 #include "Camera.h"
 #include "ProjectionType.h"
@@ -17,12 +18,19 @@ class Scene {
 private:
 	std::vector<std::shared_ptr<MeshModel>> models;
 	std::vector<Camera> cameras;
+	glm::vec4 ambientLight;
 
 	int activeCameraIndex;
 	int activeModelIndex;
+	double imGuiRenderExecutionTime;
+	double zBufferExecutionTime;
+	double colorBufferExecutionTime;
+	double swapBuffersExecutionTime;
+	double renderExecutionTime;
 
 	bool showNormals = false;
 	bool fillTriangles = true;
+	bool drawAxis = true;
 
 public:
 	Scene();
@@ -49,4 +57,25 @@ public:
 
 	void SetFillTriangles(const bool value) { fillTriangles = value; }
 	bool GetFillTriangles() const { return fillTriangles; }
+
+	void SetDrawAxis(const bool value) { drawAxis = value; }
+	bool GetDrawAxis() const {    return drawAxis; }
+
+	const double GetRenderExecutionTime() const { return renderExecutionTime; }
+	void SetRenderExecutionTime(double time) { renderExecutionTime = time; }
+
+	const double GetImGuiRenderExecutionTime() const { return imGuiRenderExecutionTime; }
+	void SetImGuiRenderExecutionTime(double time) { imGuiRenderExecutionTime = time; }
+
+	const double GetZBufferExecutionTime() const { return zBufferExecutionTime; }
+	void SetZBufferExecutionTime(double time) { zBufferExecutionTime = time; }
+
+	const double GetColorBufferExecutionTime() const { return colorBufferExecutionTime; }
+	void SetColorBufferExecutionTime(double time) { colorBufferExecutionTime = time; }
+
+	const double GetSwapBuffersExecutionTime() const { return swapBuffersExecutionTime; }
+	void SetSwapBuffersExecutionTime(double time) { swapBuffersExecutionTime = time; }
+
+	const glm::vec4& GetAmbientLight() const { return ambientLight; }
+	void SetAmbientLight(const glm::vec4& light) { ambientLight = light; }
 };

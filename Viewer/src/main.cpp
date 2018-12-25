@@ -127,7 +127,11 @@ void StartFrame()
 void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& io)
 {
 	// Render the menus
+	auto start = std::chrono::high_resolution_clock::now();
 	ImGui::Render();
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed = finish - start;
+	scene.SetImGuiRenderExecutionTime(elapsed.count());
 
 	// That's how you get the current width/height of the frame buffer (for example, after the window was resized)
 	int frameBufferWidth, frameBufferHeight;
@@ -136,14 +140,27 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 	// Resize handling here... (a suggestion)
 
 	// Clear the frame buffer
+	start = std::chrono::high_resolution_clock::now();
 	renderer.ClearColorBuffer(GetClearColor());
+	finish = std::chrono::high_resolution_clock::now();
+	elapsed = finish - start;
+	scene.SetColorBufferExecutionTime(elapsed.count());
+
+	start = std::chrono::high_resolution_clock::now();
 	renderer.ClearZBuffer();
+	finish = std::chrono::high_resolution_clock::now();
+	elapsed = finish - start;
+	scene.SetZBufferExecutionTime(elapsed.count());
 
 	// Render the scene
 	renderer.Render();
 
 	// Swap buffers
+	start = std::chrono::high_resolution_clock::now();
 	renderer.SwapBuffers();
+	finish = std::chrono::high_resolution_clock::now();
+	elapsed = finish - start;
+	scene.SetSwapBuffersExecutionTime(elapsed.count());
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(window);

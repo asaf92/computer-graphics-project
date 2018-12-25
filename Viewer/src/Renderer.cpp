@@ -333,6 +333,7 @@ void Renderer::draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4&
 
 void Renderer::Render()
 {
+	auto start = std::chrono::high_resolution_clock::now();
 	auto& cameras = scene.GetCamerasVector();
 	auto& activeCamera = scene.GetActiveCamera();
 
@@ -341,11 +342,14 @@ void Renderer::Render()
 	activeCamera.RenderProjectionMatrix();
 	const glm::mat4& projectionMatrix = activeCamera.GetProjectionMatrix();
 
-	drawAxis(projectionMatrix, viewMatrix);
+	if (scene.GetDrawAxis()) { drawAxis(projectionMatrix, viewMatrix);}
 
 	if (scene.GetModelCount() == 0)
 	{
 		// Nothing to draw
+		auto finish = std::chrono::high_resolution_clock::now();
+		auto elapsed = finish - start;
+		scene.SetRenderExecutionTime(std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count());
 		return;
 	}
 
@@ -418,6 +422,9 @@ void Renderer::Render()
 			draw3DLine(PointC, PointCNormalTip, glm::mat4(1), glm::mat4(1),glm::vec3(1));
 		}
 	}
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed = finish - start;
+	scene.SetRenderExecutionTime(elapsed.count());
 }
 
 void Renderer::drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix)

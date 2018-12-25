@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 #include <imgui/imgui.h>
-
+#include <chrono>
 
 /*
  * Renderer class.
@@ -25,7 +25,6 @@ private:
 	int viewportX;
 	int viewportY;
 	static const float maxZ;
-
 	void putPixel(int x, int y, const glm::vec3& color,float z);
 	void createBuffers(int viewportWidth, int viewportHeight);
 	void drawLine(Line& line);
@@ -45,6 +44,7 @@ private:
 	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
 	Point toScreenPixel(const Point& point) const;
 	void drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
+	int RenderExecutionTime;
 
 public:
 	Renderer(Scene& scene, int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
@@ -60,4 +60,5 @@ public:
 
 	void ClearZBuffer();
 	// Add more methods/functionality as needed...
+
 };
