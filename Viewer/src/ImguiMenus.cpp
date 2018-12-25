@@ -26,7 +26,7 @@ static bool showCameraControls =          false;
 static bool showProjectionControls =      false;
 static bool showNormals =				  false;
 
-glm::vec4 clearColor = glm::vec4(0.8f, 0.8f, 0.8f, 1.00f);
+glm::vec4 clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.00f);
 
 const glm::vec4& GetClearColor()
 {
@@ -43,6 +43,7 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 	if (ImGui::CollapsingHeader("General"))
 	{
 		ImGui::Checkbox("Show normal vectors", &showNormals);
+		ImGui::Text("Background color"); ImGui::SameLine();ImGui::ColorEdit3("Background", (float*)&clearColor, ImGuiColorEditFlags_NoInputs);
 		scene.SetShowNormals(showNormals);
 	}
 
