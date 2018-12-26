@@ -13,6 +13,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "ImguiMenus.h"
+#include "Shader.h"
 
 // Function declarations
 static void GlfwErrorCallback(int error, const char* description);
@@ -47,9 +48,13 @@ int main(int argc, char **argv)
 	int frameBufferWidth, frameBufferHeight;
 	glfwGetFramebufferSize(window, &frameBufferWidth, &frameBufferHeight);
 
+	// Create the shader
+	Shader shader = Shader();
+
 	// Create the renderer and the scene
 	Scene scene = Scene();
-	Renderer renderer = Renderer(scene,frameBufferWidth, frameBufferHeight);
+	Renderer renderer = Renderer(shader,scene,frameBufferWidth, frameBufferHeight);
+
 
 	// Setup ImGui
 	ImGuiIO& io = SetupDearImgui(window);

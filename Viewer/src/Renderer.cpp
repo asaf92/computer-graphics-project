@@ -14,10 +14,11 @@
 
 const float Renderer::maxZ = 1000.0f;
 
-Renderer::Renderer(Scene& scene, int viewportWidth, int viewportHeight, int viewportX, int viewportY) :
+Renderer::Renderer(Shader& shader, Scene& scene, int viewportWidth, int viewportHeight, int viewportX, int viewportY) :
 	colorBuffer(nullptr),
 	zBuffer(nullptr),
-	scene(scene)
+	scene(scene),
+	shader(shader)
 {
 	initOpenGLRendering();
 	SetViewport(viewportWidth, viewportHeight, viewportX, viewportY);
@@ -375,7 +376,7 @@ void Renderer::Render()
 		const auto& normals = currentModel->GetNormalsVector();
 		std::vector<Face>& faces = currentModel->GetFacesVector();
 		auto& colorVector = currentModel->GetColor();
-		glm::vec4 color = glm::vec4(colorVector[0], colorVector[1], colorVector[2], 255);
+		glm::vec4 color = glm::vec4(colorVector[0], colorVector[1], colorVector[2], colorVector[3]);
 
 		glm::mat4x4 transformMatrix = projectionMatrix *  viewMatrix * worldTransform;
 		

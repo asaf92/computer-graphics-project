@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Line.h"
 #include "XYBorders.h"
+#include "Shader.h"
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -18,6 +19,7 @@ class Renderer
 {
 private:
 	Scene& scene;
+	Shader& shader;
 
 	// Buffers
 	void createBuffers(int viewportWidth, int viewportHeight);
@@ -56,7 +58,7 @@ private:
 	int RenderExecutionTime;
 
 public:
-	Renderer(Scene& scene, int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
+	Renderer(Shader& shader, Scene& scene, int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
 	~Renderer();
 
 
