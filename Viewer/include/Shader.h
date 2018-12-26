@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "Scene.h"
 
 enum ShadingModels {
 	Phong,
@@ -9,8 +10,10 @@ enum ShadingModels {
 class Shader
 {
 private:
+	Scene& scene;
 	ShadingModels selectedModel;
-public:
 	glm::vec4& ambientColor;
-	Shader(): ambientColor(glm::vec4(0)), selectedModel(Phong) {}
+public:
+	Shader(Scene& scene): scene(scene), ambientColor(glm::vec4(0)), selectedModel(Phong) {}
+
 };

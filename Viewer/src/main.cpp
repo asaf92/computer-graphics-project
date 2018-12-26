@@ -48,11 +48,13 @@ int main(int argc, char **argv)
 	int frameBufferWidth, frameBufferHeight;
 	glfwGetFramebufferSize(window, &frameBufferWidth, &frameBufferHeight);
 
+	// Create the scene
+	Scene scene = Scene();
+
 	// Create the shader
-	Shader shader = Shader();
+	Shader shader = Shader(scene);
 
 	// Create the renderer and the scene
-	Scene scene = Scene();
 	Renderer renderer = Renderer(shader,scene,frameBufferWidth, frameBufferHeight);
 
 
