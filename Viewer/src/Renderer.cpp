@@ -357,8 +357,8 @@ void Renderer::Render()
 	{
 		// Nothing to draw
 		auto finish = std::chrono::high_resolution_clock::now();
-		auto elapsed = finish - start;
-		scene.SetRenderExecutionTime(std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count());
+		std::chrono::duration<double> elapsed = finish - start;
+		scene.SetRenderExecutionTime(elapsed.count());
 		return;
 	}
 
@@ -373,8 +373,7 @@ void Renderer::Render()
 		std::vector<glm::vec3>& vertices = currentModel->GetVerticesVector();
 		const auto& normals = currentModel->GetNormalsVector();
 		std::vector<Face>& faces = currentModel->GetFacesVector();
-		auto& colorVector = currentModel->GetColor();
-		glm::vec4 color = glm::vec4(colorVector[0], colorVector[1], colorVector[2], colorVector[3]);
+		shader.SetObjectColor(currentModel->GetColor());
 
 		glm::mat4x4 transformMatrix = projectionMatrix *  viewMatrix * worldTransform;
 		
@@ -411,7 +410,7 @@ void Renderer::Render()
 			drawTriangle(Point(PointA), 
 						 Point(PointB), 
 						 Point(PointC),
-						 shader.CalculateColor(color));
+						 shader.CalculateColor());
 
 			if (scene.GetShowNormals() == false) { continue; }
 			float drawLength = 0.05f;
