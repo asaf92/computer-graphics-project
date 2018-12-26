@@ -4,7 +4,8 @@
 
 Scene::Scene() :
 	activeCameraIndex(0),
-	activeModelIndex(0)
+	activeModelIndex(0),
+	ambientLight(0)
 {
 	// Init first camera
 	AddCamera(*(new Camera()));

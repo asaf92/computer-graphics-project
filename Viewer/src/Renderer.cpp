@@ -75,8 +75,6 @@ void Renderer::createBuffers(int viewportWidth, int viewportHeight)
 			putPixel(x, y, glm::vec3(0.0f, 0.0f, 0.0f));
 		}
 	}
-
-
 }
 
 void Renderer::ClearColorBuffer(const glm::vec3& color)
@@ -413,7 +411,7 @@ void Renderer::Render()
 			drawTriangle(Point(PointA), 
 						 Point(PointB), 
 						 Point(PointC),
-						 color);
+						 shader.CalculateColor(color));
 
 			if (scene.GetShowNormals() == false) { continue; }
 			float drawLength = 0.05f;
