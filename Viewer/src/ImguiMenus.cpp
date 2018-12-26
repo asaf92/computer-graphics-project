@@ -43,17 +43,15 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 	if (ImGui::CollapsingHeader("General"))
 	{
 		bool drawAxis = scene.GetDrawAxis();
-		glm::vec4 ambientLight = scene.GetAmbientLight();
-		ImGui::Checkbox("Show normal vectors", &showNormals); ImGui::SameLine(); ImGui::Checkbox("Show axis", &drawAxis);
-		ImGui::Text("Background color"); ImGui::SameLine();ImGui::ColorEdit3("Background", (float*)&clearColor, ImGuiColorEditFlags_NoInputs);
-		ImGui::Text("Ambient light color"); ImGui::SameLine(); ImGui::ColorEdit3("Ambient", (float*)&ambientLight, ImGuiColorEditFlags_NoInputs);
+		ImGui::Checkbox("Show axis", &drawAxis);
+		ImGui::ColorEdit3("Background color", (float*)&clearColor, ImGuiColorEditFlags_NoInputs);
+		// Execution stats
 		ImGui::Text("ImGui render execution time: %.3f", scene.GetImGuiRenderExecutionTime());
 		ImGui::Text("Color buffer clearing execution time: %.3f", scene.GetColorBufferExecutionTime());
 		ImGui::Text("Z-Buffer clearing execution time: %.3f", scene.GetZBufferExecutionTime());
 		ImGui::Text("Render execution time: %.3f", scene.GetRenderExecutionTime());
-		scene.SetShowNormals(showNormals);
+
 		scene.SetDrawAxis(drawAxis);
-		scene.SetAmbientLight(ambientLight);
 	}
 
 	if (ImGui::CollapsingHeader("Transformation Matrices"))
@@ -74,6 +72,11 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 	if (ImGui::CollapsingHeader("Projection Controls"))
 	{
 		ShowProjectionControls(io, scene);
+	}
+
+	if (ImGui::CollapsingHeader("Shader Controls"))
+	{
+		ShowShaderControls(io, scene);
 	}
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -359,6 +362,17 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	uniformMaterial.SetSpecularColor(specularColor);
 	uniformMaterial.SetDiffuseColor(diffuseColor);
 	scene.SetActiveModelIndex(selectedModelIndex);
+}
+
+void ShowShaderControls(ImGuiIO& io, Scene& scene)
+{
+	glm::vec4 ambientLight = scene.GetAmbientLight();
+	ImGui::Checkbox("Show normal vectors", &showNormals);
+	ImGui::ColorEdit3("Ambient light color", (float*)&ambientLight, ImGuiColorEditFlags_NoInputs);
+
+	scene.SetShowNormals(showNormals);
+	scene.SetAmbientLight(ambientLight);
+	return;
 }
 
 void DisplayMenuBar(ImGuiIO& io, Scene& scene)

@@ -11,6 +11,7 @@ void ShowPerspectiveProjectionControls(Camera & activeCamera);
 void DrawImguiMenus(ImGuiIO& io, Scene& scene);
 void ShowModelControls(ImGuiIO& io, Scene& scene);
 void ShowCameraControls(ImGuiIO& io, Scene& scene);
+void ShowShaderControls(ImGuiIO& io, Scene& scene);
 const glm::vec4& GetClearColor();
 void DisplayMenuBar(ImGuiIO& io, Scene& scene);
 void PrintMatrix(const glm::mat4x4& matrix, const char* name);
