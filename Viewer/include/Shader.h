@@ -10,10 +10,20 @@ enum ShadingModels {
 class Shader
 {
 private:
+	// Dependencies
 	Scene& scene;
-	ShadingModels selectedModel;
-	glm::vec4& ambientColor;
-public:
-	Shader(Scene& scene): scene(scene), ambientColor(glm::vec4(0)), selectedModel(Phong) {}
 
+	// Properties
+	ShadingModels selectedModel;
+
+	// Colors
+	const glm::vec4& ambientColor;
+
+	// Calculations
+	const glm::vec4 CalculateColorPhong(const glm::vec4& color) const;
+	const glm::vec4 calculateAmbientPart(const glm::vec4& color) const;
+
+public:
+	Shader(Scene& scene): scene(scene), ambientColor(scene.GetAmbientLight()), selectedModel(Phong) {}
+	const glm::vec4 CalculateColor(const glm::vec4& color) const;
 };
