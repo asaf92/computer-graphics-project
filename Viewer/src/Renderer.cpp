@@ -80,22 +80,31 @@ void Renderer::createBuffers(int viewportWidth, int viewportHeight)
 
 void Renderer::ClearColorBuffer(const glm::vec3& color)
 {
+	int index;
+	int i = 0;
+	int j = 0;
 	for (int i = 0; i < viewportWidth; i++)
 	{
 		for (int j = 0; j < viewportHeight; j++)
 		{
-			putPixel(i, j, color);
+			index = INDEX(viewportWidth, i, j, 0);
+			colorBuffer[index++] = color.x;
+			colorBuffer[index++] = color.y;
+			colorBuffer[index] =   color.z;
 		}
 	}
 }
 
 void Renderer::ClearZBuffer()
 {
+	//if (!zBufferChanged) return;
+	int index;
 	for (int i = 0; i < viewportWidth; i++)
 	{
 		for (int j = 0; j < viewportHeight; j++)
 		{
-			zBuffer[INDEX(viewportWidth,i,j,0)] = maxZ;
+			index = INDEX(viewportWidth, i, j, 0);
+			zBuffer[index] = maxZ;
 		}
 	}
 }
@@ -333,6 +342,7 @@ void Renderer::draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4&
 
 void Renderer::Render()
 {
+	zBufferChanged = true; // Keep it this way and figure out later how we can rule out that zBuffer has changed
 	auto start = std::chrono::high_resolution_clock::now();
 	auto& cameras = scene.GetCamerasVector();
 	auto& activeCamera = scene.GetActiveCamera();
@@ -398,6 +408,7 @@ void Renderer::Render()
 			PointB = PointB / PointB.w;
 			PointC = PointC / PointC.w;
 
+			// Here we need to calculate the color taking lighting into acount
 			drawTriangle(Point(PointA), 
 						 Point(PointB), 
 						 Point(PointC),

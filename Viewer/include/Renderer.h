@@ -18,37 +18,47 @@ class Renderer
 {
 private:
 	Scene& scene;
+
+	// Buffers
+	void createBuffers(int viewportWidth, int viewportHeight);
 	float *colorBuffer;
 	float *zBuffer;
+	static const float maxZ;
+	bool zBufferChanged;
+
+	// Viewport
 	int viewportWidth;
 	int viewportHeight;
 	int viewportX;
 	int viewportY;
-	static const float maxZ;
+
+	// Drawing
 	void putPixel(int x, int y, const glm::vec3& color,float z);
-	void createBuffers(int viewportWidth, int viewportHeight);
 	void drawLine(Line& line);
 	void drawLine(Line & line, const glm::vec3 & color);
-	XYBorders minMax(const Point& A, const Point& B, const Point& C) const;
-	void fillTriangle(const Point & PointA, const Point & PointB, const Point & PointC, const XYBorders & borders, const glm::vec3 color);
-	float CalcWOneValue(const Point & A, const Point & B, const Point & C, int y, int x);
-	float CalcWTwoValue(const Point & A, const Point & B, const Point & C, int y, float w1);
 	void drawTriangle(const Point& PointA, const Point& PointB, const Point& PointC) { drawTriangle(PointA,PointB,PointC,glm::vec3(0)); }
 	void drawTriangle(const Point& PointA, const Point& PointB, const Point& PointC, const glm::vec3 color);
+	void fillTriangle(const Point & PointA, const Point & PointB, const Point & PointC, const XYBorders & borders, const glm::vec3 color);
+	void drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
+	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
+
+	// Calculations
+	XYBorders minMax(const Point& A, const Point& B, const Point& C) const;
+	float CalcWOneValue(const Point & A, const Point & B, const Point & C, int y, int x);
+	float CalcWTwoValue(const Point & A, const Point & B, const Point & C, int y, float w1);
+	Point toScreenPixel(const Point& point) const;
 
 	GLuint glScreenTex;
 	GLuint glScreenVtc;
 
 	void createOpenGLBuffer();
 	void initOpenGLRendering();
-	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
-	Point toScreenPixel(const Point& point) const;
-	void drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
 	int RenderExecutionTime;
 
 public:
 	Renderer(Scene& scene, int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
 	~Renderer();
+
 
 	void Render();
 	void SwapBuffers();
