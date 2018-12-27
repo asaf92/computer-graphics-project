@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "Scene.h"
+#include "Utils.h"
 #include "Point.h"
 
 enum ShadingModels {
@@ -22,10 +23,10 @@ protected:
 	Point ScreenPointA;
 	Point ScreenPointB;
 	Point ScreenPointC;
-	Point WorldPointA;
-	Point WorldPointB;
-	Point WorldPointC;
-	Point CameraWorldPoint;
+	glm::vec4 WorldPointA;
+	glm::vec4 WorldPointB;
+	glm::vec4 WorldPointC;
+	glm::vec4 CameraWorldPoint;
 
 	// Coordinates
 	int x, y;
@@ -44,8 +45,9 @@ protected:
 	const glm::vec4 calculateColorPhong () const;
 	const glm::vec4 calculatePhongReflection(const glm::vec4& normal, const glm::vec4& toViewer) const;
 	const glm::vec4 calculateAmbientPart() const;
-	const glm::vec4 calculateDiffusePart () const {return glm::vec4(0)} // Implement later
-	const glm::vec4 calculateSpectralPart() const {return glm::vec4(0)} // Implement later
+	const glm::vec4 calculateDiffusePart () const {return glm::vec4(0);} // Implement later
+	const glm::vec4 calculateSpectralPart() const {return glm::vec4(0);} // Implement later
+	const glm::vec4 calculateFaceWorldCenter() const { return (WorldPointA + WorldPointB + WorldPointC / 3.0f); }
 
 public:
 	Shader(Scene& scene): scene(scene), ambientColor(scene.GetAmbientLight()), selectedModel(Flat) {}
@@ -53,7 +55,7 @@ public:
 	const glm::vec4 GetColor() const;
 	void SetObjectColor(const glm::vec4& color)      { objectColor = color; }
 	void SetShadingModel(const ShadingModels& model) { selectedModel = model; }
-	void SetCameraWorldPoint(const Point& point)     { CameraWorldPoint = point; }
+	void SetCameraWorldPoint(const glm::vec4& point)     { CameraWorldPoint = Utils::Vec4FromPoint(point); }
 	void SetNormals(const glm::vec4& a, const glm::vec4& b, const glm::vec4& c) { NormalA = a; NormalB = b; NormalC = c;}
 	void SetWorldPoints (const Point& worldPointA , const Point& worldPointB , const Point& worldPointC);
 	void SetScreenPoints(const Point& ScreenPointA, const Point& ScreenPointB, const Point& ScreenPointC);
