@@ -417,27 +417,28 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 	{
 		scene.AddLight(PointSource,lightsID++);
 	}
-	const std::vector<LightSource> lights = scene.GetLightsVector();
+	const std::vector<LightSource*> lights = scene.GetLightsVector();
 	if (lights.size() == 0)
 	{
 		ImGui::Text("No lights in the scene");
 		return;
 	}
-	auto& activeLight = scene.GetActiveLight();
-	const glm::vec4& lightLocation = activeLight.GetLocation();
+	auto activeLight = scene.GetActiveLight();
+
+	// Get abstract properties
+	const glm::vec4* lightLocation =  activeLight->GetLocation();
 	glm::vec4 newLightLocation;
-	const glm::vec4& lightDirection = activeLight.GetDirection();
-	glm::vec4 newDirection = lightDirection;
+	const glm::vec4* lightDirection = activeLight->GetDirection();
+	glm::vec4 newDirection;
 
 	static int selection_mask = (1 << 2);
 	for (unsigned int i = 0, lightsSize = lights.size(); i < lightsSize; i++)
 	{
+		// Some stupid ImGui interfacing that i copy pasted just to have a single selectable node
 		ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((selection_mask & (1 << i)) ? ImGuiTreeNodeFlags_Selected : 0);
 		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
-		std::string lightName = "Light #";
-		lightName += std::to_string(lights[i].GetID());
-		const char * lightNameConst = lightName.c_str();
-		ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, lightNameConst);
+		ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, lights[i]->GetName().c_str());
+
 		if (ImGui::IsItemClicked())
 			selectedLightIndex = i;
 	}
@@ -449,23 +450,30 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 		else //if (!(selection_mask & (1 << node_clicked))) // Depending on selection behavior you want, this commented bit preserve selection when clicking on item that is part of the selection
 			selection_mask = (1 << selectedLightIndex);           // Click to single-select
 	}
-	newLightLocation = lightLocation;
-	ImGui::Text("Location");
-	ImGui::SliderFloat("X Location", &newLightLocation.x, -worldRadius, worldRadius);
-	ImGui::SliderFloat("Y Location", &newLightLocation.y, -worldRadius, worldRadius);
-	ImGui::SliderFloat("Z Location", &newLightLocation.z, -worldRadius, worldRadius);
-
-	ImGui::Text("Direction");
-	ImGui::SliderFloat("X Direction", &newDirection.x, -worldRadius, worldRadius);
-	ImGui::SliderFloat("Z Direction", &newDirection.z, -worldRadius, worldRadius);
-	ImGui::SliderFloat("Y Direction", &newDirection.y, -worldRadius, worldRadius);
-
+	if (lightLocation != nullptr)
+	{
+		newLightLocation = *lightLocation;
+		xyzSliders(newLightLocation, "Location",worldRadius);
+	}
+	if (lightDirection != nullptr)
+	{
+		newDirection = *lightDirection;
+		xyzSliders(newDirection, "Direction", worldRadius);
+	}
 
 	scene.SetActiveLightsIndex(selectedLightIndex);
-	activeLight.SetLocation(newLightLocation);
-	activeLight.SetDirection(newDirection);
+	activeLight->SetLocation(newLightLocation);
+	activeLight->SetDirection(newDirection);
 	ImGui::Text("Number of lights: %d",scene.GetLightsCount());
 	ImGui::Text("Active light number: %d", selectedLightIndex + 1);
+}
+
+void xyzSliders(glm::vec4 &newVector, std::string title, float radius)
+{
+	ImGui::Text(title.c_str());
+	ImGui::SliderFloat((std::string("X ") +title).c_str(), &newVector.x, -radius, radius);
+	ImGui::SliderFloat((std::string("Y ") +title).c_str(), &newVector.y, -radius, radius);
+	ImGui::SliderFloat((std::string("Z ") +title).c_str(), &newVector.z, -radius, radius);
 }
 
 void DrawImguiMenus(ImGuiIO& io, Scene& scene)

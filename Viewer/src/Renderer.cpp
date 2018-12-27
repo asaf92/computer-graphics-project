@@ -446,14 +446,11 @@ void Renderer::Render()
 	scene.SetRenderExecutionTime(elapsed.count());
 }
 
-void Renderer::drawLightSources(const std::vector<LightSource> & lightsVector)
+void Renderer::drawLightSources(const std::vector<LightSource*> & lightsVector)
 {
 	if (lightsVector.empty()) return;
-	for (std::vector<LightSource>::const_iterator lightsIterator = lightsVector.cbegin(); lightsIterator != lightsVector.cend(); ++lightsIterator)
-	{
-		// Draw all lights somehow
-		//std::cout << "Light" << std::endl;
-	}
+	//for each light
+		// Draw the light somehow
 }
 
 void Renderer::drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix)

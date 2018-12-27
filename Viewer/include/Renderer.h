@@ -62,7 +62,7 @@ public:
 
 
 	void Render();
-	void drawLightSources(const std::vector<LightSource> & lightsVector);
+	void drawLightSources(const std::vector<LightSource*>& lightsVector);
 	void SwapBuffers();
 	void ClearColorBuffer(const glm::vec3& color);
 	void SetViewport(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);

@@ -1,5 +1,6 @@
 #pragma once
 #include "glm/glm.hpp"
+#include <string>
 
 enum LightSourceType
 {
@@ -7,24 +8,33 @@ enum LightSourceType
 	Parallel
 };
 
+// Abstract class
 class LightSource
 {
 protected:
 	glm::vec4 color;
-	glm::vec4 direction;
-	glm::vec4 location;
+	std::string name;
 	int ID;
 public:
-	LightSource(const glm::vec4& _direction, const glm::vec4& _color, int id, const glm::vec4& _location) : direction(_direction), color(_color), ID(id), location(_location) {	}
+	// Constructors
+	LightSource(const glm::vec4& color,int id): color(color), ID(id) {}
 	
 	// Setters
-	void SetDirection(const glm::vec4& _direction) { direction = _direction; }
-	void SetColor(const glm::vec4& _color)         { color     = _color;     }
-	void SetLocation(const glm::vec4& _location)   { location  = _location;  }
-	 
+	void SetColor(const glm::vec4& _color){ color = _color;}
+
 	// Getters
-	const glm::vec4& GetDirection() const { return direction;}
-	const glm::vec4& GetColor()     const { return color;    }
-	const int GetID()               const { return ID;       }
-	const glm::vec4& GetLocation() const  { return location; }
+	const glm::vec4& GetColor() const { return color; }
+	const int GetID()           const { return ID;    }
+	const std::string GetName() const { return name; }
+
+	// Virtual Methods
+	virtual const glm::vec4 GetDirectionToLightSource(const glm::vec4& worldPoint) = 0;
+
+	// Virtual Setters
+	virtual void SetDirection(const glm::vec4& _direction) =0;
+	virtual void SetLocation (const glm::vec4& _location)  =0;
+
+	// Virtual Getters
+	virtual const glm::vec4* GetDirection() const =0;
+	virtual const glm::vec4* GetLocation()  const =0;
 };

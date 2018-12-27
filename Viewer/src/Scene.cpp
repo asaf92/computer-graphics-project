@@ -69,6 +69,17 @@ const int Scene::GetActiveCameraIndex() const
 	return activeCameraIndex;
 }
 
+void Scene::AddLight(LightSourceType type, int id)
+{
+	switch (type)
+	{
+	case PointSource:
+		lights.push_back(new PointLightSource(id));
+	default:
+		return;
+	}
+}
+
 void Scene::SetActiveModelIndex(const int pIndex)
 {
 	unsigned int index = (unsigned int)pIndex;

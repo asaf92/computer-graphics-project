@@ -18,7 +18,7 @@ class Scene {
 private:
 	std::vector<std::shared_ptr<MeshModel>> models;
 	std::vector<Camera> cameras;
-	std::vector<LightSource> lights;
+	std::vector<LightSource*> lights;
 	glm::vec4 ambientLight;
 
 	int activeCameraIndex;
@@ -79,10 +79,10 @@ public:
 	// Lights
 	const glm::vec4& GetAmbientLight() const { return ambientLight; }
 	void SetAmbientLight(const glm::vec4& light) { ambientLight = light; }
-	void AddLight(LightSourceType type, int id) { lights.push_back(PointLightSource(id)); };
-	const std::vector<LightSource>& GetLightsVector() const { return lights; }
+	void AddLight(LightSourceType type, int id);
+	const std::vector<LightSource*>& GetLightsVector() const { return lights; }
 	const int GetLightsCount() const { return lights.size(); }
 	void SetActiveLightsIndex(const int index) { activeLightsIndex = index; }
 	const int GetActiveLightsIndex() const { return activeLightsIndex; }
-	LightSource& GetActiveLight() { return lights[GetActiveLightsIndex()]; }
+	LightSource* GetActiveLight() { return lights[GetActiveLightsIndex()]; }
 };

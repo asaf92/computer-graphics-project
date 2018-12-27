@@ -3,15 +3,19 @@
 
 class PointLightSource : public LightSource
 {
+protected:
+	glm::vec4 location;
 public:
 	// Constructors
-	PointLightSource(int id) : LightSource(glm::vec4(1.0f), 
-		                       glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), 
-							   id, 
-							   glm::vec4(0.0f, 0.0f, -1.0f, 1.0f)) {}
-	PointLightSource(const glm::vec4& _color, 
-		             const glm::vec4& _direction, 
-		             const glm::vec4& _location, 
-		             int id): 
-					 LightSource(_color, _direction, id,_location) {}
+	PointLightSource(int id);
+	PointLightSource(const glm::vec4& location, int id);
+
+	// Base class 
+	virtual const glm::vec4 GetDirectionToLightSource(const glm::vec4 & worldPoint) override { return location - worldPoint; }
+	virtual const glm::vec4 * GetDirection() const override { return nullptr; };
+	virtual const glm::vec4 * GetLocation() const override { return &location; };
+
+	// Base class setters
+	virtual void SetDirection(const glm::vec4 & _direction) override { return; }
+	virtual void SetLocation(const glm::vec4 & _location)   override { location = _location; }
 };
