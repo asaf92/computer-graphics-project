@@ -452,7 +452,7 @@ void Renderer::drawLightSources(const std::vector<LightSource> & lightsVector)
 	for (std::vector<LightSource>::const_iterator lightsIterator = lightsVector.cbegin(); lightsIterator != lightsVector.cend(); ++lightsIterator)
 	{
 		// Draw all lights somehow
-		std::cout << "Light" << std::endl;
+		//std::cout << "Light" << std::endl;
 	}
 }
 

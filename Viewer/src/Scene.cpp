@@ -5,6 +5,7 @@
 Scene::Scene() :
 	activeCameraIndex(0),
 	activeModelIndex(0),
+	activeLightsIndex(0),
 	ambientLight(glm::vec4(0.25f))
 {
 	// Init first camera

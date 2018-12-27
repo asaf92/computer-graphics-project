@@ -84,5 +84,5 @@ public:
 	const int GetLightsCount() const { return lights.size(); }
 	void SetActiveLightsIndex(const int index) { activeLightsIndex = index; }
 	const int GetActiveLightsIndex() const { return activeLightsIndex; }
-	LightSource& GetActiveLight() { return lights[GetActiveCameraIndex()]; }
+	LightSource& GetActiveLight() { return lights[GetActiveLightsIndex()]; }
 };

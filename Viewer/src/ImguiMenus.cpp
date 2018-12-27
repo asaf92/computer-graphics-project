@@ -411,6 +411,8 @@ void DisplayMenuBar(ImGuiIO& io, Scene& scene)
 
 void ShowLightsControls(ImGuiIO& io, Scene& scene)
 {
+	int selectedLightIndex = scene.GetActiveLightsIndex();
+	//int selectedLightIndex = -1;
 	if (ImGui::Button("Add point light source"))
 	{
 		scene.AddLight(PointSource,lightsID++);
@@ -421,8 +423,49 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 		ImGui::Text("No lights in the scene");
 		return;
 	}
+	auto& activeLight = scene.GetActiveLight();
+	const glm::vec4& lightLocation = activeLight.GetLocation();
+	glm::vec4 newLightLocation;
+	const glm::vec4& lightDirection = activeLight.GetDirection();
+	glm::vec4 newDirection = lightDirection;
 
+	static int selection_mask = (1 << 2);
+	for (unsigned int i = 0, lightsSize = lights.size(); i < lightsSize; i++)
+	{
+		ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((selection_mask & (1 << i)) ? ImGuiTreeNodeFlags_Selected : 0);
+		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
+		std::string lightName = "Light #";
+		lightName += std::to_string(lights[i].GetID());
+		const char * lightNameConst = lightName.c_str();
+		ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, lightNameConst);
+		if (ImGui::IsItemClicked())
+			selectedLightIndex = i;
+	}
+	if (selectedLightIndex != -1)
+	{
+		// Update selection state. Process outside of tree loop to avoid visual inconsistencies during the clicking-frame.
+		if (ImGui::GetIO().KeyCtrl)
+			selection_mask ^= (1 << selectedLightIndex);          // CTRL+click to toggle
+		else //if (!(selection_mask & (1 << node_clicked))) // Depending on selection behavior you want, this commented bit preserve selection when clicking on item that is part of the selection
+			selection_mask = (1 << selectedLightIndex);           // Click to single-select
+	}
+	newLightLocation = lightLocation;
+	ImGui::Text("Location");
+	ImGui::SliderFloat("X Location", &newLightLocation.x, -worldRadius, worldRadius);
+	ImGui::SliderFloat("Y Location", &newLightLocation.y, -worldRadius, worldRadius);
+	ImGui::SliderFloat("Z Location", &newLightLocation.z, -worldRadius, worldRadius);
+
+	ImGui::Text("Direction");
+	ImGui::SliderFloat("X Direction", &newDirection.x, -worldRadius, worldRadius);
+	ImGui::SliderFloat("Z Direction", &newDirection.z, -worldRadius, worldRadius);
+	ImGui::SliderFloat("Y Direction", &newDirection.y, -worldRadius, worldRadius);
+
+
+	scene.SetActiveLightsIndex(selectedLightIndex);
+	activeLight.SetLocation(newLightLocation);
+	activeLight.SetDirection(newDirection);
 	ImGui::Text("Number of lights: %d",scene.GetLightsCount());
+	ImGui::Text("Active light number: %d", selectedLightIndex + 1);
 }
 
 void DrawImguiMenus(ImGuiIO& io, Scene& scene)
