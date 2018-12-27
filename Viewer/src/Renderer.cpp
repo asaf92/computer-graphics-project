@@ -347,6 +347,7 @@ void Renderer::Render()
 	auto& activeCamera = scene.GetActiveCamera();
 	auto activeCameraLocation = Utils::Vec4FromVec3(activeCamera.GetCameraLocation());
 	shader.SetCameraWorldPoint(activeCameraLocation);
+	auto& lightsVector = scene.GetLightssVector();
 	const glm::mat4& viewMatrix = activeCamera.GetViewMatrix();
 
 	activeCamera.RenderProjectionMatrix();
@@ -438,9 +439,21 @@ void Renderer::Render()
 			draw3DLine(PointC, PointCNormalTip, glm::mat4(1), glm::mat4(1),glm::vec3(1));
 		}
 	}
+
+	drawLightSources(lightsVector);
 	auto finish = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> elapsed = finish - start;
 	scene.SetRenderExecutionTime(elapsed.count());
+}
+
+void Renderer::drawLightSources(const std::vector<LightSource> & lightsVector)
+{
+	if (lightsVector.empty()) return;
+	for (std::vector<LightSource>::const_iterator lightsIterator = lightsVector.cbegin(); lightsIterator != lightsVector.cend(); ++lightsIterator)
+	{
+		// Draw all lights somehow
+		std::cout << "Light" << std::endl;
+	}
 }
 
 void Renderer::drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix)

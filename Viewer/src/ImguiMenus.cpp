@@ -414,6 +414,7 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 	{
 		scene.AddLight(PointSource);
 	}
+	ImGui::Text("Number of lights: %d",scene.GetLightsCount());
 }
 
 void DrawImguiMenus(ImGuiIO& io, Scene& scene)

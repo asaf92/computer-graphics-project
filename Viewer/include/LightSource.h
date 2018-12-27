@@ -14,4 +14,5 @@ protected:
 	glm::vec4 direction;
 public:
 	LightSource(const glm::vec4& _direction, const glm::vec4& _color) : direction(_direction), color(_color) {	}
+	virtual const glm::vec4* GetLocation() { return nullptr; }
 };
