@@ -1,22 +1,31 @@
 #include "Shader.h"
 
-const glm::vec4 Shader::CalculateColorPhong() const
+const glm::vec4 Shader::calculateColorPhong() const
 {
-	glm::vec4 out;
-	glm::vec4 ambientPart = calculateAmbientPart();
-	glm::vec4 diffusePart(0);
-	glm::vec4 spectralPart(0);
+	//glm::vec4 out;
+	//glm::vec4 ambientPart = calculateAmbientPart();
+	//glm::vec4 diffusePart(0);
+	//glm::vec4 spectralPart(0);
 
-	out = ambientPart + diffusePart + spectralPart;
-	return out;
+	//out = ambientPart + diffusePart + spectralPart;
+	return glm::vec4(0);
 }
 
-const glm::vec4 Shader::CalculateColorFlat() const
+const glm::vec4 Shader::calculateColorFlat() const
 {
 	glm::vec4 color;
 	// ignore the coordinates, just calculate the color of point A
-	color = calculateAmbientPart();
+	color = calculatePhongReflection();
 	return color;
+}
+
+const glm::vec4 Shader::calculatePhongReflection(const glm::vec4& normal, const glm::vec4& toViewer) const
+{
+	glm::vec4 ambientPart = calculateAmbientPart ();
+	glm::vec4 diffusePart = calculateDiffusePart ();
+	glm::vec4 spectralPart= calculateSpectralPart();
+	glm::vec4 lightSum = diffusePart + spectralPart; // For each light!!!
+	return ambientPart + lightSum;
 }
 
 const glm::vec4 Shader::calculateAmbientPart() const
@@ -29,9 +38,9 @@ const glm::vec4 Shader::GetColor() const
 	switch (selectedModel)
 	{
 	case Flat:
-		return CalculateColorFlat();
+		return calculateColorFlat();
 	case Phong:
-		return CalculateColorPhong();
+		return calculateColorPhong();
 	default:
 		return glm::vec4(0);
 	}

@@ -25,6 +25,7 @@ protected:
 	Point WorldPointA;
 	Point WorldPointB;
 	Point WorldPointC;
+	Point CameraWorldPoint;
 
 	// Coordinates
 	int x, y;
@@ -39,18 +40,22 @@ protected:
 	glm::vec4 objectColor;
 
 	// Calculations
-	const glm::vec4 CalculateColorPhong () const;
-	const glm::vec4 CalculateColorFlat  () const;
+	const glm::vec4 calculateColorFlat  () const;
+	const glm::vec4 calculateColorPhong () const;
+	const glm::vec4 calculatePhongReflection(const glm::vec4& normal, const glm::vec4& toViewer) const;
 	const glm::vec4 calculateAmbientPart() const;
+	const glm::vec4 calculateDiffusePart () const {return glm::vec4(0)} // Implement later
+	const glm::vec4 calculateSpectralPart() const {return glm::vec4(0)} // Implement later
 
 public:
-	Shader(Scene& scene): scene(scene), ambientColor(scene.GetAmbientLight()), selectedModel(Phong) {}
+	Shader(Scene& scene): scene(scene), ambientColor(scene.GetAmbientLight()), selectedModel(Flat) {}
 	
 	const glm::vec4 GetColor() const;
 	void SetObjectColor(const glm::vec4& color)      { objectColor = color; }
 	void SetShadingModel(const ShadingModels& model) { selectedModel = model; }
+	void SetCameraWorldPoint(const Point& point)     { CameraWorldPoint = point; }
+	void SetNormals(const glm::vec4& a, const glm::vec4& b, const glm::vec4& c) { NormalA = a; NormalB = b; NormalC = c;}
 	void SetWorldPoints (const Point& worldPointA , const Point& worldPointB , const Point& worldPointC);
 	void SetScreenPoints(const Point& ScreenPointA, const Point& ScreenPointB, const Point& ScreenPointC);
 	void SetCoords(const int _x, const int _y) { x=_x; y=_y; }
-	void SetNormals(const glm::vec4& a, const glm::vec4& b, const glm::vec4& c) { NormalA = a; NormalB = b; NormalC = c;}
 };
