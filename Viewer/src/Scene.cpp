@@ -15,6 +15,7 @@ Scene::Scene() :
 Scene::~Scene()
 {
 	cameras.clear(); // This calls the destructor on every camera
+	lights.clear();
 }
 
 void Scene::AddModel(const std::shared_ptr<MeshModel>& model)

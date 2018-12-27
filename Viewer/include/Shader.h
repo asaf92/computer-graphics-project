@@ -16,13 +16,13 @@ protected:
 	// Dependencies
 	Scene& scene;
 
-	// Properties
+	// Shader properties
 	ShadingModels selectedModel;
 
 	// Points
-	Point ScreenPointA;
-	Point ScreenPointB;
-	Point ScreenPointC;
+	Point ScreenPointA;	// Not sure shader needs to know these
+	Point ScreenPointB;	// Not sure shader needs to know these
+	Point ScreenPointC; // Not sure shader needs to know these
 	glm::vec4 WorldPointA;
 	glm::vec4 WorldPointB;
 	glm::vec4 WorldPointC;
@@ -40,7 +40,7 @@ protected:
 	const glm::vec4& ambientColor;
 	glm::vec4 objectColor;
 
-	// Calculations
+	// Calculation methods
 	const glm::vec4 calculateColorFlat  () const;
 	const glm::vec4 calculateColorPhong () const;
 	const glm::vec4 calculatePhongReflection(const glm::vec4& normal, const glm::vec4& toViewer) const;
