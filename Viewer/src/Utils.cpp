@@ -30,6 +30,14 @@ glm::vec4 Utils::Vec4FromVec3(const glm::vec3& other)
 	return out;
 }
 
+glm::vec4 Utils::Vec4FromPoint(const Point& point)
+{
+	return glm::vec4(point.X,
+					 point.Y,
+					 point.Z,
+					 0.0f);
+}
+
 glm::vec4 Utils::Vec4FromVec3WithZero(const glm::vec3& other)
 {
 	glm::vec4 out;
