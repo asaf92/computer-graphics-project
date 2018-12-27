@@ -15,7 +15,7 @@ const glm::vec4 Shader::calculateColorFlat() const
 {
 	glm::vec4 color;
 	// ignore the coordinates, just calculate the color of point A
-	color = calculatePhongReflection();
+	color = calculatePhongReflection(NormalA,CameraWorldPoint);
 	return color;
 }
 
@@ -48,9 +48,9 @@ const glm::vec4 Shader::GetColor() const
 
 void Shader::SetWorldPoints(const Point & worldPointA, const Point & worldPointB, const Point & worldPointC)
 {
-	WorldPointA = worldPointA;
-	WorldPointB = worldPointB;
-	WorldPointC = worldPointC;
+	WorldPointA = Utils::Vec4FromPoint(worldPointA);
+	WorldPointB = Utils::Vec4FromPoint(worldPointB);
+	WorldPointC = Utils::Vec4FromPoint(worldPointC);
 }
 
 void Shader::SetScreenPoints(const Point & screenPointA, const Point & screenPointB, const Point & screenPointC)

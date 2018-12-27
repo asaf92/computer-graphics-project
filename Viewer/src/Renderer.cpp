@@ -345,7 +345,8 @@ void Renderer::Render()
 	auto start = std::chrono::high_resolution_clock::now();
 	auto& cameras = scene.GetCamerasVector();
 	auto& activeCamera = scene.GetActiveCamera();
-
+	auto activeCameraLocation = Utils::Vec4FromVec3(activeCamera.GetCameraLocation());
+	shader.SetCameraWorldPoint(activeCameraLocation);
 	const glm::mat4& viewMatrix = activeCamera.GetViewMatrix();
 
 	activeCamera.RenderProjectionMatrix();
