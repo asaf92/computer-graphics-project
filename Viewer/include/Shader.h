@@ -4,7 +4,8 @@
 
 enum ShadingModels {
 	Phong,
-	Gouraud
+	Gouraud,
+	Flat
 };
 
 class Shader
@@ -28,6 +29,6 @@ public:
 	Shader(Scene& scene): scene(scene), ambientColor(scene.GetAmbientLight()), selectedModel(Phong) {}
 	
 	const glm::vec4 CalculateColor() const;
-
 	void SetObjectColor(const glm::vec4& color) { objectColor = color; }
+	void SetShadingModel(ShadingModels model) { selectedModel = model; }
 };
