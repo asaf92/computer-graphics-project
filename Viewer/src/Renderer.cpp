@@ -243,38 +243,6 @@ XYBorders Renderer::minMax(const Point & A, const Point & B, const Point & C) co
 	return out;
 }
 
-void Renderer::fillTriangle(const Point& A, const Point& B, const Point& C,const XYBorders& borders, const glm::vec3 color)
-{
-	float w1, w2;
-	float z = A.Z +B.Z + C.Z;
-	z /= 3;
-	const int minX = (int)floor(borders.minX);
-	const int maxX = (int)ceil(borders.maxX);
-	const int minY = (int)floor(borders.minY);
-	const int maxY = (int)ceil(borders.maxY);
-	bool triangleHit = false;
-	for (int x = minX; x < maxX; x++)
-	{
-		triangleHit = false;
-		for (int y = minY; y < maxY; y++)
-		{
-			// This is the algorithm in the module (https://www.youtube.com/watch?v=HYAgJN3x4GA)
-			w1 = CalcWOneValue(A, B, C, x,y);
-			if (w1 < 0.0f || w1 > 1.0f) continue;
-			w2 = CalcWTwoValue(A,B,C,y,w1);
-			if (w2 < 0.0f || w2 > 1.0f) continue;
-			if ((w1 + w2) <= 1.0f) // No need to check that it's negative because in this point both w1 and w2 are non-negative
-			{
-				putPixel(x, y,color,z);
-				triangleHit = true;
-			}
-			else if (triangleHit) break; // This is an optimization. After drawing some pixels in the triangle and finding that the next y
-										 // value is not inside the triangle, we can assert that the rest of the Y values will also 
-										 // not be in the triangle
-		}
-	}
-}
-
 float Renderer::CalcWTwoValue(const Point & A, const Point & B, const Point & C, int y, float w1)
 {
 	if (C.Y == A.Y) return 0.0f;
@@ -291,26 +259,59 @@ float Renderer::CalcWOneValue(const Point & A, const Point & B, const Point & C,
 		   ((B.Y - A.Y)*(C.X - A.X) - (B.X - A.X)*(C.Y - A.Y));
 }
 
-void Renderer::drawTriangle(const Point & parameterPointA, const Point & parameterPointB, const Point & parameterPointC)
+void Renderer::drawTriangle(const Point & worldPointA, const Point & worldPointB, const Point & worldPointC)
 {	
-	Point screenPointA = toScreenPixel(parameterPointA);
-	Point screenPointB = toScreenPixel(parameterPointB);
-	Point screenPointC = toScreenPixel(parameterPointC);
-	
-	if ((!screenPointA.IsInFrame((float)viewportWidth, (float)viewportHeight)) || (!screenPointB.IsInFrame((float)viewportWidth, (float)viewportHeight)) || (!screenPointC.IsInFrame((float)viewportWidth, (float)viewportHeight)))
+	Point screenPointA = toScreenPixel(worldPointA);
+	Point screenPointB = toScreenPixel(worldPointB);
+	Point screenPointC = toScreenPixel(worldPointC);
+	shader.SetWorldPoints(worldPointA, worldPointB, worldPointC);
+	shader.SetScreenPoints(screenPointA, screenPointB, screenPointC);
+
+	if ((!screenPointA.IsInFrame((float)viewportWidth, (float)viewportHeight)) || 
+		(!screenPointB.IsInFrame((float)viewportWidth, (float)viewportHeight)) || 
+		(!screenPointC.IsInFrame((float)viewportWidth, (float)viewportHeight)))
 	{
 		return;
 	}
-	drawLine(Line(screenPointA, screenPointB),color);
-	drawLine(Line(screenPointB, screenPointC),color);
-	drawLine(Line(screenPointC, screenPointA),color);
 
-	if (scene.GetFillTriangles()) 
+	if (!scene.GetFillTriangles())
 	{
-		XYBorders borders = minMax(screenPointA, screenPointB, screenPointC);
-		fillTriangle(screenPointA, screenPointB, screenPointC, borders, color);
+		//drawLine(Line(A, B), shader.GetColor());
+		//drawLine(Line(B, C), shader.GetColor());
+		//drawLine(Line(C, A), shader.GetColor());
+		return;
 	}
-	
+	XYBorders borders = minMax(screenPointA, screenPointB, screenPointC);
+	float w1, w2;
+	float z = screenPointA.Z + screenPointB.Z + screenPointC.Z;
+	z /= 3;
+	const int minX = (int)floor(borders.minX);
+	const int maxX = (int)ceil (borders.maxX);
+	const int minY = (int)floor(borders.minY);
+	const int maxY = (int)ceil (borders.maxY);
+	bool triangleHit = false;
+	for (int x = minX; x < maxX; x++)
+	{
+		triangleHit = false;
+		for (int y = minY; y < maxY; y++)
+		{
+			// This is the algorithm in the module (https://www.youtube.com/watch?v=HYAgJN3x4GA)
+			w1 = CalcWOneValue(screenPointA, screenPointB, screenPointC, x, y);
+			if (w1 < 0.0f || w1 > 1.0f) continue;
+			w2 = CalcWTwoValue(screenPointA, screenPointB, screenPointC, y, w1);
+			if (w2 < 0.0f || w2 > 1.0f) continue;
+			if ((w1 + w2) <= 1.0f) // No need to check that it's negative because in this point both w1 and w2 are non-negative
+			{
+				shader.SetCoords(x, y);
+				putPixel(x, y, shader.GetColor(), z);
+				triangleHit = true;
+			}
+			else if (triangleHit) break; // This is an optimization. After drawing some pixels in the triangle and finding that the next y
+											// value is not inside the triangle, we can assert that the rest of the Y values will also 
+											// not be in the triangle
+		}
+	}
+	return;
 }
 
 void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX, int viewportY)
@@ -386,6 +387,13 @@ void Renderer::Render()
 			glm::vec4 PointA = Utils::Vec4FromVec3(vertices[firstIndex]);
 			glm::vec4 PointB = Utils::Vec4FromVec3(vertices[secondIndex]);
 			glm::vec4 PointC = Utils::Vec4FromVec3(vertices[thirdIndex]);
+			firstIndex  = facesIterator->GetNormalIndex(0) - 1;
+			secondIndex = facesIterator->GetNormalIndex(1) - 1;
+			thirdIndex  = facesIterator->GetNormalIndex(2) - 1;
+			glm::vec4 PointANormal = Utils::Vec4FromVec3(normals[firstIndex]);
+			glm::vec4 PointBNormal = Utils::Vec4FromVec3(normals[secondIndex]);
+			glm::vec4 PointCNormal = Utils::Vec4FromVec3(normals[thirdIndex]);
+			shader.SetNormals(PointANormal, PointBNormal, PointCNormal);
 			glm::vec4 PointANormalTip;
 			glm::vec4 PointBNormalTip;
 			glm::vec4 PointCNormalTip;
