@@ -291,9 +291,8 @@ float Renderer::CalcWOneValue(const Point & A, const Point & B, const Point & C,
 		   ((B.Y - A.Y)*(C.X - A.X) - (B.X - A.X)*(C.Y - A.Y));
 }
 
-void Renderer::drawTriangle(const Point & parameterPointA, const Point & parameterPointB, const Point & parameterPointC, const glm::vec3 color)
-{
-	
+void Renderer::drawTriangle(const Point & parameterPointA, const Point & parameterPointB, const Point & parameterPointC)
+{	
 	Point screenPointA = toScreenPixel(parameterPointA);
 	Point screenPointB = toScreenPixel(parameterPointB);
 	Point screenPointC = toScreenPixel(parameterPointC);
@@ -409,8 +408,7 @@ void Renderer::Render()
 			// Here we need to calculate the color taking lighting into acount
 			drawTriangle(Point(PointA), 
 						 Point(PointB), 
-						 Point(PointC),
-						 shader.CalculateColor());
+						 Point(PointC));
 
 			if (scene.GetShowNormals() == false) { continue; }
 			float drawLength = 0.05f;
