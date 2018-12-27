@@ -10,6 +10,7 @@ void ShowOrtographicProjectionControls(Camera & activeCamera);
 void ShowPerspectiveProjectionControls(Camera & activeCamera);
 void DrawImguiMenus(ImGuiIO& io, Scene& scene);
 void ShowModelControls(ImGuiIO& io, Scene& scene);
+void ShowLightsControls(ImGuiIO& io, Scene& scene);
 void ShowCameraControls(ImGuiIO& io, Scene& scene);
 void ShowShaderControls(ImGuiIO& io, Scene& scene);
 const glm::vec4& GetClearColor();

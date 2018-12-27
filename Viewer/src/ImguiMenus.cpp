@@ -64,6 +64,11 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		ShowModelControls(io,scene);
 	}
 
+	if (ImGui::CollapsingHeader("Lights Controls"))
+	{
+		ShowLightsControls(io, scene);
+	}
+
 	if (ImGui::CollapsingHeader("Camera Controls"))
 	{
 		ShowCameraControls(io, scene);
@@ -78,6 +83,7 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 	{
 		ShowShaderControls(io, scene);
 	}
+
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
@@ -399,6 +405,14 @@ void DisplayMenuBar(ImGuiIO& io, Scene& scene)
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
+	}
+}
+
+void ShowLightsControls(ImGuiIO& io, Scene& scene)
+{
+	if (ImGui::Button("Add point light source"))
+	{
+		scene.AddLight(PointSource);
 	}
 }
 

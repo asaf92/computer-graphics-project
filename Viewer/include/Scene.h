@@ -23,6 +23,7 @@ private:
 
 	int activeCameraIndex;
 	int activeModelIndex;
+	int activeLightsIndex;
 	double imGuiRenderExecutionTime;
 	double zBufferExecutionTime;
 	double colorBufferExecutionTime;
@@ -61,7 +62,7 @@ public:
 	void SetFillTriangles(const bool value) { fillTriangles = value; }
 	bool GetFillTriangles() const { return fillTriangles; }
 	void SetDrawAxis(const bool value) { drawAxis = value; }
-	bool GetDrawAxis() const {    return drawAxis; }
+	bool GetDrawAxis() const { return drawAxis; }
 
 	// Stats
 	const double GetRenderExecutionTime() const { return renderExecutionTime; }
@@ -79,9 +80,9 @@ public:
 	const glm::vec4& GetAmbientLight() const { return ambientLight; }
 	void SetAmbientLight(const glm::vec4& light) { ambientLight = light; }
 	void AddLight(LightSourceType type) { lights.push_back(PointLightSource()); };
-	//const std::vector<Camera>& GetLightssVector() const;
-	//const int GetLightsCount() const;
-	//void SetActiveLightsIndex(const int index);
-	//const int GetActiveLightsIndex() const;
-	//Camera&	GetActiveLights() { return lights[GetActiveCameraIndex()]; }
+	const std::vector<LightSource>& GetLightssVector() const { return lights; }
+	const int GetLightsCount() const { return lights.size(); }
+	void SetActiveLightsIndex(const int index) { activeLightsIndex = index; }
+	const int GetActiveLightsIndex() const { return activeLightsIndex; }
+	LightSource& GetActiveLight() { return lights[GetActiveCameraIndex()]; }
 };
