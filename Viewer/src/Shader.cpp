@@ -15,11 +15,11 @@ const glm::vec4 Shader::calculateColorFlat() const
 {
 	glm::vec4 color;
 	// ignore the coordinates, just calculate the color of point A
-	color = calculatePhongReflection(NormalA,CameraWorldPoint);
+	color = calculatePhongReflection(NormalA,calculateToCameraVector(calculateFaceWorldCenter()));
 	return color;
 }
 
-const glm::vec4 Shader::calculatePhongReflection(const glm::vec4& normal, const glm::vec4& toViewer) const
+const glm::vec4 Shader::calculatePhongReflection(const glm::vec4& normal, const glm::vec4& toCamera) const
 {
 	glm::vec4 ambientPart = calculateAmbientPart ();
 	glm::vec4 diffusePart = calculateDiffusePart ();

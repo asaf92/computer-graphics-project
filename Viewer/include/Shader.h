@@ -48,6 +48,7 @@ protected:
 	const glm::vec4 calculateDiffusePart () const {return glm::vec4(0);} // Implement later
 	const glm::vec4 calculateSpectralPart() const {return glm::vec4(0);} // Implement later
 	const glm::vec4 calculateFaceWorldCenter() const { return (WorldPointA + WorldPointB + WorldPointC / 3.0f); }
+	const glm::vec4 calculateToCameraVector(const glm::vec4& worldPoint) const { return CameraWorldPoint - worldPoint; }
 
 public:
 	Shader(Scene& scene): scene(scene), ambientColor(scene.GetAmbientLight()), selectedModel(Flat) {}
