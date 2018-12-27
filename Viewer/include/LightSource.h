@@ -28,7 +28,7 @@ public:
 	const std::string GetName() const { return name; }
 
 	// Virtual Methods
-	virtual const glm::vec4 GetDirectionToLightSource(const glm::vec4& worldPoint) = 0;
+	virtual const glm::vec4 GetDirectionToLightSource(const glm::vec4& worldPoint) const = 0;
 
 	// Virtual Setters
 	virtual void SetDirection(const glm::vec4& _direction) =0;

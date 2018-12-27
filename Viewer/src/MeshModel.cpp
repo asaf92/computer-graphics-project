@@ -166,11 +166,6 @@ const glm::mat4x4& MeshModel::GetWorldTransformation()
 	return worldTransform;
 }
 
-void MeshModel::SetColor(const glm::vec4& color)
-{
-	this->color = color;
-}
-
 void MeshModel::SetRotation(const glm::vec3 & angle)
 {
 	if (angle.x != 0)

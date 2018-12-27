@@ -376,7 +376,7 @@ void Renderer::Render()
 		const auto& normals = currentModel->GetNormalsVector();
 		std::vector<Face>& faces = currentModel->GetFacesVector();
 		shader.SetObjectColor(currentModel->GetColor());
-
+		shader.SetObjectDiffuseColor(currentModel->GetDiffuseColor());
 		glm::mat4x4 transformMatrix = projectionMatrix *  viewMatrix * worldTransform;
 		
 		// Looping through all faces

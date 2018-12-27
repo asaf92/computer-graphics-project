@@ -424,6 +424,7 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 		return;
 	}
 	auto activeLight = scene.GetActiveLight();
+	glm::vec4 newActiveLightColor = activeLight->GetColor();
 
 	// Get abstract properties
 	const glm::vec4* lightLocation =  activeLight->GetLocation();
@@ -460,10 +461,11 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 		newDirection = *lightDirection;
 		xyzSliders(newDirection, "Direction", worldRadius);
 	}
-
+	ImGui::ColorEdit3("Light color", (float*)&newActiveLightColor, ImGuiColorEditFlags_NoInputs);
 	scene.SetActiveLightsIndex(selectedLightIndex);
 	activeLight->SetLocation(newLightLocation);
 	activeLight->SetDirection(newDirection);
+	activeLight->SetColor(newActiveLightColor);
 	ImGui::Text("Number of lights: %d",scene.GetLightsCount());
 	ImGui::Text("Active light number: %d", selectedLightIndex + 1);
 }

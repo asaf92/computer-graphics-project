@@ -39,13 +39,14 @@ protected:
 	// Colors
 	const glm::vec4& ambientColor;
 	glm::vec4 objectColor;
+	glm::vec4 objectDiffuseColor;
 
 	// Calculation methods
 	const glm::vec4 calculateColorFlat  () const;
 	const glm::vec4 calculateColorPhong () const;
-	const glm::vec4 calculatePhongReflection(const glm::vec4& normal, const glm::vec4& toViewer) const;
+	const glm::vec4 calculatePhongReflection(const glm::vec4& normal, const glm::vec4& worldPoint, const glm::vec4& toCamera) const;
 	const glm::vec4 calculateAmbientPart() const;
-	const glm::vec4 calculateDiffusePart () const {return glm::vec4(0);} // Implement later
+	const glm::vec4 calculateDiffusePart(const glm::vec4& normal, const glm::vec4& worldPoint, const LightSource* lightSource) const;
 	const glm::vec4 calculateSpectralPart() const {return glm::vec4(0);} // Implement later
 	const glm::vec4 calculateFaceWorldCenter() const { return (WorldPointA + WorldPointB + WorldPointC / 3.0f); }
 	const glm::vec4 calculateToCameraVector(const glm::vec4& worldPoint) const { return CameraWorldPoint - worldPoint; }
@@ -61,4 +62,5 @@ public:
 	void SetWorldPoints (const Point& worldPointA , const Point& worldPointB , const Point& worldPointC);
 	void SetScreenPoints(const Point& ScreenPointA, const Point& ScreenPointB, const Point& ScreenPointC);
 	void SetCoords(const int _x, const int _y) { x=_x; y=_y; }
+	void SetObjectDiffuseColor(const glm::vec4& color) { objectDiffuseColor = color; }
 };
