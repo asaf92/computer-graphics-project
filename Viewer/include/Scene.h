@@ -79,8 +79,8 @@ public:
 	// Lights
 	const glm::vec4& GetAmbientLight() const { return ambientLight; }
 	void SetAmbientLight(const glm::vec4& light) { ambientLight = light; }
-	void AddLight(LightSourceType type) { lights.push_back(PointLightSource()); };
-	const std::vector<LightSource>& GetLightssVector() const { return lights; }
+	void AddLight(LightSourceType type, int id) { lights.push_back(PointLightSource(id)); };
+	const std::vector<LightSource>& GetLightsVector() const { return lights; }
 	const int GetLightsCount() const { return lights.size(); }
 	void SetActiveLightsIndex(const int index) { activeLightsIndex = index; }
 	const int GetActiveLightsIndex() const { return activeLightsIndex; }
