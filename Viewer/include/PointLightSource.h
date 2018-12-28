@@ -11,7 +11,8 @@ public:
 	PointLightSource(const glm::vec4& location, int id);
 
 	// Base class 
-	virtual const glm::vec4 GetDirectionToLightSource(const glm::vec4 & worldPoint) const override { return location - worldPoint; }
+	/*Returns the normalized vector from the worldPoint to the light source*/
+	virtual const glm::vec4 GetDirectionToLightSource(const glm::vec4 & worldPoint) const override { return glm::normalize(location - worldPoint); }
 	virtual const glm::vec4 * GetDirection() const override { return nullptr; };
 	virtual const glm::vec4 * GetLocation() const override { return &location; };
 

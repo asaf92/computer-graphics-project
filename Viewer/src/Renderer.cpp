@@ -264,7 +264,6 @@ void Renderer::drawTriangle(const Point & worldPointA, const Point & worldPointB
 	Point screenPointA = toScreenPixel(worldPointA);
 	Point screenPointB = toScreenPixel(worldPointB);
 	Point screenPointC = toScreenPixel(worldPointC);
-	shader.SetWorldPoints(worldPointA, worldPointB, worldPointC);
 	shader.SetScreenPoints(screenPointA, screenPointB, screenPointC);
 
 	if ((!screenPointA.IsInFrame((float)viewportWidth, (float)viewportHeight)) || 
@@ -345,8 +344,7 @@ void Renderer::Render()
 	auto start = std::chrono::high_resolution_clock::now();
 	auto& cameras = scene.GetCamerasVector();
 	auto& activeCamera = scene.GetActiveCamera();
-	auto activeCameraLocation = Utils::Vec4FromVec3(activeCamera.GetCameraLocation());
-	shader.SetCameraWorldPoint(activeCameraLocation);
+	auto activeCameraLocation = Utils::Vec4FromVec3Point(activeCamera.GetCameraLocation());
 	auto& lightsVector = scene.GetLightsVector();
 	const glm::mat4& viewMatrix = activeCamera.GetViewMatrix();
 
@@ -371,35 +369,48 @@ void Renderer::Render()
 	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator != models.end(); ++iterator)
 	{
 		auto currentModel = *iterator;
-		const glm::mat4& worldTransform = currentModel->GetWorldTransformation();
-		std::vector<glm::vec3>& vertices = currentModel->GetVerticesVector();
+		const auto& worldTransform = currentModel->GetWorldTransformation();
 		const auto& normals = currentModel->GetNormalsVector();
-		std::vector<Face>& faces = currentModel->GetFacesVector();
+		auto& vertices = currentModel->GetVerticesVector();
+		auto& faces = currentModel->GetFacesVector();
+
+		// Feeding the shader data
 		shader.SetObjectColor(currentModel->GetColor());
 		shader.SetObjectDiffuseColor(currentModel->GetDiffuseColor());
+		shader.SetCameraWorldPoint(worldTransform * activeCameraLocation);
 		glm::mat4x4 transformMatrix = projectionMatrix *  viewMatrix * worldTransform;
 		
 		// Looping through all faces
 		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
 		{
-			// These 3 integers will be used later for normals as well
+			// Getting the 3 vertices. These 3 index integers will be used later for normals as well
 			int firstIndex  = facesIterator->GetVertexIndex(0) - 1; // -1 because the indices start with 1
 			int secondIndex = facesIterator->GetVertexIndex(1) - 1;
 			int thirdIndex  = facesIterator->GetVertexIndex(2) - 1;
-			glm::vec4 PointA = Utils::Vec4FromVec3(vertices[firstIndex]);
-			glm::vec4 PointB = Utils::Vec4FromVec3(vertices[secondIndex]);
-			glm::vec4 PointC = Utils::Vec4FromVec3(vertices[thirdIndex]);
+			auto PointA = Utils::Vec4FromVec3Point(vertices[firstIndex]);
+			auto PointB = Utils::Vec4FromVec3Point(vertices[secondIndex]);
+			auto PointC = Utils::Vec4FromVec3Point(vertices[thirdIndex]);
+			auto PointAWorld = worldTransform * PointA;
+			auto PointBWorld = worldTransform * PointB;
+			auto PointCWorld = worldTransform * PointC;
+			PointAWorld = PointAWorld / PointAWorld.w;
+			PointBWorld = PointBWorld / PointBWorld.w;
+			PointCWorld = PointCWorld / PointCWorld.w;
+			shader.SetWorldPoints(PointAWorld, PointBWorld, PointCWorld);
+
+			// Getting the 3 normals
 			firstIndex  = facesIterator->GetNormalIndex(0) - 1;
 			secondIndex = facesIterator->GetNormalIndex(1) - 1;
 			thirdIndex  = facesIterator->GetNormalIndex(2) - 1;
-			glm::vec4 PointANormal = Utils::Vec4FromVec3(normals[firstIndex]);
-			glm::vec4 PointBNormal = Utils::Vec4FromVec3(normals[secondIndex]);
-			glm::vec4 PointCNormal = Utils::Vec4FromVec3(normals[thirdIndex]);
+			glm::vec4 PointANormal = worldTransform * Utils::Vec4FromVec3DirectionVector(normals[firstIndex]);
+			glm::vec4 PointBNormal = worldTransform * Utils::Vec4FromVec3DirectionVector(normals[secondIndex]);
+			glm::vec4 PointCNormal = worldTransform * Utils::Vec4FromVec3DirectionVector(normals[thirdIndex]);
 			shader.SetNormals(PointANormal, PointBNormal, PointCNormal);
 			glm::vec4 PointANormalTip;
 			glm::vec4 PointBNormalTip;
 			glm::vec4 PointCNormalTip;
 
+			//TODO remove this segment and calculate normals without calculating their tips
 			if (scene.GetShowNormals() == true)
 			{
 				// It's important to assign the value before PointA goes thorugh model to world transformation
@@ -408,9 +419,9 @@ void Renderer::Render()
 				PointCNormalTip = PointC;
 			}
 
-			PointA = transformMatrix * PointA;
-			PointB = transformMatrix * PointB;
-			PointC = transformMatrix * PointC;
+			PointA = projectionMatrix *  viewMatrix * PointAWorld;
+			PointB = projectionMatrix *  viewMatrix * PointBWorld;
+			PointC = projectionMatrix *  viewMatrix * PointCWorld;
 			PointA = PointA / PointA.w;
 			PointB = PointB / PointB.w;
 			PointC = PointC / PointC.w;
@@ -425,9 +436,9 @@ void Renderer::Render()
 			firstIndex = facesIterator->GetNormalIndex(0) - 1; // -1 because the indices start with 1
 			secondIndex = facesIterator->GetNormalIndex(1) - 1;
 			thirdIndex = facesIterator->GetNormalIndex(2) - 1;
-			PointANormalTip += Utils::Vec4FromVec3(normals[firstIndex]) * drawLength;
-			PointBNormalTip += Utils::Vec4FromVec3(normals[secondIndex])* drawLength;
-			PointCNormalTip += Utils::Vec4FromVec3(normals[thirdIndex]) * drawLength;
+			PointANormalTip += Utils::Vec4FromVec3Point(normals[firstIndex]) * drawLength;
+			PointBNormalTip += Utils::Vec4FromVec3Point(normals[secondIndex])* drawLength;
+			PointCNormalTip += Utils::Vec4FromVec3Point(normals[thirdIndex]) * drawLength;
 			PointANormalTip = transformMatrix * PointANormalTip;
 			PointBNormalTip = transformMatrix * PointBNormalTip;
 			PointCNormalTip = transformMatrix * PointCNormalTip;

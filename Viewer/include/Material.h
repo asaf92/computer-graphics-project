@@ -9,7 +9,7 @@ private:
 	glm::vec4 specularColor;
 public:
 	// Constructors
-	Material() : ambientColor(glm::vec4(0)), diffuseColor(glm::vec4(0)), specularColor(glm::vec4(0)) {}	
+	Material() : ambientColor(glm::vec4(0.0f)), diffuseColor(glm::vec4(0.25f, 0.25f, 0.25f, 1.0f)), specularColor(glm::vec4(0.0f)) {}
 	Material(const Material& other) : ambientColor(other.GetAmbientColor()), diffuseColor(other.GetDiffuseColor()), specularColor(other.GetSpecularColor()) {}
 
 	// Setters

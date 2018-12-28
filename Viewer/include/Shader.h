@@ -10,6 +10,7 @@ enum ShadingModels {
 	Flat
 };
 
+/* Shader class*/
 class Shader
 {
 protected:
@@ -57,10 +58,10 @@ public:
 	const glm::vec4 GetColor() const;
 	void SetObjectColor(const glm::vec4& color)      { objectColor = color; }
 	void SetShadingModel(const ShadingModels& model) { selectedModel = model; }
-	void SetCameraWorldPoint(const glm::vec4& point)     { CameraWorldPoint = Utils::Vec4FromPoint(point); }
-	void SetNormals(const glm::vec4& a, const glm::vec4& b, const glm::vec4& c) { NormalA = a; NormalB = b; NormalC = c;}
-	void SetWorldPoints (const Point& worldPointA , const Point& worldPointB , const Point& worldPointC);
-	void SetScreenPoints(const Point& ScreenPointA, const Point& ScreenPointB, const Point& ScreenPointC);
-	void SetCoords(const int _x, const int _y) { x=_x; y=_y; }
+	void SetCameraWorldPoint(const glm::vec4& point)     { CameraWorldPoint = point; }
+	void SetNormals(const glm::vec4& a, const glm::vec4& b, const glm::vec4& c);
+	void SetWorldPoints (const glm::vec4& worldPointA , const glm::vec4& worldPointB , const glm::vec4& worldPointC);
+	void SetScreenPoints(const Point& ScreenPointA, const Point& ScreenPointB, const Point& ScreenPointC); // Not sure these are needed
+	void SetCoords(const int _x, const int _y) { x=_x; y=_y; }											   // Not sure these are needed
 	void SetObjectDiffuseColor(const glm::vec4& color) { objectDiffuseColor = color; }
 };

@@ -43,7 +43,8 @@ const glm::vec4 Shader::calculateDiffusePart(const glm::vec4& normal, const glm:
 	glm::vec4 directionToLight;
 	const std::vector<LightSource*>& lightSources = scene.GetLightsVector();
 	directionToLight = lightSource->GetDirectionToLightSource(worldPoint);
-	auto result = objectDiffuseColor * (directionToLight * normal);
+	float scalar = std::fmax(glm::dot(directionToLight, normal),0.0f);
+	auto result = objectDiffuseColor * scalar * lightSource->GetColor();
 	result.x = std::fmax(result.x, 0.0f);
 	result.y = std::fmax(result.y, 0.0f);
 	result.z = std::fmax(result.z, 0.0f);
@@ -65,11 +66,19 @@ const glm::vec4 Shader::GetColor() const
 	}
 }
 
-void Shader::SetWorldPoints(const Point & worldPointA, const Point & worldPointB, const Point & worldPointC)
+void Shader::SetNormals(const glm::vec4 & a, const glm::vec4 & b, const glm::vec4 & c)
 {
-	WorldPointA = Utils::Vec4FromPoint(worldPointA);
-	WorldPointB = Utils::Vec4FromPoint(worldPointB);
-	WorldPointC = Utils::Vec4FromPoint(worldPointC);
+	NormalA = glm::normalize(a); 
+	NormalB = glm::normalize(b); 
+	NormalC = glm::normalize(c);
+}
+
+
+void Shader::SetWorldPoints(const glm::vec4 & worldPointA, const glm::vec4& worldPointB, const glm::vec4& worldPointC)
+{
+	WorldPointA = worldPointA;
+	WorldPointB = worldPointB;
+	WorldPointC = worldPointC;
 }
 
 void Shader::SetScreenPoints(const Point & screenPointA, const Point & screenPointB, const Point & screenPointC)
