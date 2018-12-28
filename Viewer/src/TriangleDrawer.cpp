@@ -40,7 +40,9 @@ void TriangleDrawer::DrawTriangle()
 	const int maxY = (int)ceil(borders.maxY);
 	const float z = (screenPointA.z + screenPointB.z + screenPointC.z) / 3.0f;
 	// If A, B, C share X or Y value
-		// drawStraightLine (don't stop the function)
+	//if((int)round(screenPointA.x) == (int)round(screenPointB.x)  ||
+	//	(int)round(screenPointA.x) == (int)round(screenPointC.x) ||
+	//	(int)round(screenPointB.x) == (int)round(screenPointC.x))
 	
 	for (int x = minX; x < maxX; x++)
 	{
@@ -53,11 +55,26 @@ void TriangleDrawer::DrawTriangle()
 				pixelPlacer.PutPixel(x, y, shader.GetColor(), z);
 				triangleHit = true;
 			}
-			else if (triangleHit) break;  // This is an optimization. After drawing some pixels in the triangle and finding that the next y
+			else if (triangleHit) continue;  // This is an optimization. After drawing some pixels in the triangle and finding that the next y
 		}								  // value is not inside the triangle, we can assert that the rest of the Y values will also 
 	}									  // not be in the triangle
 }
 
+//void TriangleDrawer::drawVerticalLine(int x,float minY, float maxY,float z)
+//{
+//	float z;
+//	line.SetAToHaveSmallerYValue();
+//	z = line.PointA.Z;
+//	const int minY = (int)floor(line.PointA.Y);
+//	const int maxY = (int)ceil(line.PointB.Y);
+//	const float zStep = (line.PointB.Z - line.PointA.Z) / (line.PointB.Y - line.PointA.Y);
+//	for (int y = minY; y < maxY; y++)
+//	{
+//		putPixel(x, y, color, z);
+//		z += zStep;
+//	}
+//	return;
+//}
 
 void TriangleDrawer::SetViewport(int viewportWidth, int viewportHeight)
 {
@@ -86,10 +103,14 @@ bool TriangleDrawer::pointInTriangle(int _x, int _y)
 	float CYminAY = (screenPointC.y - screenPointA.y);
 	float CXminAX = (screenPointC.x - screenPointA.x);
 	float BYminAY = (screenPointB.y - screenPointA.y);
-	float PXminAX = (Py - screenPointA.y);
-	float w1 = ((screenPointA.x * CYminAY) + (PXminAX * CXminAX) - (Px * CYminAY)) / ((BYminAY*CXminAX) - ((screenPointB.x - screenPointA.x) *CYminAY));
-	float w2 = (PXminAX - (w1 * BYminAY)) / CYminAY;
-	return w1 >= 0.0 && w2 >= 0.0f && (w1 + w2) <= 1.0f;
+	float PYminAY = (Py - screenPointA.y);
+	float w1 = ((screenPointA.x * CYminAY) + (PYminAY * CXminAX) - (Px * CYminAY)) / ((BYminAY*CXminAX) - ((screenPointB.x - screenPointA.x) *CYminAY));
+	float w2 = (PYminAY - (w1 * BYminAY)) / CYminAY;
+	// Round to zero
+	if (abs(w1) < EPSILON) w1 = 0.0f;
+	if (abs(w2) < EPSILON) w2 = 0.0f;
+	float w1w2 = w1 + w2 - 1.0f;
+	return w1 >= 0.0 && w2 >= 0.0f && w1w2 < 0.0f || abs(w1w2) < EPSILON;
 }
 
 bool TriangleDrawer::allPointsAreInFrame()

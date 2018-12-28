@@ -15,6 +15,6 @@ public:
 	void SetAToHaveSmallerXValue();
 	void SetAToHaveSmallerYValue();
 
-	bool IsHorizontal() const { return PointA.Y == PointB.Y; };
-	bool IsVertical() const { return PointA.X == PointB.X; };
+	bool IsHorizontal() const { return round(PointA.Y) == round(PointB.Y); };
+	bool IsVertical() const { return round(PointA.X) == round(PointB.X); };
 };

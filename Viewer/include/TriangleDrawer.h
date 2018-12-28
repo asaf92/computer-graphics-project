@@ -1,10 +1,13 @@
 #pragma once
 #include"PixelPlacer.h"
 #include "Point.h"
+#include "Line.h"
 #include "Utils.h"
 #include "XYBorders.h"
 #include <glm/glm.hpp>
 #include <algorithm> // For std::min
+
+#define EPSILON 0.000001f
 
 class TriangleDrawer
 {
