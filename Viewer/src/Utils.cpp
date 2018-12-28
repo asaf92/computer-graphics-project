@@ -68,7 +68,7 @@ glm::vec3 Utils::ScreenVec3FromWorldPoint(const Point& _worldPoint,int _viewport
 	float viewportWidth = float(_viewportWidth);
 	float viewportHeight = float(_viewportHeight);
 	worldPoint += 1.0f;
-	worldPoint /= 2;
+	worldPoint /= 2.0f;
 	worldPoint.x *= viewportWidth;
 	worldPoint.y *= viewportHeight;
 
@@ -77,11 +77,11 @@ glm::vec3 Utils::ScreenVec3FromWorldPoint(const Point& _worldPoint,int _viewport
 
 glm::vec3 Utils::ScreenVec3FromWorldPoint(const glm::vec4& _worldPoint, int _viewportWidth, int _viewportHeight)
 {
-	glm::vec3 screenPoint = _worldPoint;
+	glm::vec3 screenPoint = glm::vec3(_worldPoint.x,_worldPoint.y,_worldPoint.z);
 	float viewportWidth = float(_viewportWidth);
 	float viewportHeight = float(_viewportHeight);
 	screenPoint += 1.0f;
-	screenPoint /= 2;
+	screenPoint /= 2.0f;
 	screenPoint.x *= viewportWidth;
 	screenPoint.y *= viewportHeight;
 
