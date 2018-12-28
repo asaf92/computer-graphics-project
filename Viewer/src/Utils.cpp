@@ -70,8 +70,22 @@ glm::vec3 Utils::ScreenVec3FromWorldPoint(const Point& _worldPoint,int _viewport
 	worldPoint += 1.0f;
 	worldPoint /= 2;
 	worldPoint.x *= viewportWidth;
+	worldPoint.y *= viewportHeight;
 
 	return glm::vec3(worldPoint.x, worldPoint.y, worldPoint.z);
+}
+
+glm::vec3 Utils::ScreenVec3FromWorldPoint(const glm::vec4& _worldPoint, int _viewportWidth, int _viewportHeight)
+{
+	glm::vec3 screenPoint = _worldPoint;
+	float viewportWidth = float(_viewportWidth);
+	float viewportHeight = float(_viewportHeight);
+	screenPoint += 1.0f;
+	screenPoint /= 2;
+	screenPoint.x *= viewportWidth;
+	screenPoint.y *= viewportHeight;
+
+	return screenPoint;
 }
 
 MeshModel Utils::LoadMeshModel(const std::string& filePath)
