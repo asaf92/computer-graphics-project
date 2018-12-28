@@ -3,6 +3,7 @@
 #include "Line.h"
 #include "XYBorders.h"
 #include "Shader.h"
+#include "PixelPlacer.h"
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -18,6 +19,7 @@
 class Renderer
 {
 private:
+	// Depndencies
 	Scene& scene;
 	Shader& shader;
 
@@ -35,6 +37,7 @@ private:
 	int viewportY;
 
 	// Drawing
+	PixelPlacer pixelPlacer;
 	void putPixel(int x, int y, const glm::vec3& color,float z);
 	void drawLine(Line& line);
 	void drawLine(Line & line, const glm::vec3 & color);

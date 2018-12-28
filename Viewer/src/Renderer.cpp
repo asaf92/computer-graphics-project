@@ -18,7 +18,8 @@ Renderer::Renderer(Shader& shader, Scene& scene, int viewportWidth, int viewport
 	colorBuffer(nullptr),
 	zBuffer(nullptr),
 	scene(scene),
-	shader(shader)
+	shader(shader),
+	pixelPlacer(viewportWidth, viewportHeight, colorBuffer, zBuffer)
 {
 	initOpenGLRendering();
 	SetViewport(viewportWidth, viewportHeight, viewportX, viewportY);
@@ -38,17 +39,13 @@ Renderer::~Renderer()
 
 void Renderer::putPixel(const int i, const int j, const glm::vec3& color,const float z = maxZ)
 {
-	if (i < 0) return; if (i >= viewportWidth) return;
-	if (j < 0) return; if (j >= viewportHeight) return;
-	if (zBuffer[INDEX(viewportWidth, i, j, 0)] < z) return;
-	zBuffer[INDEX(viewportWidth, i, j, 0)] = z;
-	colorBuffer[INDEX(viewportWidth, i, j, 0)] = color.x;
-	colorBuffer[INDEX(viewportWidth, i, j, 1)] = color.y;
-	colorBuffer[INDEX(viewportWidth, i, j, 2)] = color.z;
+	pixelPlacer.PutPixel(i, j,color,z);
 }
 
 void Renderer::createBuffers(int viewportWidth, int viewportHeight)
 {
+	pixelPlacer.SetViewportWidth(viewportWidth);
+	pixelPlacer.SetViewportHeight(viewportHeight);
 	if (zBuffer)
 	{
 		delete[] zBuffer;
@@ -59,6 +56,7 @@ void Renderer::createBuffers(int viewportWidth, int viewportHeight)
 	}
 
 	zBuffer = new float[3 * viewportWidth * viewportHeight];
+	pixelPlacer.SetZBuffer(zBuffer);
 	for (int x = 0; x < viewportWidth; x++)
 	{
 		for (int y = 0; y < viewportHeight; y++)
@@ -68,6 +66,7 @@ void Renderer::createBuffers(int viewportWidth, int viewportHeight)
 	}
 
 	colorBuffer = new float[3* viewportWidth * viewportHeight];
+	pixelPlacer.SetColorBuffer(colorBuffer);
 	for (int x = 0; x < viewportWidth; x++)
 	{
 		for (int y = 0; y < viewportHeight; y++)
@@ -75,6 +74,7 @@ void Renderer::createBuffers(int viewportWidth, int viewportHeight)
 			putPixel(x, y, glm::vec3(0.0f, 0.0f, 0.0f));
 		}
 	}
+
 }
 
 void Renderer::ClearColorBuffer(const glm::vec3& color)
@@ -243,20 +243,23 @@ XYBorders Renderer::minMax(const Point & A, const Point & B, const Point & C) co
 	return out;
 }
 
-float Renderer::CalcWTwoValue(const Point & A, const Point & B, const Point & C, int y, float w1)
+float Renderer::CalcWTwoValue(const Point & A, const Point & B, const Point & C, int _y, float w1)
 {
-	if (C.Y == A.Y) return 0.0f;
-	float nominator = ((float)y - A.Y - (w1 * (B.Y - A.Y)));
+	//if (C.Y == A.Y) return 0.0f;
+	float y = (float)_y;
+	float nominator = (y - A.Y - (w1 * (B.Y - A.Y)));
 	float denominator = (C.Y - A.Y);
 	return nominator / denominator;
 }
 
-float Renderer::CalcWOneValue(const Point & A, const Point & B, const Point & C, int x, int y)
+float Renderer::CalcWOneValue(const Point & A, const Point & B, const Point & C, int _x, int _y)
 {
-	if (A.Y == B.Y) return 0.0f;
-	return (A.X*(C.Y - A.Y) + (y - A.Y)*(C.X - A.X) - x * (C.Y - A.Y))
-		/
-		   ((B.Y - A.Y)*(C.X - A.X) - (B.X - A.X)*(C.Y - A.Y));
+	//if (A.Y == C.Y) return 0.0f;
+	float x = (float)_x;
+	float y = (float)_y;
+	float nominator = (A.X*(C.Y - A.Y) + (y - A.Y)*(C.X - A.X) - x * (C.Y - A.Y));
+	float denominator = ((B.Y - A.Y)*(C.X - A.X) - (B.X - A.X)*(C.Y - A.Y));
+	return nominator / denominator;
 }
 
 void Renderer::drawTriangle(const Point & worldPointA, const Point & worldPointB, const Point & worldPointC)
@@ -483,8 +486,8 @@ Point Renderer::toScreenPixel(const Point& point) const
 	float ratioX = (point.X + 1) / 2;
 	float ratioY = (point.Y + 1) / 2;
 
-	out.X = viewportWidth  * ratioX;
-	out.Y = viewportHeight * ratioY;
+	out.X = (float)viewportWidth  * ratioX;
+	out.Y = (float)viewportHeight * ratioY;
 	out.Z = point.Z;
 	return out;
 }
