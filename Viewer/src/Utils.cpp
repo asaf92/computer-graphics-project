@@ -19,13 +19,24 @@ glm::vec2 Utils::Vec2fFromStream(std::istream& issLine)
 	return glm::vec2(x, y);
 }
 
-glm::vec4 Utils::Vec4FromVec3(const glm::vec3& other)
+glm::vec4 Utils::Vec4FromVec3Point(const glm::vec3& other)
 {
 	glm::vec4 out;
 	out.x = other.x;
 	out.y = other.y;
 	out.z = other.z;
 	out.w = 1;
+
+	return out;
+}
+
+glm::vec4 Utils::Vec4FromVec3DirectionVector(const glm::vec3& other)
+{
+	glm::vec4 out;
+	out.x = other.x;
+	out.y = other.y;
+	out.z = other.z;
+	out.w = 0;
 
 	return out;
 }
