@@ -17,6 +17,7 @@ public:
 	static glm::vec4 Vec4FromVec3DirectionVector(const glm::vec3 & other);
 	static glm::vec4 Vec4FromPoint(const Point& point);
 	static glm::vec4 Vec4FromVec3WithZero(const glm::vec3 & other);
+	glm::vec3 ScreenVec3FromWorldPoint(const Point & _worldPoint, int _viewportWidth, int _viewportHeightPar);
 	static MeshModel LoadMeshModel(const std::string& filePath);
 
 	// Add here more static utility functions...

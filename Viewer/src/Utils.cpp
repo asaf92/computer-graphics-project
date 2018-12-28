@@ -60,6 +60,20 @@ glm::vec4 Utils::Vec4FromVec3WithZero(const glm::vec3& other)
 	return out;
 }
 
+/*Takes the pixel from [-1, 1] to [0,viewportHeight/Width]
+Does NOT round the values*/
+glm::vec3 Utils::ScreenVec3FromWorldPoint(const Point& _worldPoint,int _viewportWidth, int _viewportHeight)
+{
+	glm::vec4 worldPoint = Vec4FromPoint(_worldPoint);
+	float viewportWidth = float(_viewportWidth);
+	float viewportHeight = float(_viewportHeight);
+	worldPoint += 1.0f;
+	worldPoint /= 2;
+	worldPoint.x *= viewportWidth;
+
+	return glm::vec3(worldPoint.x, worldPoint.y, worldPoint.z);
+}
+
 MeshModel Utils::LoadMeshModel(const std::string& filePath)
 {
 	std::vector<Face> faces;
