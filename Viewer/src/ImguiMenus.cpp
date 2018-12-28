@@ -373,12 +373,9 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 
 void ShowShaderControls(ImGuiIO& io, Scene& scene)
 {
-	glm::vec4 ambientLight = scene.GetAmbientLight();
 	ImGui::Checkbox("Show normal vectors", &showNormals);
-	ImGui::ColorEdit3("Ambient light color", (float*)&ambientLight, ImGuiColorEditFlags_NoInputs);
 
 	scene.SetShowNormals(showNormals);
-	scene.SetAmbientLight(ambientLight);
 	return;
 }
 
@@ -412,6 +409,9 @@ void DisplayMenuBar(ImGuiIO& io, Scene& scene)
 void ShowLightsControls(ImGuiIO& io, Scene& scene)
 {
 	int selectedLightIndex = scene.GetActiveLightsIndex();
+	glm::vec4 ambientLight = scene.GetAmbientLight();
+	ImGui::ColorEdit3("Ambient light color", (float*)&ambientLight, ImGuiColorEditFlags_NoInputs);
+	scene.SetAmbientLight(ambientLight);
 	//int selectedLightIndex = -1;
 	if (ImGui::Button("Add point light source"))
 	{
