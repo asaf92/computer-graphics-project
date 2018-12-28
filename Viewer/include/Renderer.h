@@ -4,6 +4,7 @@
 #include "XYBorders.h"
 #include "Shader.h"
 #include "PixelPlacer.h"
+#include "TriangleDrawer.h"
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -37,6 +38,7 @@ private:
 	int viewportY;
 
 	// Drawing
+	TriangleDrawer triangleDrawer;
 	PixelPlacer pixelPlacer;
 	void putPixel(int x, int y, const glm::vec3& color,float z);
 	void drawLine(Line& line);

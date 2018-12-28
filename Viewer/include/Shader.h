@@ -21,9 +21,9 @@ protected:
 	ShadingModels selectedModel;
 
 	// Points
-	Point ScreenPointA;	// Not sure shader needs to know these
-	Point ScreenPointB;	// Not sure shader needs to know these
-	Point ScreenPointC; // Not sure shader needs to know these
+	Point ScreenPointA;	
+	Point ScreenPointB;	
+	Point ScreenPointC; 
 	glm::vec4 WorldPointA;
 	glm::vec4 WorldPointB;
 	glm::vec4 WorldPointC;
