@@ -24,3 +24,9 @@ void PixelPlacer::PutPixel(const int i, const int j, const glm::vec3 & color, co
 	colorBuffer[INDEX(viewportWidth, i, j, 1)] = color.y;
 	colorBuffer[INDEX(viewportWidth, i, j, 2)] = color.z;
 }
+
+void PixelPlacer::SetViewport(int _viewportWidth, int _viewportHeight)
+{
+	viewportWidth = _viewportWidth;
+	viewportHeight = _viewportHeight;
+}

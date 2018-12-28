@@ -20,6 +20,7 @@ Renderer::Renderer(Shader& shader, Scene& scene, int viewportWidth, int viewport
 	scene(scene),
 	shader(shader),
 	pixelPlacer(viewportWidth, viewportHeight, colorBuffer, zBuffer)
+	pixelPlacer(viewportWidth, viewportHeight, colorBuffer, zBuffer),
 {
 	initOpenGLRendering();
 	SetViewport(viewportWidth, viewportHeight, viewportX, viewportY);

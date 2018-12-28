@@ -21,7 +21,9 @@ public:
 	PixelPlacer(int viewportWidth, int viewportHeight, float* colorBuffer, float* zBuffer);
 	void PutPixel(const int i, const int j, const glm::vec3& color, const float z);
 
+
 	// Setters
+	void SetViewport(int viewportWidth, int viewportHeight);
 	void SetColorBuffer(float* _colorBuffer) { colorBuffer = _colorBuffer; }
 	void SetZBuffer(float* _zBuffer) { zBuffer = _zBuffer; }
 	void SetViewportWidth(int width) { viewportWidth = width; }
