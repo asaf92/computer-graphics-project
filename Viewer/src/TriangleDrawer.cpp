@@ -34,6 +34,7 @@ void TriangleDrawer::DrawTriangle()
 	// Set z, minX,minY,maxX,maxY and triangleHit bool
 	bool triangleHit = false;
 	XYBorders borders = minMax();
+	BycentricCoordinates bycentricCoordinates;
 	const int minX = (int)floor(borders.minX);
 	const int minY = (int)floor(borders.minY);
 	const int maxX = (int)ceil(borders.maxX);
@@ -49,7 +50,8 @@ void TriangleDrawer::DrawTriangle()
 		triangleHit = false;
 		for (int y = minY; y < maxY; y++)
 		{
-			if (pointInTriangle(x, y))
+			bycentricCoordinates = getBycentricCoordinates(x,y);
+			if (pointInTriangle(bycentricCoordinates))
 			{
 				shader.SetCoords(x, y);
 				pixelPlacer.PutPixel(x, y, shader.GetColor(), z);
@@ -100,10 +102,22 @@ bool TriangleDrawer::pointInTriangle(int _x, int _y)
 {
 	BycentricCoordinates bycentricCoords = getBycentricCoordinates(_x, _y);
 	// Round to zero
-	if (abs(bycentricCoords.w1) < EPSILON) bycentricCoords.w1 = 0.0f;
-	if (abs(bycentricCoords.w2) < EPSILON) bycentricCoords.w2 = 0.0f;
-	float w1w2 = bycentricCoords.w1 + bycentricCoords.w2 - 1.0f;
-	return bycentricCoords.w1 >= 0.0 && bycentricCoords.w2 >= 0.0f && w1w2 < 0.0f || abs(w1w2) < EPSILON;
+	if (abs(bycentricCoords.B) < EPSILON) bycentricCoords.B = 0.0f;
+	if (abs(bycentricCoords.C) < EPSILON) bycentricCoords.C = 0.0f;
+	float w1w2 = bycentricCoords.B + bycentricCoords.C - 1.0f;
+	return bycentricCoords.B >= 0.0 && bycentricCoords.C >= 0.0f && w1w2 < 0.0f || abs(w1w2) < EPSILON;
+}
+
+bool TriangleDrawer::pointInTriangle(const BycentricCoordinates& bycentricCoords) const
+{
+	float w1 = bycentricCoords.B;
+	float w2 = bycentricCoords.C;
+	float w3 = bycentricCoords.A;
+	// Round to zero
+	if (abs(w1) < EPSILON) w1 = 0.0f;
+	if (abs(w2) < EPSILON) w2 = 0.0f;
+	float w1w2 = w1 + w2 - 1.0f;
+	return w1 >= 0.0 && w2 >= 0.0f && w1w2 < 0.0f || abs(w1w2) < EPSILON;
 }
 
 BycentricCoordinates TriangleDrawer::getBycentricCoordinates(int _x, int _y)
@@ -115,9 +129,9 @@ BycentricCoordinates TriangleDrawer::getBycentricCoordinates(int _x, int _y)
 	float CXminAX = (screenPointC.x - screenPointA.x);
 	float BYminAY = (screenPointB.y - screenPointA.y);
 	float PYminAY = (Py - screenPointA.y);
-	out.w1 = ((screenPointA.x * CYminAY) + (PYminAY * CXminAX) - (Px * CYminAY)) / ((BYminAY*CXminAX) - ((screenPointB.x - screenPointA.x) *CYminAY));
-	out.w2 = (PYminAY - (out.w1 * BYminAY)) / CYminAY;
-	out.w3 = 1 - out.w2 - out.w1;
+	out.B = ((screenPointA.x * CYminAY) + (PYminAY * CXminAX) - (Px * CYminAY)) / ((BYminAY*CXminAX) - ((screenPointB.x - screenPointA.x) *CYminAY));
+	out.C = (PYminAY - (out.B * BYminAY)) / CYminAY;
+	out.A = 1 - out.C - out.B;
 
 	return out;
 }

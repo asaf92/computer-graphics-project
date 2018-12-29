@@ -4,12 +4,12 @@
 #include "Line.h"
 #include "Utils.h"
 #include "XYBorders.h"
+#include "BycentricCoordinates.h"
 #include <glm/glm.hpp>
 #include <algorithm> // For std::min
 
 #define EPSILON 0.001f
 
-struct BycentricCoordinates;
 
 class TriangleDrawer
 {
@@ -34,6 +34,7 @@ private:
 	void drawStraightLine(glm::vec3 pointA, glm::vec4 pointB);
 	XYBorders minMax() const;
 	bool pointInTriangle(int _x, int _y);
+	bool pointInTriangle(const BycentricCoordinates & bycentricCoords) const;
 	BycentricCoordinates getBycentricCoordinates(int _x, int _y);
 	bool allPointsAreInFrame();
 public:
@@ -50,9 +51,3 @@ public:
 	void SetViewport(int viewportWidth, int viewportHeight);
 };
 
-struct BycentricCoordinates
-{
-	float w1;	// A
-	float w2;   // B
-	float w3;   // C
-};

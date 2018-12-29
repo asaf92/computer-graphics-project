@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "Utils.h"
 #include "Point.h"
+#include "BycentricCoordinates.h"
 
 enum ShadingModels {
 	Phong,
@@ -30,7 +31,8 @@ protected:
 	glm::vec4 CameraWorldPoint;
 
 	// Coordinates
-	int x, y, xLeft, xRight; // x and y are current coordinates, xLeft and xRight are the limits of the scanline
+	int x, y; // x and y are current coordinates, xLeft and xRight are the limits of the scanline
+	BycentricCoordinates bycentricCoordinates;
 
 	// Normals
 	glm::vec4 NormalA;
@@ -68,6 +70,6 @@ public:
 	void SetWorldPoints (const glm::vec4& worldPointA , const glm::vec4& worldPointB , const glm::vec4& worldPointC);
 	void SetScreenPoints(const glm::vec3 & screenPointA, const glm::vec3 & screenPointB, const glm::vec3 & screenPointC);
 	void SetCoords(const int _x, const int _y) { x=_x; y=_y; }											   // Not sure these are needed
+	void SetBycentricCoords(const BycentricCoordinates coordinates) { bycentricCoordinates = coordinates; }
 	void SetObjectDiffuseColor(const glm::vec4& color) { objectDiffuseColor = color; }
-	void SetScanLine(int _xLeft, int _xRight) { xLeft = _xLeft; xRight = _xRight; }
 };
