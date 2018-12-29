@@ -14,10 +14,10 @@ const glm::vec4 Shader::GetColor() const
 	{
 	case Flat:
 		return calculateColorFlat();
-	case Phong:
-		return calculateColorPhong();
 	case Gouraud:
 		return calculateColorGouraud();
+	case Phong:
+		return calculateColorPhong();
 	default:
 		return glm::vec4(0);
 	}
@@ -27,13 +27,20 @@ const glm::vec4 Shader::GetColor() const
 #pragma region const Calculations
 const glm::vec4 Shader::calculateColorPhong() const
 {
-	//glm::vec4 out;
-	//glm::vec4 ambientPart = calculateAmbientPart();
-	//glm::vec4 diffusePart(0);
-	//glm::vec4 spectralPart(0);
+	glm::vec4 interpolatedNormal;
+	interpolatedNormal  = bycentricCoordinates.A * NormalA;
+	interpolatedNormal += bycentricCoordinates.B * NormalB;
+	interpolatedNormal += bycentricCoordinates.C * NormalC;
+	interpolatedNormal = glm::normalize(interpolatedNormal);
+	
+	glm::vec4 interpolatedWorldPoint;
+	interpolatedWorldPoint  = bycentricCoordinates.A * WorldPointA;
+	interpolatedWorldPoint += bycentricCoordinates.B * WorldPointB;
+	interpolatedWorldPoint += bycentricCoordinates.C * WorldPointC;
+	
+	glm::vec4 toCamera = calculateToCameraVector(interpolatedWorldPoint);
 
-	//out = ambientPart + diffusePart + spectralPart;
-	return glm::vec4(0);
+	return calculatePhongReflection(interpolatedNormal, interpolatedWorldPoint, toCamera);
 }
 
 const glm::vec4 Shader::calculateColorGouraud() const
