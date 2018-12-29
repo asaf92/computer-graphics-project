@@ -43,6 +43,9 @@ protected:
 	const glm::vec4& ambientColor;
 	glm::vec4 objectColor;
 	glm::vec4 objectDiffuseColor;
+	glm::vec4 colorA;
+	glm::vec4 colorB;
+	glm::vec4 colorC;
 
 	// Shading methods
 	const glm::vec4 calculateColorFlat  () const;
@@ -53,6 +56,7 @@ protected:
 	const glm::vec4 calculatePhongReflection(const glm::vec4& normal, const glm::vec4& worldPoint, const glm::vec4& toCamera) const;
 	const glm::vec4 calculateAmbientPart() const;
 	const glm::vec4 calculateDiffusePart(const glm::vec4& normal, const glm::vec4& worldPoint, const LightSource* lightSource) const;
+	void CalculateVertxColors();
 	const glm::vec4 calculateSpectralPart() const {return glm::vec4(0);} // Implement later
 
 	// Vector calculations

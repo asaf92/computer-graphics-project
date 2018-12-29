@@ -1,5 +1,28 @@
 #include "Shader.h"
 
+#pragma region Public Methods
+void Shader::CalculateVertxColors()
+{
+	colorA = calculatePhongReflection(NormalA, WorldPointA, calculateToCameraVector(WorldPointA));
+	colorB = calculatePhongReflection(NormalB, WorldPointB, calculateToCameraVector(WorldPointB));
+	colorC = calculatePhongReflection(NormalC, WorldPointC, calculateToCameraVector(WorldPointC));
+}
+
+const glm::vec4 Shader::GetColor() const
+{
+	switch (selectedModel)
+	{
+	case Flat:
+		return calculateColorFlat();
+	case Phong:
+		return calculateColorPhong();
+	default:
+		return glm::vec4(0);
+	}
+}
+#pragma endregion
+
+#pragma region const Calculations
 const glm::vec4 Shader::calculateColorPhong() const
 {
 	//glm::vec4 out;
@@ -9,6 +32,20 @@ const glm::vec4 Shader::calculateColorPhong() const
 
 	//out = ambientPart + diffusePart + spectralPart;
 	return glm::vec4(0);
+}
+
+const glm::vec4 Shader::calculateColorGouraud() const
+{
+	// Calculate the face normal by averaging the 3 normals
+	//glm::vec3 faceNormal = (NormalA + NormalB + NormalC) / 3.0f;
+
+	// Calculate (using phong reflection) the colors of each screenPoint
+	glm::vec4 aColor = calculatePhongReflection(NormalA, WorldPointA, calculateToCameraVector(WorldPointA));
+	glm::vec4 bColor = calculatePhongReflection(NormalB, WorldPointB, calculateToCameraVector(WorldPointB));
+	glm::vec4 cColor = calculatePhongReflection(NormalC, WorldPointC, calculateToCameraVector(WorldPointC));
+
+	// 
+	return glm::vec4();
 }
 
 const glm::vec4 Shader::calculateColorFlat() const
@@ -52,19 +89,9 @@ const glm::vec4 Shader::calculateDiffusePart(const glm::vec4& normal, const glm:
 }
 
 
+#pragma endregion
 
-const glm::vec4 Shader::GetColor() const
-{
-	switch (selectedModel)
-	{
-	case Flat:
-		return calculateColorFlat();
-	case Phong:
-		return calculateColorPhong();
-	default:
-		return glm::vec4(0);
-	}
-}
+#pragma region Setters
 
 void Shader::SetNormals(const glm::vec4 & a, const glm::vec4 & b, const glm::vec4 & c)
 {
@@ -87,3 +114,6 @@ void Shader::SetScreenPoints(const glm::vec3 & screenPointA, const glm::vec3 & s
 	ScreenPointB = screenPointB;
 	ScreenPointC = screenPointC;
 }
+
+
+#pragma endregion
