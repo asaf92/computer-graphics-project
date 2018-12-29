@@ -24,7 +24,7 @@ void TriangleDrawer::DrawTriangle()
 	screenPointA = Utils::ScreenVec3FromWorldPoint(unscaledPointA, viewportWidth, viewportHeight);
 	screenPointB = Utils::ScreenVec3FromWorldPoint(unscaledPointB, viewportWidth, viewportHeight);
 	screenPointC = Utils::ScreenVec3FromWorldPoint(unscaledPointC, viewportWidth, viewportHeight);
-
+	shader.SetScreenPoints(screenPointA, screenPointB, screenPointC);
 	// Check if screenPoints are not in frame, return if necessary
 	if (!allPointsAreInFrame())
 	{
@@ -98,19 +98,28 @@ XYBorders TriangleDrawer::minMax() const
 
 bool TriangleDrawer::pointInTriangle(int _x, int _y)
 {
+	BycentricCoordinates bycentricCoords = getBycentricCoordinates(_x, _y);
+	// Round to zero
+	if (abs(bycentricCoords.w1) < EPSILON) bycentricCoords.w1 = 0.0f;
+	if (abs(bycentricCoords.w2) < EPSILON) bycentricCoords.w2 = 0.0f;
+	float w1w2 = bycentricCoords.w1 + bycentricCoords.w2 - 1.0f;
+	return bycentricCoords.w1 >= 0.0 && bycentricCoords.w2 >= 0.0f && w1w2 < 0.0f || abs(w1w2) < EPSILON;
+}
+
+BycentricCoordinates TriangleDrawer::getBycentricCoordinates(int _x, int _y)
+{
+	BycentricCoordinates out;
 	float Px = (float)_x;
 	float Py = (float)_y;
 	float CYminAY = (screenPointC.y - screenPointA.y);
 	float CXminAX = (screenPointC.x - screenPointA.x);
 	float BYminAY = (screenPointB.y - screenPointA.y);
 	float PYminAY = (Py - screenPointA.y);
-	float w1 = ((screenPointA.x * CYminAY) + (PYminAY * CXminAX) - (Px * CYminAY)) / ((BYminAY*CXminAX) - ((screenPointB.x - screenPointA.x) *CYminAY));
-	float w2 = (PYminAY - (w1 * BYminAY)) / CYminAY;
-	// Round to zero
-	if (abs(w1) < EPSILON) w1 = 0.0f;
-	if (abs(w2) < EPSILON) w2 = 0.0f;
-	float w1w2 = w1 + w2 - 1.0f;
-	return w1 >= 0.0 && w2 >= 0.0f && w1w2 < 0.0f || abs(w1w2) < EPSILON;
+	out.w1 = ((screenPointA.x * CYminAY) + (PYminAY * CXminAX) - (Px * CYminAY)) / ((BYminAY*CXminAX) - ((screenPointB.x - screenPointA.x) *CYminAY));
+	out.w2 = (PYminAY - (out.w1 * BYminAY)) / CYminAY;
+	out.w3 = 1 - out.w2 - out.w1;
+
+	return out;
 }
 
 bool TriangleDrawer::allPointsAreInFrame()

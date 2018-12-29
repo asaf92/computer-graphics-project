@@ -9,6 +9,8 @@
 
 #define EPSILON 0.001f
 
+struct BycentricCoordinates;
+
 class TriangleDrawer
 {
 private:
@@ -32,6 +34,7 @@ private:
 	void drawStraightLine(glm::vec3 pointA, glm::vec4 pointB);
 	XYBorders minMax() const;
 	bool pointInTriangle(int _x, int _y);
+	BycentricCoordinates getBycentricCoordinates(int _x, int _y);
 	bool allPointsAreInFrame();
 public:
 	// Constructors 
@@ -47,3 +50,9 @@ public:
 	void SetViewport(int viewportWidth, int viewportHeight);
 };
 
+struct BycentricCoordinates
+{
+	float w1;	// A
+	float w2;   // B
+	float w3;   // C
+};
