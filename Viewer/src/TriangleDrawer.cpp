@@ -130,25 +130,4 @@ bool TriangleDrawer::allPointsAreInFrame()
 		   screenPointC.y >= 0 && screenPointC.y < viewportHeight;
 }
 
-//float TriangleDrawer::calcWOneValue(const glm::vec3& A, const glm::vec3& B, const glm::vec3& C, int _x, int _y)
-//{
-//	//if (A.Y == C.Y) return 0.0f;
-//	float Px = (float)_x;
-//	float Py = (float)_y;
-//	float CYminAY = (C.y - A.y);
-//	float CXminAX = (C.x - A.x);
-//	float BYminAY = (B.y - A.y);
-//	float BXminAX = (B.x - A.x);
-//	return ()/();
-//}
-//
-//float TriangleDrawer::calcWTwoValue(const glm::vec3 & A, const glm::vec3& B, const glm::vec3& C, int _y, float w1)
-//{
-//	//if (C.Y == A.Y) return 0.0f;
-//	float y = (float)_y;
-//	float nominator = (y - A.y - (w1 * (B.y - A.y)));
-//	float denominator = (C.y - A.y);
-//	return nominator / denominator;
-//}
-
 #pragma endregion PrivateMethods
