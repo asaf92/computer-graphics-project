@@ -10,12 +10,14 @@ void Shader::CalculateVertxColors()
 
 const glm::vec4 Shader::GetColor() const
 {
-	switch (selectedModel)
+	switch (scene.GetSelectedShadingModel())
 	{
 	case Flat:
 		return calculateColorFlat();
 	case Phong:
 		return calculateColorPhong();
+	case Gouraud:
+		return calculateColorGouraud();
 	default:
 		return glm::vec4(0);
 	}

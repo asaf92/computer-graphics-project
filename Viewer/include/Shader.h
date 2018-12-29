@@ -5,21 +5,12 @@
 #include "Point.h"
 #include "BycentricCoordinates.h"
 
-enum ShadingModels {
-	Phong,
-	Gouraud,
-	Flat
-};
-
 /* Shader class*/
 class Shader
 {
 protected:
 	// Dependencies
 	Scene& scene;
-
-	// Shader properties
-	ShadingModels selectedModel;
 
 	// Points
 	glm::vec3 ScreenPointA;	
@@ -64,11 +55,11 @@ protected:
 	const glm::vec4 calculateToCameraVector(const glm::vec4& worldPoint) const { return CameraWorldPoint - worldPoint; }
 
 public:
-	Shader(Scene& scene): scene(scene), ambientColor(scene.GetAmbientLight()), selectedModel(Flat) {}
+	Shader(Scene& scene): scene(scene), ambientColor(scene.GetAmbientLight()) {}
 	
 	const glm::vec4 GetColor() const;
+
 	void SetObjectColor(const glm::vec4& color)      { objectColor = color; }
-	void SetShadingModel(const ShadingModels model) { selectedModel = model; }
 	void SetCameraWorldPoint(const glm::vec4& point)     { CameraWorldPoint = point; }
 	void SetNormals(const glm::vec4& a, const glm::vec4& b, const glm::vec4& c);
 	void SetWorldPoints (const glm::vec4& worldPointA , const glm::vec4& worldPointB , const glm::vec4& worldPointC);

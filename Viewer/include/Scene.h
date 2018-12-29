@@ -15,6 +15,13 @@
  * Scene class.
  * This class holds all the scene information (models, cameras, lights, etc..)
  */
+
+enum ShadingModels {
+	Flat = 0,
+	Phong = 1,
+	Gouraud = 2
+};
+
 class Scene {
 private:
 	std::vector<std::shared_ptr<MeshModel>> models;
@@ -34,6 +41,9 @@ private:
 	bool showNormals = false;
 	bool fillTriangles = true;
 	bool drawAxis = true;
+
+	// Shader
+	ShadingModels selectedShader;
 
 public:
 	Scene();
@@ -86,4 +96,8 @@ public:
 	void SetActiveLightsIndex(const int index) { activeLightsIndex = index; }
 	const int GetActiveLightsIndex() const { return activeLightsIndex; }
 	LightSource* GetActiveLight() { return lights[GetActiveLightsIndex()]; }
+
+	// Shader
+	ShadingModels GetSelectedShadingModel() const { return selectedShader; }
+	void SetShadingModel(ShadingModels selection) { selectedShader = selection; }
 };
