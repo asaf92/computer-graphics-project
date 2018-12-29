@@ -31,7 +31,6 @@ private:
 	glm::vec4 unscaledPointC;
 
 	// Private methods
-	void drawStraightLine(glm::vec3 pointA, glm::vec4 pointB);
 	XYBorders minMax() const;
 	bool pointInTriangle(int _x, int _y);
 	bool pointInTriangle(const BycentricCoordinates & bycentricCoords) const;

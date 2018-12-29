@@ -58,25 +58,9 @@ void TriangleDrawer::DrawTriangle()
 				triangleHit = true;
 			}
 			else if (triangleHit) continue;  // This is an optimization. After drawing some pixels in the triangle and finding that the next y
-		}								  // value is not inside the triangle, we can assert that the rest of the Y values will also 
-	}									  // not be in the triangle
+		}								     // value is not inside the triangle, we can assert that the rest of the Y values will also 
+	}									     // not be in the triangle
 }
-
-//void TriangleDrawer::drawVerticalLine(int x,float minY, float maxY,float z)
-//{
-//	float z;
-//	line.SetAToHaveSmallerYValue();
-//	z = line.PointA.Z;
-//	const int minY = (int)floor(line.PointA.Y);
-//	const int maxY = (int)ceil(line.PointB.Y);
-//	const float zStep = (line.PointB.Z - line.PointA.Z) / (line.PointB.Y - line.PointA.Y);
-//	for (int y = minY; y < maxY; y++)
-//	{
-//		putPixel(x, y, color, z);
-//		z += zStep;
-//	}
-//	return;
-//}
 
 void TriangleDrawer::SetViewport(int viewportWidth, int viewportHeight)
 {
@@ -144,11 +128,6 @@ bool TriangleDrawer::allPointsAreInFrame()
 		   screenPointA.y >= 0 && screenPointA.y < viewportHeight &&
 		   screenPointB.y >= 0 && screenPointB.y < viewportHeight &&
 		   screenPointC.y >= 0 && screenPointC.y < viewportHeight;
-}
-
-void TriangleDrawer::drawStraightLine(glm::vec3 pointA, glm::vec4 pointB)
-{
-
 }
 
 //float TriangleDrawer::calcWOneValue(const glm::vec3& A, const glm::vec3& B, const glm::vec3& C, int _x, int _y)
