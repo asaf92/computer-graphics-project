@@ -81,7 +81,7 @@ void Shader::SetWorldPoints(const glm::vec4 & worldPointA, const glm::vec4& worl
 	WorldPointC = worldPointC;
 }
 
-void Shader::SetScreenPoints(const Point & screenPointA, const Point & screenPointB, const Point & screenPointC)
+void Shader::SetScreenPoints(const glm::vec3 & screenPointA, const glm::vec3 & screenPointB, const glm::vec3 & screenPointC)
 {
 	ScreenPointA = screenPointA;
 	ScreenPointB = screenPointB;
