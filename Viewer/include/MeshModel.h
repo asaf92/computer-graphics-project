@@ -54,10 +54,11 @@ public:
 	virtual ~MeshModel();
 
 	// Setters
-	void SetColor(const glm::vec4& color)              { this->color = color; }
-	void SetTranslation(glm::vec3 direction)           { translationVector = direction; }
-	void SetScaling(glm::vec3 scale)                   { scaleSize         = scale; }
-	void SetObjectDiffuseColor(const glm::vec4& color) { uniformMaterial.SetDiffuseColor(color); }
+	void SetColor(const glm::vec4& color)               { this->color = color; }
+	void SetTranslation(glm::vec3 direction)            { translationVector = direction; }
+	void SetScaling(glm::vec3 scale)                    { scaleSize         = scale; }
+	void SetObjectDiffuseColor(const glm::vec4& color)  { uniformMaterial.SetDiffuseColor(color); }
+	void SetObjectSpecularColor(const glm::vec4& color) { uniformMaterial.SetSpecularColor(color); }
 	void SetRotation(const glm::vec3& angle);
 
 	//Getters
@@ -71,6 +72,7 @@ public:
 	const glm::vec3& GetScalingVector()              const  { return scaleSize; }
 	Material& GetUniformMaterial()                          { return uniformMaterial; }
 	glm::vec4 GetDiffuseColor()                      const	{ return glm::vec4(uniformMaterial.GetDiffuseColor()); }
+	glm::vec4 GetSpecularColor()                     const  { return glm::vec4(uniformMaterial.GetSpecularColor()); }
 
 	// Not sure if needed
 	glm::vec3& GetCenterPoint()						        { return centerPoint; }

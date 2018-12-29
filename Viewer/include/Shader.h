@@ -34,6 +34,7 @@ protected:
 	const glm::vec4& ambientColor;
 	glm::vec4 objectColor;
 	glm::vec4 objectDiffuseColor;
+	glm::vec4 objectSpecularColor;
 	glm::vec4 colorA;
 	glm::vec4 colorB;
 	glm::vec4 colorC;
@@ -47,7 +48,7 @@ protected:
 	const glm::vec4 calculatePhongReflection(const glm::vec4& normal, const glm::vec4& worldPoint, const glm::vec4& toCamera) const;
 	const glm::vec4 calculateAmbientPart() const;
 	const glm::vec4 calculateDiffusePart(const glm::vec4& normal, const glm::vec4& worldPoint, const LightSource* lightSource) const;
-	const glm::vec4 calculateSpectralPart() const {return glm::vec4(0);} // Implement later
+	const glm::vec4 calculateSpectralPart(const glm::vec4& normal, const glm::vec4& worldPoint, const glm::vec4& toCamera, const LightSource* lightSource) const;
 
 	// Vector calculations
 	const glm::vec4 calculateFaceWorldCenter() const { return (WorldPointA + WorldPointB + WorldPointC / 3.0f); }
@@ -66,5 +67,6 @@ public:
 	void SetCoords(const int _x, const int _y) { x=_x; y=_y; }											   // Not sure these are needed
 	void SetBycentricCoords(const BycentricCoordinates coordinates) { bycentricCoordinates = coordinates; }
 	void SetObjectDiffuseColor(const glm::vec4& color) { objectDiffuseColor = color; }
+	void SetObjectSpecularColor(const glm::vec4& color) { objectSpecularColor = color; }
 	void CalculateVertexColors();
 };

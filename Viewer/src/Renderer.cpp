@@ -333,6 +333,7 @@ void Renderer::Render()
 		// Feeding the shader data
 		shader.SetObjectColor(currentModel->GetColor());
 		shader.SetObjectDiffuseColor(currentModel->GetDiffuseColor());
+		shader.SetObjectSpecularColor(currentModel->GetSpecularColor());
 		shader.SetCameraWorldPoint(worldTransform * activeCameraLocation);
 		glm::mat4x4 transformMatrix = projectionMatrix *  viewMatrix * worldTransform;
 		
@@ -383,7 +384,6 @@ void Renderer::Render()
 			PointC = PointC / PointC.w;
 			shader.CalculateVertexColors();
 			triangleDrawer.SetUnscaledPoints(PointA, PointB, PointC);
-			// Here we need to calculate the color taking lighting into acount
 			triangleDrawer.DrawTriangle();
 
 			if (scene.GetShowNormals() == false) { continue; }

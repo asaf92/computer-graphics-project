@@ -67,7 +67,7 @@ const glm::vec4 Shader::calculatePhongReflection(const glm::vec4& normal,const g
 	for each (LightSource* light in scene.GetLightsVector())
 	{
 		glm::vec4 diffusePartSum = calculateDiffusePart (normal,worldPoint,light);
-		glm::vec4 spectralPartSum = calculateSpectralPart();
+		glm::vec4 spectralPartSum = calculateSpectralPart(normal,worldPoint,toCamera,light);
 		lightSum += diffusePartSum + spectralPartSum;
 	}
 	return ambientPart + lightSum;
@@ -82,10 +82,24 @@ const glm::vec4 Shader::calculateAmbientPart() const
 const glm::vec4 Shader::calculateDiffusePart(const glm::vec4& normal, const glm::vec4& worldPoint, const LightSource* lightSource) const
 {
 	glm::vec4 directionToLight;
-	const std::vector<LightSource*>& lightSources = scene.GetLightsVector();
+	//const std::vector<LightSource*>& lightSources = scene.GetLightsVector();
 	directionToLight = lightSource->GetDirectionToLightSource(worldPoint);
 	float scalar = std::fmax(glm::dot(directionToLight, normal),0.0f);
 	auto result = objectDiffuseColor * scalar * lightSource->GetColor();
+	result.x = std::fmax(result.x, 0.0f);
+	result.y = std::fmax(result.y, 0.0f);
+	result.z = std::fmax(result.z, 0.0f);
+	return result;
+}
+
+const glm::vec4 Shader::calculateSpectralPart(const glm::vec4& normal, const glm::vec4& worldPoint, const glm::vec4& toCamera, const LightSource* lightSource) const
+{
+	float alpha = 0.5f;
+	glm::vec4 directionToLight = lightSource->GetDirectionToLightSource(worldPoint);
+	glm::vec4 reflection = 2.0f * (glm::dot(directionToLight, normal)) * normal - directionToLight;
+	float scalar = glm::dot(reflection, toCamera);
+	scalar = pow(scalar, alpha);
+	auto result = objectSpecularColor * scalar * lightSource->GetColor();
 	result.x = std::fmax(result.x, 0.0f);
 	result.y = std::fmax(result.y, 0.0f);
 	result.z = std::fmax(result.z, 0.0f);
