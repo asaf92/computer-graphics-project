@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include "ProjectionType.h"
 #include "PointLightSource.h"
+#include "ParallelLightSource.h"
 /*
  * Scene class.
  * This class holds all the scene information (models, cameras, lights, etc..)
@@ -79,7 +80,7 @@ public:
 	// Lights
 	const glm::vec4& GetAmbientLight() const { return ambientLight; }
 	void SetAmbientLight(const glm::vec4& light) { ambientLight = light; }
-	void AddLight(LightSourceType type, int id);
+	void AddLight(LightSourceType type);
 	const std::vector<LightSource*>& GetLightsVector() const { return lights; }
 	const int GetLightsCount() const { return lights.size(); }
 	void SetActiveLightsIndex(const int index) { activeLightsIndex = index; }

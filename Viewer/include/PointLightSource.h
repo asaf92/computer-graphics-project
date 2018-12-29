@@ -3,12 +3,16 @@
 
 class PointLightSource : public LightSource
 {
-protected:
+private:
+	static int id;
 	glm::vec4 location;
 public:
 	// Constructors
-	PointLightSource(int id);
-	PointLightSource(const glm::vec4& location, int id);
+	PointLightSource() : PointLightSource(glm::vec4(0.0f,0.0f,-1.0f,1.0f)) {}
+	PointLightSource(const glm::vec4& _location) : location(_location)
+	{
+		name = "Point Light Source #" + std::to_string(id++);
+	}
 
 	// Base class 
 	/*Returns the normalized vector from the worldPoint to the light source*/
@@ -20,3 +24,4 @@ public:
 	virtual void SetDirection(const glm::vec4 & _direction) override { return; }
 	virtual void SetLocation(const glm::vec4 & _location)   override { location = _location; }
 };
+

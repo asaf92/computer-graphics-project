@@ -69,12 +69,16 @@ const int Scene::GetActiveCameraIndex() const
 	return activeCameraIndex;
 }
 
-void Scene::AddLight(LightSourceType type, int id)
+void Scene::AddLight(LightSourceType type)
 {
 	switch (type)
 	{
 	case PointSource:
-		lights.push_back(new PointLightSource(id));
+		lights.push_back(new PointLightSource());
+		return;
+	case Parallel:
+		lights.push_back(new ParallelLightSource());
+		return;
 	default:
 		return;
 	}

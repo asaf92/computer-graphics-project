@@ -14,17 +14,16 @@ class LightSource
 protected:
 	glm::vec4 color;
 	std::string name;
-	int ID;
 public:
 	// Constructors
-	LightSource(const glm::vec4& color,int id): color(color), ID(id) {}
+	LightSource() :color(glm::vec4(0)) {}
+	LightSource(const glm::vec4& color): color(color) {}
 	
 	// Setters
 	void SetColor(const glm::vec4& _color){ color = _color;}
 
 	// Getters
 	const glm::vec4& GetColor() const { return color; }
-	const int GetID()           const { return ID;    }
 	const std::string GetName() const { return name; }
 
 	// Virtual Methods

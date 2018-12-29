@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 #include <algorithm> // For std::min
 
-#define EPSILON 0.000001f
+#define EPSILON 0.001f
 
 class TriangleDrawer
 {

@@ -27,7 +27,6 @@ static bool showProjectionControls =      false;
 static bool showNormals =				  false;
 
 glm::vec4 clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.00f);
-int lightsID = 1;
 
 const glm::vec4& GetClearColor()
 {
@@ -415,7 +414,11 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 	//int selectedLightIndex = -1;
 	if (ImGui::Button("Add point light source"))
 	{
-		scene.AddLight(PointSource,lightsID++);
+		scene.AddLight(PointSource);
+	}
+	if (ImGui::Button("Add parallel light source"))
+	{
+		scene.AddLight(Parallel);
 	}
 	const std::vector<LightSource*> lights = scene.GetLightsVector();
 	if (lights.size() == 0)
