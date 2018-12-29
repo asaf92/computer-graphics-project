@@ -53,7 +53,8 @@ void TriangleDrawer::DrawTriangle()
 			bycentricCoordinates = getBycentricCoordinates(x,y);
 			if (pointInTriangle(bycentricCoordinates))
 			{
-				shader.SetCoords(x, y);
+				//shader.SetCoords(x, y);
+				shader.SetBycentricCoords(bycentricCoordinates);
 				pixelPlacer.PutPixel(x, y, shader.GetColor(), z);
 				triangleHit = true;
 			}

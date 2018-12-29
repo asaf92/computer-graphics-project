@@ -47,7 +47,6 @@ protected:
 	const glm::vec4 calculatePhongReflection(const glm::vec4& normal, const glm::vec4& worldPoint, const glm::vec4& toCamera) const;
 	const glm::vec4 calculateAmbientPart() const;
 	const glm::vec4 calculateDiffusePart(const glm::vec4& normal, const glm::vec4& worldPoint, const LightSource* lightSource) const;
-	void CalculateVertxColors();
 	const glm::vec4 calculateSpectralPart() const {return glm::vec4(0);} // Implement later
 
 	// Vector calculations
@@ -67,4 +66,5 @@ public:
 	void SetCoords(const int _x, const int _y) { x=_x; y=_y; }											   // Not sure these are needed
 	void SetBycentricCoords(const BycentricCoordinates coordinates) { bycentricCoordinates = coordinates; }
 	void SetObjectDiffuseColor(const glm::vec4& color) { objectDiffuseColor = color; }
+	void CalculateVertexColors();
 };

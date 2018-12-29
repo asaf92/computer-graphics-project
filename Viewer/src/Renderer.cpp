@@ -381,6 +381,7 @@ void Renderer::Render()
 			PointA = PointA / PointA.w;
 			PointB = PointB / PointB.w;
 			PointC = PointC / PointC.w;
+			shader.CalculateVertexColors();
 			triangleDrawer.SetUnscaledPoints(PointA, PointB, PointC);
 			// Here we need to calculate the color taking lighting into acount
 			triangleDrawer.DrawTriangle();

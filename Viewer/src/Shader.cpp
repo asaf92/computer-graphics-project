@@ -1,7 +1,7 @@
 #include "Shader.h"
 
 #pragma region Public Methods
-void Shader::CalculateVertxColors()
+void Shader::CalculateVertexColors()
 {
 	colorA = calculatePhongReflection(NormalA, WorldPointA, calculateToCameraVector(WorldPointA));
 	colorB = calculatePhongReflection(NormalB, WorldPointB, calculateToCameraVector(WorldPointB));
@@ -38,16 +38,11 @@ const glm::vec4 Shader::calculateColorPhong() const
 
 const glm::vec4 Shader::calculateColorGouraud() const
 {
-	// Calculate the face normal by averaging the 3 normals
-	//glm::vec3 faceNormal = (NormalA + NormalB + NormalC) / 3.0f;
-
-	// Calculate (using phong reflection) the colors of each screenPoint
-	glm::vec4 aColor = calculatePhongReflection(NormalA, WorldPointA, calculateToCameraVector(WorldPointA));
-	glm::vec4 bColor = calculatePhongReflection(NormalB, WorldPointB, calculateToCameraVector(WorldPointB));
-	glm::vec4 cColor = calculatePhongReflection(NormalC, WorldPointC, calculateToCameraVector(WorldPointC));
-
-	// 
-	return glm::vec4();
+	glm::vec4 out; 
+	out  = bycentricCoordinates.A * colorA;
+	out += bycentricCoordinates.B * colorB;
+	out += bycentricCoordinates.C * colorC;
+	return out;
 }
 
 const glm::vec4 Shader::calculateColorFlat() const

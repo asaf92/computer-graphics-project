@@ -5,6 +5,7 @@
 #include "MeshModel.h"
 #include "Camera.h"
 #include "Utils.h"
+#include "Shader.h"
 #include <cmath>
 #include <memory>
 #include <stdio.h>
@@ -372,8 +373,39 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 
 void ShowShaderControls(ImGuiIO& io, Scene& scene)
 {
+	
+	ShadingModels selectedShaderModel = scene.GetSelectedShadingModel();
 	ImGui::Checkbox("Show normal vectors", &showNormals);
 
+	static int selection_mask = (1 << 2);
+	ImGui::Text("Shader Model Selection");
+	
+	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((selection_mask & (1 << 0)) ? ImGuiTreeNodeFlags_Selected : 0);
+	node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
+	ImGui::TreeNodeEx((void*)(intptr_t)0, node_flags, "Flat shading");
+	if (ImGui::IsItemClicked())
+		selectedShaderModel = Flat;
+	node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((selection_mask & (1 << 1)) ? ImGuiTreeNodeFlags_Selected : 0);
+	node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
+	ImGui::TreeNodeEx((void*)(intptr_t)1, node_flags, "Phong shading");
+	if (ImGui::IsItemClicked())
+		selectedShaderModel = Phong;
+	node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ((selection_mask & (1 << 2)) ? ImGuiTreeNodeFlags_Selected : 0);
+	node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
+	ImGui::TreeNodeEx((void*)(intptr_t)2, node_flags, "Gouraud shading");
+	if (ImGui::IsItemClicked())
+		selectedShaderModel = Gouraud;
+	
+	if ((int)selectedShaderModel != -1)
+	{
+		// Update selection state. Process outside of tree loop to avoid visual inconsistencies during the clicking-frame.
+		if (ImGui::GetIO().KeyCtrl)
+			selection_mask ^= (1 << selectedShaderModel);          // CTRL+click to toggle
+		else //if (!(selection_mask & (1 << node_clicked))) // Depending on selection behavior you want, this commented bit preserve selection when clicking on item that is part of the selection
+			selection_mask = (1 << selectedShaderModel);           // Click to single-select
+	}
+
+	scene.SetShadingModel(selectedShaderModel);
 	scene.SetShowNormals(showNormals);
 	return;
 }
