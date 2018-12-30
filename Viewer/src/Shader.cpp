@@ -94,8 +94,8 @@ const glm::vec4 Shader::calculateDiffusePart(const glm::vec4& normal, const glm:
 
 const glm::vec4 Shader::calculateSpectralPart(const glm::vec4& normal, const glm::vec4& worldPoint, const glm::vec4& toCamera, const LightSource* lightSource) const
 {
-	glm::vec4 directionToLight = lightSource->GetDirectionToLightSource(worldPoint);
-	glm::vec4 reflection = 2.0f * (glm::dot(directionToLight, normal)) * normal - directionToLight;
+	glm::vec4 directionToLight = glm::normalize(-lightSource->GetDirectionToLightSource(worldPoint));
+	glm::vec4 reflection = glm::normalize(2.0f * (glm::dot(directionToLight, normal)) * normal - directionToLight);
 	float scalar = glm::dot(reflection, toCamera);
 	scalar = pow(scalar, shininess);
 	auto result = objectSpecularColor * scalar * lightSource->GetColor();
