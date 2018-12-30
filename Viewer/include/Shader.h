@@ -38,6 +38,7 @@ protected:
 	glm::vec4 colorA;
 	glm::vec4 colorB;
 	glm::vec4 colorC;
+	float shininess;
 
 	// Shading methods
 	const glm::vec4 calculateColorFlat  () const;
@@ -68,5 +69,6 @@ public:
 	void SetBycentricCoords(const BycentricCoordinates coordinates) { bycentricCoordinates = coordinates; }
 	void SetObjectDiffuseColor(const glm::vec4& color) { objectDiffuseColor = color; }
 	void SetObjectSpecularColor(const glm::vec4& color) { objectSpecularColor = color; }
+	void SetShininess(float _shininess) { shininess = _shininess; }
 	void CalculateVertexColors();
 };

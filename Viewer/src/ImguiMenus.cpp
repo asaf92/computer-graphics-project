@@ -297,6 +297,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	auto ambientColor = uniformMaterial.GetAmbientColor();
 	auto specularColor = uniformMaterial.GetSpecularColor();
 	auto diffuseColor = uniformMaterial.GetDiffuseColor();
+	auto shininess = uniformMaterial.GetShininess();
 
 	static int selection_mask = (1 << 2);
 	ImGui::Text("Model Selection");
@@ -357,6 +358,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 		ImGui::Text("Diffuse Color");
 		ImGui::ColorEdit3("Diffuse", (float*)&diffuseColor);
 		ImGui::TreePop();
+		ImGui::SliderFloat("Shininess", (float*)&shininess, 0.0f, 1.0f);
 	}
 
 	ImGui::Text("x: %.2f y: %.2f z: %.2f", activeModelTranslationVector.x, activeModelTranslationVector.y, activeModelTranslationVector.z);
@@ -368,6 +370,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	uniformMaterial.SetAmbientColor(ambientColor);
 	uniformMaterial.SetSpecularColor(specularColor);
 	uniformMaterial.SetDiffuseColor(diffuseColor);
+	uniformMaterial.SetShininess(shininess);
 	scene.SetActiveModelIndex(selectedModelIndex);
 }
 

@@ -334,6 +334,7 @@ void Renderer::Render()
 		shader.SetObjectColor(currentModel->GetColor());
 		shader.SetObjectDiffuseColor(currentModel->GetDiffuseColor());
 		shader.SetObjectSpecularColor(currentModel->GetSpecularColor());
+		shader.SetShininess(currentModel->GetUniformMaterial().GetShininess());
 		shader.SetCameraWorldPoint(worldTransform * activeCameraLocation);
 		glm::mat4x4 transformMatrix = projectionMatrix *  viewMatrix * worldTransform;
 		
