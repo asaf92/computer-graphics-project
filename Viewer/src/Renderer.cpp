@@ -20,7 +20,8 @@ Renderer::Renderer(Shader& shader, Scene& scene, int viewportWidth, int viewport
 	scene(scene),
 	shader(shader),
 	pixelPlacer(viewportWidth, viewportHeight, colorBuffer, zBuffer),
-	triangleDrawer(TriangleDrawer(shader,pixelPlacer,viewportWidth,viewportHeight))
+	triangleDrawer(TriangleDrawer(shader, pixelPlacer, viewportWidth, viewportHeight)),
+	fogger(Fogger())
 {
 	initOpenGLRendering();
 	SetViewport(viewportWidth, viewportHeight, viewportX, viewportY);
@@ -405,6 +406,15 @@ void Renderer::Render()
 			draw3DLine(PointB, PointBNormalTip, glm::mat4(1), glm::mat4(1),glm::vec3(1));
 			draw3DLine(PointC, PointCNormalTip, glm::mat4(1), glm::mat4(1),glm::vec3(1));
 		}
+	}
+	if (scene.GetFogEnabled())
+	{
+		fogger.SetColorBuffer(colorBuffer);
+		fogger.SetZBuffer(zBuffer);
+		fogger.SetStart(scene.GetFogStart());
+		fogger.SetFinish(scene.GetFogFinish());
+		fogger.SetViewport(viewportWidth, viewportHeight);
+		fogger.AddFog();
 	}
 
 	drawLightSources(lightsVector);

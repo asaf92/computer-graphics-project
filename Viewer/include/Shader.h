@@ -4,6 +4,7 @@
 #include "Utils.h"
 #include "Point.h"
 #include "BycentricCoordinates.h"
+#include "Fogger.h"
 
 /* Shader class*/
 class Shader
@@ -11,6 +12,7 @@ class Shader
 protected:
 	// Dependencies
 	Scene& scene;
+	//Fogger& fogger;
 
 	// Points
 	glm::vec3 ScreenPointA;	

@@ -12,7 +12,6 @@ float Fogger::getFogFactor(float zValue)
 
 void Fogger::AddFog()
 {
-	float r, g, b;
 	glm::vec3 color;
 	float zValue;
 	float fogFactor;
@@ -20,12 +19,17 @@ void Fogger::AddFog()
 	{
 		for (int y = 0; y < viewportHeight; y++)
 		{
-			r =  colorBuffer[INDEX(viewportWidth, x, y, 0)];
-			g =  colorBuffer[INDEX(viewportWidth, x, y, 1)];
-			b =  colorBuffer[INDEX(viewportWidth, x, y, 2)];
+			color.r =  colorBuffer[INDEX(viewportWidth, x, y, 0)];
+			color.g =  colorBuffer[INDEX(viewportWidth, x, y, 1)];
+			color.b =  colorBuffer[INDEX(viewportWidth, x, y, 2)];
 			zValue = zBuffer[INDEX(viewportWidth, x, y, 0)];
+			zValue += 2.0f; // Magic number to solve negative zValues issue
 			fogFactor = getFogFactor(zValue);
-			color = glm::vec4(r, g, b,0) * fogFactor;
+			color *= fogFactor;
+			color += (1 - fogFactor) * fogColor;
+			colorBuffer[INDEX(viewportWidth, x, y, 0)] = color.x;
+			colorBuffer[INDEX(viewportWidth, x, y, 1)] = color.y;
+			colorBuffer[INDEX(viewportWidth, x, y, 2)] = color.z;
 		}
 	}
 }

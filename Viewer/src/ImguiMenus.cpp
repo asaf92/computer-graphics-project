@@ -427,8 +427,8 @@ void ShowFogControls(ImGuiIO& io, Scene& scene)
 	if (!enableFog) return;
 	float start = scene.GetFogStart();
 	float finish = scene.GetFogFinish();
-	ImGui::SliderFloat("Start", &start, 0, 30.0f);
-	ImGui::SliderFloat("Finish", &finish, 0, 30.0f);
+	ImGui::SliderFloat("Start", &start, 0, 2.0f);
+	ImGui::SliderFloat("Finish", &finish, 0, 2.0f);
 
 	scene.SetFogStart(start);
 	scene.SetFogFinish(finish);

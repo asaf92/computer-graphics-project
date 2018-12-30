@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "PixelPlacer.h"
 #include "TriangleDrawer.h"
+#include "Fogger.h"
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -36,6 +37,9 @@ private:
 	int viewportHeight;
 	int viewportX;
 	int viewportY;
+
+	// Fogger
+	Fogger fogger;
 
 	// Drawing
 	TriangleDrawer triangleDrawer;

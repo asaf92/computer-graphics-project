@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "ImguiMenus.h"
 #include "Shader.h"
+#include "Fogger.h"
 
 // Function declarations
 static void GlfwErrorCallback(int error, const char* description);
@@ -56,7 +57,6 @@ int main(int argc, char **argv)
 
 	// Create the renderer and the scene
 	Renderer renderer = Renderer(shader,scene,frameBufferWidth, frameBufferHeight);
-
 
 	// Setup ImGui
 	ImGuiIO& io = SetupDearImgui(window);
