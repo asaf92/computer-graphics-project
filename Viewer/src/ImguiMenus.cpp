@@ -85,6 +85,10 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		ShowShaderControls(io, scene);
 	}
 
+	if (ImGui::CollapsingHeader("Fog Controls"))
+	{
+		ShowFogControls(io, scene);
+	}
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
@@ -411,6 +415,23 @@ void ShowShaderControls(ImGuiIO& io, Scene& scene)
 	scene.SetShadingModel(selectedShaderModel);
 	scene.SetShowNormals(showNormals);
 	return;
+}
+
+void ShowFogControls(ImGuiIO& io, Scene& scene)
+{
+	bool enableFog = scene.GetFogEnabled();
+	ImGui::Text("Fog");
+	ImGui::Checkbox("Enable fog", &enableFog);
+	scene.SetFogEnabled(enableFog);
+
+	if (!enableFog) return;
+	float start = scene.GetFogStart();
+	float finish = scene.GetFogFinish();
+	ImGui::SliderFloat("Start", &start, 0, 30.0f);
+	ImGui::SliderFloat("Finish", &finish, 0, 30.0f);
+
+	scene.SetFogStart(start);
+	scene.SetFogFinish(finish);
 }
 
 void DisplayMenuBar(ImGuiIO& io, Scene& scene)

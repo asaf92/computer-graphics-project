@@ -14,6 +14,7 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene);
 void xyzSliders(glm::vec4 &newVector, std::string title, float radius);
 void ShowCameraControls(ImGuiIO& io, Scene& scene);
 void ShowShaderControls(ImGuiIO& io, Scene& scene);
+void ShowFogControls(ImGuiIO& io, Scene& scene);
 const glm::vec4& GetClearColor();
 void DisplayMenuBar(ImGuiIO& io, Scene& scene);
 void PrintMatrix(const glm::mat4x4& matrix, const char* name);

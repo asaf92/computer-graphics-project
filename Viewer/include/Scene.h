@@ -42,6 +42,11 @@ private:
 	bool fillTriangles = true;
 	bool drawAxis = true;
 
+	// Fog
+	bool fogEnabled = false;
+	float fogStart;
+	float fogFinish;
+
 	// Shader
 	ShadingModels selectedShader;
 
@@ -100,4 +105,12 @@ public:
 	// Shader
 	ShadingModels GetSelectedShadingModel() const { return selectedShader; }
 	void SetShadingModel(ShadingModels selection) { selectedShader = selection; }
+
+	// Fog
+	void SetFogEnabled(bool value) { fogEnabled = value; }
+	void SetFogStart(float value) { fogStart = value; }
+	void SetFogFinish(float value) { fogFinish = value; }
+	bool GetFogEnabled() const { return fogEnabled; }
+	float GetFogStart() const { return fogStart; }
+	float GetFogFinish() const { return fogFinish; }
 };

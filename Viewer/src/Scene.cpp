@@ -7,7 +7,9 @@ Scene::Scene() :
 	activeModelIndex(0),
 	activeLightsIndex(0),
 	ambientLight(glm::vec4(0.25f)),
-	selectedShader(Flat)
+	selectedShader(Flat),
+	fogStart(1.0f),
+	fogFinish(5.0f)
 {
 	// Init first camera
 	AddCamera(*(new Camera()));
