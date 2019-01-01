@@ -362,7 +362,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 		ImGui::Text("Diffuse Color");
 		ImGui::ColorEdit3("Diffuse", (float*)&diffuseColor);
 		ImGui::TreePop();
-		ImGui::SliderFloat("Shininess", (float*)&shininess, 0.0f, 1.0f);
+		ImGui::SliderFloat("Shininess", (float*)&shininess, 0.0f, 50.0f);
 	}
 
 	ImGui::Text("x: %.2f y: %.2f z: %.2f", activeModelTranslationVector.x, activeModelTranslationVector.y, activeModelTranslationVector.z);
@@ -427,8 +427,8 @@ void ShowFogControls(ImGuiIO& io, Scene& scene)
 	if (!enableFog) return;
 	float start = scene.GetFogStart();
 	float finish = scene.GetFogFinish();
-	ImGui::SliderFloat("Start", &start, 0, 2.0f);
-	ImGui::SliderFloat("Finish", &finish, 0, 2.0f);
+	ImGui::SliderFloat("Start", &start, 0, 10.0f);
+	ImGui::SliderFloat("Finish", &finish, 0, 10.0f);
 
 	scene.SetFogStart(start);
 	scene.SetFogFinish(finish);
