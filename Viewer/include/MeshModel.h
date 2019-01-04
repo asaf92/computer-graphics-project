@@ -4,6 +4,8 @@
 #include <memory>
 #include "Face.h"
 #include "Material.h"
+#include "IMovable.h"
+
 /*
  * MeshModel class.
  * This class represents a mesh model (with faces and normals informations).
@@ -14,7 +16,7 @@
  *
  * Made by Asaf Agami 2018
  */
-class MeshModel
+class MeshModel: IMovable
 {
 protected:
 	// Protected members
@@ -78,4 +80,7 @@ public:
 	glm::vec3& GetCenterPoint()						        { return centerPoint; }
 	glm::vec3& GetMinimumsVector()					        { return minimums; }
 	glm::vec3& GetMaximumVectors()					        { return maximums; }
+
+	// Inherited via IMovable
+	virtual void Move(const glm::vec3 direction) override { SetTranslation(translationVector + direction); }
 };

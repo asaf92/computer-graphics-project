@@ -13,6 +13,7 @@ class Utils
 public:
 	static glm::vec3 Vec3fFromStream(std::istream& issLine);
 	static glm::vec2 Vec2fFromStream(std::istream& issLine);
+	static glm::vec3 Vec3FromVec4(const glm::vec4 & other);
 	static glm::vec4 Vec4FromVec3Point(const glm::vec3 &);
 	static glm::vec4 Vec4FromVec3DirectionVector(const glm::vec3 & other);
 	static glm::vec4 Vec4FromPoint(const Point& point);

@@ -19,6 +19,11 @@ glm::vec2 Utils::Vec2fFromStream(std::istream& issLine)
 	return glm::vec2(x, y);
 }
 
+glm::vec3 Utils::Vec3FromVec4(const glm::vec4& other)
+{
+	return glm::vec3(other.x, other.y, other.z);
+}
+
 glm::vec4 Utils::Vec4FromVec3Point(const glm::vec3& other)
 {
 	glm::vec4 out;

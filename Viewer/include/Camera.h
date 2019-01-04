@@ -4,6 +4,7 @@
 #include "MeshModel.h"
 #include "ProjectionType.h"
 #include "LookAtParameters.h"
+#include "IMovable.h"
 
 /*
  * Camera class. This class takes care of all the camera transformations and manipulations.
@@ -30,7 +31,7 @@ struct OrthographicProjectionParameters {
 	float zFar;
 };
 
-class Camera
+class Camera: public IMovable
 {
 private:
 	LookAtParameters lookAtParameters;
@@ -50,7 +51,6 @@ public:
 	Camera();
 	Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 	~Camera();
-
 
 	// Library matrices overriding
 	void SetUseLibraryProjectionMatrix(bool value) { useLibraryProjectionMatrix = value; }
@@ -81,10 +81,14 @@ public:
 	float GetNear()			{ return perspectiveProjectionParameters.zNear; }
 	float GetFar()			{ return perspectiveProjectionParameters.zFar; }
 
+	// Projection parameters getters/setters
 	const OrthographicProjectionParameters GetOrthographicProjectionParameters() const { return orthographicProjectionParameters; };
 	void SetOrthographicProjectionParameters(OrthographicProjectionParameters parameters) { orthographicProjectionParameters = parameters; };
 	const PerspectiveProjectionParameters GetPerspectiveProjectionParameters() const { return perspectiveProjectionParameters; };
 	void SetPerspectiveProjectionParameters(PerspectiveProjectionParameters parameters) { perspectiveProjectionParameters = parameters; };
+
+	// Inherited via IMovable
+	virtual void Move(const glm::vec3 direction) override;
 
 };
 

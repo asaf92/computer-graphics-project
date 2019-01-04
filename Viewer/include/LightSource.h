@@ -1,5 +1,6 @@
 #pragma once
 #include "glm/glm.hpp"
+#include "Utils.h"
 #include <string>
 
 enum LightSourceType
@@ -9,7 +10,7 @@ enum LightSourceType
 };
 
 // Abstract class
-class LightSource
+class LightSource: IMovable
 {
 protected:
 	glm::vec4 color;
@@ -36,4 +37,7 @@ public:
 	// Virtual Getters
 	virtual const glm::vec4* GetDirection() const =0;
 	virtual const glm::vec4* GetLocation()  const =0;
+
+	// Inherited via IMovable
+	virtual void Move(const glm::vec3 direction) override;
 };

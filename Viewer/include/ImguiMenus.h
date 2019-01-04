@@ -2,6 +2,7 @@
 #include <imgui/imgui.h>
 #include "Scene.h"
 #include "ProjectionType.h"
+#include "IMovable.h"
 
 void DrawMenus(ImGuiIO& io, Scene& scene);
 void ShowTransformationMatrices(ImGuiIO& io, Scene& scene);
@@ -13,6 +14,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene);
 void ShowLightsControls(ImGuiIO& io, Scene& scene);
 void xyzSliders(glm::vec4 &newVector, std::string title, float radius);
 void ShowCameraControls(ImGuiIO& io, Scene& scene);
+void moveObjectControls(IMovable & activeCamera, std::string title);
 void ShowShaderControls(ImGuiIO& io, Scene& scene);
 void ShowFogControls(ImGuiIO& io, Scene& scene);
 const glm::vec4& GetClearColor();

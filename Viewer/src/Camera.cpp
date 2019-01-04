@@ -147,3 +147,9 @@ void Camera::RenderProjectionMatrix()
 	}
 }
 
+void Camera::Move(const glm::vec3 direction)
+{
+	lookAtParameters.at += direction;
+	SetCameraLookAt();
+}
+

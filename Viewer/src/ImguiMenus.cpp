@@ -257,6 +257,7 @@ void ShowCameraControls(ImGuiIO& io, Scene& scene)
 	auto& activeCamera = scene.GetActiveCamera();
 	//newCameraParameters = activeCamera.GetCameraParameters();
 	auto newLookAtParameters = activeCamera.GetLookAtParameters();
+	moveObjectControls(activeCamera, "Move Camera");
 
 	ImGui::Text("Look At");
 	ImGui::Text("Eye:");
@@ -280,8 +281,22 @@ void ShowCameraControls(ImGuiIO& io, Scene& scene)
 	activeCamera.SetCameraLookAt(newLookAtParameters.eye, newLookAtParameters.at, newLookAtParameters.up);
 }
 
+void moveObjectControls(IMovable & movableObject, std::string title)
+{
+	static float moveRadius = 3.0f;
+	glm::vec3 moveDirection = glm::vec3(0);
+	ImGui::Text(title.c_str());
+	ImGui::SliderFloat("Move X", &moveDirection.x, -moveRadius, moveRadius);
+	ImGui::SliderFloat("Move Y", &moveDirection.y, -moveRadius, moveRadius);
+	ImGui::SliderFloat("Move Z", &moveDirection.z, -moveRadius, moveRadius);
+	movableObject.Move(moveDirection);
+}
+
 void ShowModelControls(ImGuiIO& io, Scene& scene)
 {
+	static float scalingSizesLimit = 5.0f;
+	static float rotationSliderLimit = 60.0f;
+
 	if (scene.GetModelCount() == 0)
 	{
 		ImGui::Text("No models loaded");
@@ -289,7 +304,6 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	}
 
 	int selectedModelIndex = scene.GetActiveModelIndex();
-	static float scalingSizesLimit = 5.0f;
 	auto& activeModel = scene.GetActiveModel();
 	auto& activeModelTranslationVector = activeModel->GetTranslationVector();
 	auto& activeModelScalingSizes = activeModel->GetScalingVector();
@@ -349,9 +363,9 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	ImGui::SliderFloat("Z Scale", &newScalingSizes.z, 0, scalingSizesLimit);
 
 	ImGui::Text("Rotation");
-	ImGui::SliderFloat("X Rotation", &newAngle.x, -180.0f, 180.0f);
-	ImGui::SliderFloat("Y Rotation", &newAngle.y, -180.0f, 180.0f);
-	ImGui::SliderFloat("Z Rotation", &newAngle.z, -180.0f, 180.0f);
+	ImGui::SliderFloat("X Rotation", &newAngle.x, -rotationSliderLimit, rotationSliderLimit);
+	ImGui::SliderFloat("Y Rotation", &newAngle.y, -rotationSliderLimit, rotationSliderLimit);
+	ImGui::SliderFloat("Z Rotation", &newAngle.z, -rotationSliderLimit, rotationSliderLimit);
 
 	if (ImGui::TreeNode("Uniform Material"))
 	{
