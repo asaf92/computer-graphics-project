@@ -257,7 +257,7 @@ void ShowCameraControls(ImGuiIO& io, Scene& scene)
 	auto& activeCamera = scene.GetActiveCamera();
 	//newCameraParameters = activeCamera.GetCameraParameters();
 	auto newLookAtParameters = activeCamera.GetLookAtParameters();
-	moveObjectControls(activeCamera, "Move Camera");
+	moveObjectControls(&activeCamera, "Move Camera");
 
 	ImGui::Text("Look At");
 	ImGui::Text("Eye:");
@@ -326,8 +326,10 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 			selection_mask = (1 << selectedModelIndex);           // Click to single-select
 	}
 
+	moveObjectControls(activeModel.get(), "Move Model");
+
 	ImGui::Text("Color");
-	ImGui::ColorEdit3("MyColor##1", (float*)&color);
+	ImGui::ColorEdit3("Ambient color", (float*)&color);
 
 	glm::vec3 newTranslationVector;
 	newTranslationVector.x = activeModelTranslationVector.x;
@@ -490,7 +492,6 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 
 	// Get abstract properties
 	const glm::vec4* lightLocation =  activeLight->GetLocation();
-	glm::vec4 newLightLocation;
 	const glm::vec4* lightDirection = activeLight->GetDirection();
 	glm::vec4 newDirection;
 
@@ -515,8 +516,7 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 	}
 	if (lightLocation != nullptr)
 	{
-		newLightLocation = *lightLocation;
-		xyzSliders(newLightLocation, "Location",worldRadius);
+		moveObjectControls(activeLight,"Move Light");
 	}
 	if (lightDirection != nullptr)
 	{
@@ -525,7 +525,6 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 	}
 	ImGui::ColorEdit3("Light color", (float*)&newActiveLightColor, ImGuiColorEditFlags_NoInputs);
 	scene.SetActiveLightsIndex(selectedLightIndex);
-	activeLight->SetLocation(newLightLocation);
 	activeLight->SetDirection(newDirection);
 	activeLight->SetColor(newActiveLightColor);
 	ImGui::Text("Number of lights: %d",scene.GetLightsCount());
@@ -541,14 +540,14 @@ void xyzSliders(glm::vec4 &newVector, std::string title, float radius)
 	ImGui::SliderFloat((std::string("Z ") +title).c_str(), &newVector.z, -radius, radius);
 }
 
-void moveObjectControls(IMovable & movableObject, const std::string title)
+void moveObjectControls(IMovable* movableObject, const std::string title)
 {
-	static float moveRadius = 3.0f;
+	static float moveRadius = 0.1f;
 	glm::vec3 moveDirection = glm::vec3(0);
-	ImGui::Text(title.c_str());
-	ImGui::SliderFloat("Move X", &moveDirection.x, -moveRadius, moveRadius);
-	ImGui::SliderFloat("Move Y", &moveDirection.y, -moveRadius, moveRadius);
-	ImGui::SliderFloat("Move Z", &moveDirection.z, -moveRadius, moveRadius);
-	movableObject.Move(moveDirection);
+	ImGui::Text(("Move " + title).c_str());
+	ImGui::SliderFloat(std::string(title + "Move X").c_str(), &moveDirection.x, -moveRadius, moveRadius);
+	ImGui::SliderFloat(std::string(title + "Move Y").c_str(), &moveDirection.y, -moveRadius, moveRadius);
+	ImGui::SliderFloat(std::string(title + "Move Z").c_str(), &moveDirection.z, -moveRadius, moveRadius);
+	movableObject->Move(moveDirection);
 }
 #pragma endregion

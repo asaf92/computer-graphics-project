@@ -10,7 +10,7 @@ enum LightSourceType
 };
 
 // Abstract class
-class LightSource: IMovable
+class LightSource: public IMovable
 {
 protected:
 	glm::vec4 color;

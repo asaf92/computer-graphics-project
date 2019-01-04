@@ -16,7 +16,7 @@
  *
  * Made by Asaf Agami 2018
  */
-class MeshModel: IMovable
+class MeshModel: public IMovable
 {
 protected:
 	// Protected members

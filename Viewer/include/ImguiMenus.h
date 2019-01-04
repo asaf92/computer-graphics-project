@@ -14,7 +14,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene);
 void ShowLightsControls(ImGuiIO& io, Scene& scene);
 void xyzSliders(glm::vec4 &newVector, std::string title, float radius);
 void ShowCameraControls(ImGuiIO& io, Scene& scene);
-void moveObjectControls(IMovable & activeCamera, std::string title);
+void moveObjectControls(IMovable* movableObject, std::string title);
 void ShowShaderControls(ImGuiIO& io, Scene& scene);
 void ShowFogControls(ImGuiIO& io, Scene& scene);
 const glm::vec4& GetClearColor();
