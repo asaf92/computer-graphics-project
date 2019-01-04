@@ -6,6 +6,7 @@
 #include "Material.h"
 #include "IMovable.h"
 #include "IRotatable.h"
+#include "IMeshObject.h"
 
 /*
  * MeshModel class.
@@ -17,7 +18,7 @@
  *
  * Made by Asaf Agami 2018
  */
-class MeshModel: public IMovable, public IRotatable
+class MeshModel: public IMovable, public IRotatable, public IMeshObject
 {
 protected:
 	// Protected members
@@ -65,9 +66,6 @@ public:
 	void SetRotation(const glm::vec3& angle);
 
 	//Getters
-	std::vector<glm::vec3>& GetVerticesVector()             { return vertices; }
-	const std::vector<glm::vec3>& GetNormalsVector()        { return normals; }
-	std::vector<Face>& GetFacesVector() { return faces; }
 	const glm::mat4x4& GetWorldTransformation();
 	const glm::vec4& GetColor()                      const;
 	const std::string& GetModelName()                const  { return modelName; }
@@ -89,4 +87,9 @@ public:
 	virtual void RotateX(const float angle) override;
 	virtual void RotateY(const float angle) override;
 	virtual void RotateZ(const float angle) override;
+
+	// Inherited via IMeshObject
+	virtual std::vector<glm::vec3>& GetVerticesVector()     override    { return vertices; }
+	virtual const std::vector<glm::vec3>& GetNormalsVector()override    { return normals; }
+	virtual std::vector<Face>& GetFacesVector()				override	{ return faces; }
 };
