@@ -24,4 +24,10 @@ public:
 
 	// Methods
 	virtual const glm::vec4 GetDirectionToLightSource(const glm::vec4 & worldPoint) const override { return -direction; };
+
+	// Inherited via LightSource
+	virtual void RotateX(const float angle) override;
+	virtual void RotateY(const float angle) override;
+	virtual void RotateZ(const float angle) override;
+	virtual void Move(const glm::vec3 direction) override {} // Can't move a parallel light source
 };

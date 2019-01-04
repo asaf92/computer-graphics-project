@@ -325,37 +325,35 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 			selection_mask = (1 << selectedModelIndex);           // Click to single-select
 	}
 
-	moveObjectControls(activeModel.get(), "Move Model");
-
-	ImGui::Text("Color");
-	ImGui::ColorEdit3("Ambient color", (float*)&color);
-
-	glm::vec3 newTranslationVector;
-	newTranslationVector.x = activeModelTranslationVector.x;
-	newTranslationVector.y = activeModelTranslationVector.y;
-	newTranslationVector.z = activeModelTranslationVector.z;
-
-	glm::vec3 newScalingSizes;
-	newScalingSizes.x = activeModelScalingSizes.x;
-	newScalingSizes.y = activeModelScalingSizes.y;
-	newScalingSizes.z = activeModelScalingSizes.z;
-
-	glm::vec3 newAngle(0);
-
-	ImGui::Text("Translation");
-	ImGui::SliderFloat("X Translation",&newTranslationVector.x,-worldRadius,worldRadius);
-	ImGui::SliderFloat("Y Translation",&newTranslationVector.y,-worldRadius,worldRadius);
-	ImGui::SliderFloat("Z Translation",&newTranslationVector.z,-worldRadius,worldRadius);
-
-	ImGui::Text("Scaling");
-	ImGui::SliderFloat("X Scale", &newScalingSizes.x, 0, scalingSizesLimit);
-	ImGui::SliderFloat("Y Scale", &newScalingSizes.y, 0, scalingSizesLimit);
-	ImGui::SliderFloat("Z Scale", &newScalingSizes.z, 0, scalingSizesLimit);
-
-	rotationControls(activeModel.get(), "Rotation##Model");
-
-	if (ImGui::TreeNode("Uniform Material"))
+	moveObjectControls(activeModel.get(), "Model");
+	rotationControls(activeModel.get(), "Model");
+	if (ImGui::TreeNode("Advanced options"))
 	{
+		ImGui::Text("Color");
+		ImGui::ColorEdit3("Ambient color", (float*)&color);
+
+		glm::vec3 newTranslationVector;
+		newTranslationVector.x = activeModelTranslationVector.x;
+		newTranslationVector.y = activeModelTranslationVector.y;
+		newTranslationVector.z = activeModelTranslationVector.z;
+
+		glm::vec3 newScalingSizes;
+		newScalingSizes.x = activeModelScalingSizes.x;
+		newScalingSizes.y = activeModelScalingSizes.y;
+		newScalingSizes.z = activeModelScalingSizes.z;
+
+		glm::vec3 newAngle(0);
+
+		ImGui::Text("Translation");
+		ImGui::SliderFloat("X Translation",&newTranslationVector.x,-worldRadius,worldRadius);
+		ImGui::SliderFloat("Y Translation",&newTranslationVector.y,-worldRadius,worldRadius);
+		ImGui::SliderFloat("Z Translation",&newTranslationVector.z,-worldRadius,worldRadius);
+
+		ImGui::Text("Scaling");
+		ImGui::SliderFloat("X Scale", &newScalingSizes.x, 0, scalingSizesLimit);
+		ImGui::SliderFloat("Y Scale", &newScalingSizes.y, 0, scalingSizesLimit);
+		ImGui::SliderFloat("Z Scale", &newScalingSizes.z, 0, scalingSizesLimit);
+
 		ImGui::Text("Ambient Color");
 		ImGui::ColorEdit3("Ambient", (float*)&ambientColor);
 		ImGui::Text("Specular Color");
@@ -364,18 +362,17 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 		ImGui::ColorEdit3("Diffuse", (float*)&diffuseColor);
 		ImGui::TreePop();
 		ImGui::SliderFloat("Shininess", (float*)&shininess, 0.0f, 50.0f);
+		activeModel->SetTranslation(newTranslationVector);
+		activeModel->SetScaling(newScalingSizes);
+		activeModel->SetRotation(newAngle);
+		uniformMaterial.SetAmbientColor(ambientColor);
+		uniformMaterial.SetSpecularColor(specularColor);
+		uniformMaterial.SetDiffuseColor(diffuseColor);
+		uniformMaterial.SetShininess(shininess);
 	}
 
 	ImGui::Text("x: %.2f y: %.2f z: %.2f", activeModelTranslationVector.x, activeModelTranslationVector.y, activeModelTranslationVector.z);
-
-	activeModel->SetTranslation(newTranslationVector);
-	activeModel->SetScaling(newScalingSizes);
-	activeModel->SetRotation(newAngle);
 	activeModel->SetColor(color);
-	uniformMaterial.SetAmbientColor(ambientColor);
-	uniformMaterial.SetSpecularColor(specularColor);
-	uniformMaterial.SetDiffuseColor(diffuseColor);
-	uniformMaterial.SetShininess(shininess);
 	scene.SetActiveModelIndex(selectedModelIndex);
 }
 
@@ -512,7 +509,7 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 	}
 	if (lightLocation != nullptr)
 	{
-		moveObjectControls(activeLight,"Move Light");
+		moveObjectControls(activeLight,"Light");
 	}
 	if (lightDirection != nullptr)
 	{
@@ -540,21 +537,21 @@ void moveObjectControls(IMovable* movableObject, const std::string title)
 {
 	static float moveRadius = 0.1f;
 	glm::vec3 moveDirection = glm::vec3(0);
-	ImGui::Text(("Move " + title).c_str());
-	ImGui::SliderFloat(std::string(title + "Move X").c_str(), &moveDirection.x, -moveRadius, moveRadius);
-	ImGui::SliderFloat(std::string(title + "Move Y").c_str(), &moveDirection.y, -moveRadius, moveRadius);
-	ImGui::SliderFloat(std::string(title + "Move Z").c_str(), &moveDirection.z, -moveRadius, moveRadius);
+	ImGui::Text("Move");
+	ImGui::SliderFloat(std::string("Move X##" + title).c_str(), &moveDirection.x, -moveRadius, moveRadius);
+	ImGui::SliderFloat(std::string("Move Y##" + title).c_str(), &moveDirection.y, -moveRadius, moveRadius);
+	ImGui::SliderFloat(std::string("Move Z##" + title).c_str(), &moveDirection.z, -moveRadius, moveRadius);
 	movableObject->Move(moveDirection);
 }
 
 void rotationControls(IRotatable* rotatable, std::string title)
 {
-	static float rotationSliderLimit = 60.0f;
+	static float rotationSliderLimit = 20.0f;
 	glm::vec3 angle(0);
-	ImGui::Text(title.c_str());
-	ImGui::SliderFloat("X Rotation", &angle.x, -rotationSliderLimit, rotationSliderLimit);
-	ImGui::SliderFloat("Y Rotation", &angle.y, -rotationSliderLimit, rotationSliderLimit);
-	ImGui::SliderFloat("Z Rotation", &angle.z, -rotationSliderLimit, rotationSliderLimit);
+	ImGui::Text("Rotation");
+	ImGui::SliderFloat(std::string("X Rotation##" + title).c_str(), &angle.x, -rotationSliderLimit, rotationSliderLimit);
+	ImGui::SliderFloat(std::string("Y Rotation##" + title).c_str(), &angle.y, -rotationSliderLimit, rotationSliderLimit);
+	ImGui::SliderFloat(std::string("Z Rotation##" + title).c_str(), &angle.z, -rotationSliderLimit, rotationSliderLimit);
 	rotatable->RotateX(angle.x);
 	rotatable->RotateY(angle.y);
 	rotatable->RotateZ(angle.z);

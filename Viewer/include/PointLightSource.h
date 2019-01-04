@@ -23,5 +23,11 @@ public:
 	// Base class setters
 	virtual void SetDirection(const glm::vec4 & _direction) override { return; }
 	virtual void SetLocation(const glm::vec4 & _location)   override { location = _location; }
+
+	// Inherited via LightSource
+	virtual void Move(const glm::vec3 direction) override;
+	virtual void RotateX(const float angle) override {} // Point light source emits light everywhere
+	virtual void RotateY(const float angle) override {} 
+	virtual void RotateZ(const float angle) override {} 
 };
 

@@ -1,4 +1,6 @@
 #pragma once
+#include "IMovable.h"
+#include "IRotatable.h"
 #include "glm/glm.hpp"
 #include "Utils.h"
 #include <string>
@@ -10,7 +12,7 @@ enum LightSourceType
 };
 
 // Abstract class
-class LightSource: public IMovable
+class LightSource: public IMovable,public IRotatable
 {
 protected:
 	glm::vec4 color;
@@ -37,7 +39,12 @@ public:
 	// Virtual Getters
 	virtual const glm::vec4* GetDirection() const =0;
 	virtual const glm::vec4* GetLocation()  const =0;
-
+	
+	// Interfaces
 	// Inherited via IMovable
-	virtual void Move(const glm::vec3 direction) override;
+	virtual void Move(const glm::vec3 direction) override =0;
+	// Inherited via IRotatable
+	virtual void RotateX(const float angle) override =0;
+	virtual void RotateY(const float angle) override =0;
+	virtual void RotateZ(const float angle) override =0;
 };
