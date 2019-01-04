@@ -198,3 +198,18 @@ const glm::vec4& MeshModel::GetColor() const
 {
 	return color;
 }
+
+void MeshModel::RotateX(const float angle)
+{
+	rotateAngle.x += angle;
+}
+
+void MeshModel::RotateY(const float angle)
+{
+	rotateAngle.y += angle;
+}
+
+void MeshModel::RotateZ(const float angle)
+{
+	rotateAngle.z += angle;
+}

@@ -5,6 +5,7 @@
 #include "Face.h"
 #include "Material.h"
 #include "IMovable.h"
+#include "IRotatable.h"
 
 /*
  * MeshModel class.
@@ -16,7 +17,7 @@
  *
  * Made by Asaf Agami 2018
  */
-class MeshModel: public IMovable
+class MeshModel: public IMovable, public IRotatable
 {
 protected:
 	// Protected members
@@ -83,4 +84,9 @@ public:
 
 	// Inherited via IMovable
 	virtual void Move(const glm::vec3 direction) override { SetTranslation(translationVector + direction); }
+
+	// Inherited via IRotatable
+	virtual void RotateX(const float angle) override;
+	virtual void RotateY(const float angle) override;
+	virtual void RotateZ(const float angle) override;
 };

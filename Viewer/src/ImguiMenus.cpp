@@ -284,7 +284,6 @@ void ShowCameraControls(ImGuiIO& io, Scene& scene)
 void ShowModelControls(ImGuiIO& io, Scene& scene)
 {
 	static float scalingSizesLimit = 5.0f;
-	static float rotationSliderLimit = 60.0f;
 
 	if (scene.GetModelCount() == 0)
 	{
@@ -353,10 +352,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	ImGui::SliderFloat("Y Scale", &newScalingSizes.y, 0, scalingSizesLimit);
 	ImGui::SliderFloat("Z Scale", &newScalingSizes.z, 0, scalingSizesLimit);
 
-	ImGui::Text("Rotation");
-	ImGui::SliderFloat("X Rotation", &newAngle.x, -rotationSliderLimit, rotationSliderLimit);
-	ImGui::SliderFloat("Y Rotation", &newAngle.y, -rotationSliderLimit, rotationSliderLimit);
-	ImGui::SliderFloat("Z Rotation", &newAngle.z, -rotationSliderLimit, rotationSliderLimit);
+	rotationControls(activeModel.get(), "Rotation##Model");
 
 	if (ImGui::TreeNode("Uniform Material"))
 	{
@@ -549,5 +545,18 @@ void moveObjectControls(IMovable* movableObject, const std::string title)
 	ImGui::SliderFloat(std::string(title + "Move Y").c_str(), &moveDirection.y, -moveRadius, moveRadius);
 	ImGui::SliderFloat(std::string(title + "Move Z").c_str(), &moveDirection.z, -moveRadius, moveRadius);
 	movableObject->Move(moveDirection);
+}
+
+void rotationControls(IRotatable* rotatable, std::string title)
+{
+	static float rotationSliderLimit = 60.0f;
+	glm::vec3 angle(0);
+	ImGui::Text(title.c_str());
+	ImGui::SliderFloat("X Rotation", &angle.x, -rotationSliderLimit, rotationSliderLimit);
+	ImGui::SliderFloat("Y Rotation", &angle.y, -rotationSliderLimit, rotationSliderLimit);
+	ImGui::SliderFloat("Z Rotation", &angle.z, -rotationSliderLimit, rotationSliderLimit);
+	rotatable->RotateX(angle.x);
+	rotatable->RotateY(angle.y);
+	rotatable->RotateZ(angle.z);
 }
 #pragma endregion
