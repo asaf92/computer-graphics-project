@@ -83,7 +83,7 @@ const glm::vec4 Shader::calculateDiffusePart(const glm::vec4& normal, const glm:
 {
 	glm::vec4 directionToLight;
 	//const std::vector<LightSource*>& lightSources = scene.GetLightsVector();
-	directionToLight = lightSource->GetDirectionToLightSource(worldPoint);
+	directionToLight = glm::normalize(lightSource->GetDirectionToLightSource(worldPoint));
 	float scalar = std::fmax(glm::dot(directionToLight, normal),0.0f);
 	auto result = objectDiffuseColor * scalar * lightSource->GetColor();
 	result.x = std::fmax(result.x, 0.0f);
