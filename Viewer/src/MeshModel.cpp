@@ -61,11 +61,20 @@ glm::mat4x4 MeshModel::GetTranslationMatrix()
 
 glm::mat4x4 MeshModel::GetScalingMatrix() 
 {
+	glm::mat4x4 translateToCenter(1);
+	translateToCenter[3].x = -centerPoint.x;
+	translateToCenter[3].y = -centerPoint.y;
+	translateToCenter[3].z = -centerPoint.z;
+	glm::mat4x4 translateToCenterInverse(1);
+	translateToCenterInverse[3].x = centerPoint.x;
+	translateToCenterInverse[3].y = centerPoint.y;
+	translateToCenterInverse[3].z = centerPoint.z;
+
 	glm::mat4x4 scale(1);
 	scale[0].x *= scaleSize.x;
 	scale[1].y *= scaleSize.y;
 	scale[2].z *= scaleSize.z;
-	return scale;
+	return translateToCenterInverse * scale * translateToCenter;
 }
 
 glm::mat4x4 MeshModel::GetRotationMatrix()
