@@ -11,7 +11,7 @@ public:
 	ParallelLightSource()
 	{
 		name = "Parallel Light #" + std::to_string(id++);
-		direction = glm::vec4(0);
+		direction = glm::vec4(0.0f,0.0f,1.0f,0.0f);
 	}
 
 	// Setters
