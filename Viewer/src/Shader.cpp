@@ -96,10 +96,12 @@ const glm::vec4 Shader::calculateSpecularPart(const glm::vec4& normal, const glm
 	glm::vec4 directionToLight = glm::normalize(-lightSource->GetDirectionToLightSource(worldPoint));
 	glm::vec4 reflection = glm::normalize(2.0f * (glm::dot(directionToLight, normal)) * normal - directionToLight);
 	float scalar = glm::dot(reflection, toCamera);
+	if (scalar < 0) return glm::vec4(0.0f); // We don't want to return color when the reflection is away from the camera
+
 	scalar = pow(scalar, shininess);
 	auto result = objectSpecularColor * scalar * lightSource->GetColor();
 	result.x = std::fmax(result.x, 0.0f);
-	result.y = std::fmax(result.y, 0.0f);
+	result.y = std::fmax(result.y, 0.0f);	
 	result.z = std::fmax(result.z, 0.0f);
 	return result;
 }
