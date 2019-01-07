@@ -300,7 +300,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	auto& activeModelTranslationVector = activeModel->GetTranslationVector();
 	auto& activeModelScalingSizes = activeModel->GetScalingVector();
 	auto& models = scene.GetModelsVector();
-	auto color = activeModel->GetColor();
+	auto color = activeModel->GetAmbientColor();
 
 	// Uniform Material variables
 	auto& uniformMaterial = activeModel->GetUniformMaterial();

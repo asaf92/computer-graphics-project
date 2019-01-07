@@ -332,7 +332,7 @@ void Renderer::Render()
 		auto& faces = currentModel->GetFacesVector();
 
 		// Feeding the shader data
-		shader.SetObjectColor(currentModel->GetColor());
+		shader.SetObjectColor(currentModel->GetAmbientColor());
 		shader.SetObjectDiffuseColor(currentModel->GetDiffuseColor());
 		shader.SetObjectSpecularColor(currentModel->GetSpecularColor());
 		shader.SetShininess(currentModel->GetUniformMaterial().GetShininess());

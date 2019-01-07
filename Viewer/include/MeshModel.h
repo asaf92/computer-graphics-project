@@ -67,7 +67,7 @@ public:
 
 	//Getters
 	const glm::mat4x4& GetWorldTransformation();
-	const glm::vec4& GetColor()                      const;
+	const glm::vec4& GetAmbientColor()                      const;
 	const std::string& GetModelName()                const  { return modelName; }
 	const glm::vec3& GetTranslationVector()	         const  { return translationVector; }
 	const glm::vec3& GetScalingVector()              const  { return scaleSize; }

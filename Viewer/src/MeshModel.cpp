@@ -194,7 +194,7 @@ void MeshModel::SetRotation(const glm::vec3 & angle)
 	}
 }
 
-const glm::vec4& MeshModel::GetColor() const
+const glm::vec4& MeshModel::GetAmbientColor() const
 {
 	return color;
 }
