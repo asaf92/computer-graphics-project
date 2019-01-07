@@ -34,14 +34,10 @@ MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3
 		maximums.x = std::max(maximums.x, iterator->x);
 		maximums.y = std::max(maximums.y, iterator->y);
 		maximums.z = std::max(maximums.z, iterator->z);
-
-		centerPoint.x += iterator->x;
-		centerPoint.y += iterator->y;
-		centerPoint.z += iterator->z;
 	}
-	centerPoint.x = centerPoint.x / vertices.size();
-	centerPoint.y = centerPoint.y / vertices.size();
-	centerPoint.z = centerPoint.z / vertices.size();
+	centerPoint.x = (minimums.x + maximums.x) / 2.0f;
+	centerPoint.y = (minimums.y + maximums.y) / 2.0f;
+	centerPoint.z = (minimums.z + maximums.z) / 2.0f;
 }
 
 MeshModel::~MeshModel()
