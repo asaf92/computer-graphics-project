@@ -8,6 +8,7 @@
 #include "IRotatable.h"
 #include "IMeshObject.h"
 #include "IScalable.h"
+#include "IUniformMaterial.h"
 
 /*
  * MeshModel class.
@@ -19,7 +20,7 @@
  *
  * Made by Asaf Agami 2018
  */
-class MeshModel: public IMovable, public IRotatable, public IMeshObject, public IScalable
+class MeshModel: public IMovable, public IRotatable, public IMeshObject, public IScalable, public IUniformMaterial
 {
 protected:
 	// Protected members
@@ -62,16 +63,12 @@ public:
 	virtual ~MeshModel();
 
 	// Setters
-	void SetColor(const glm::vec4& color)               { this->color = color; }
 	void SetTranslation(glm::vec3 direction)            { translationVector = direction; }
-	void SetObjectDiffuseColor(const glm::vec4& color)  { uniformMaterial.SetDiffuseColor(color); }
-	void SetObjectSpecularColor(const glm::vec4& color) { uniformMaterial.SetSpecularColor(color); }
 	void SetRotation(const glm::vec3& angle);
 
 	//Getters
 	const std::string& GetModelName()                const  { return modelName; }
 	const glm::vec3& GetTranslationVector()	         const  { return translationVector; }
-	const glm::vec3& GetScalingVector()              const  { return scaleSize; }
 	Material& GetUniformMaterial()                          { return uniformMaterial; }
 
 	// Inherited via IMovable
@@ -87,11 +84,19 @@ public:
 	virtual const std::vector<glm::vec3>& GetNormalsVector()        override { return normals; }
 	virtual std::vector<Face>& GetFacesVector()				        override { return faces; }
 	const glm::mat4x4& GetWorldTransformation()				        override;
-	virtual const glm::vec4 GetAmbientColor()                const override;
-	virtual const glm::vec4 GetDiffuseColor()                const override { return glm::vec4(uniformMaterial.GetDiffuseColor()); }
-	virtual const glm::vec4 GetSpecularColor()               const override { return glm::vec4(uniformMaterial.GetSpecularColor()); }
 
 	// Inherited via IScalable
 	virtual void Scale(const float scale)      override                         { scaleSize         = glm::vec3(scale); }
 	virtual void Scale(const glm::vec3& scale) override                         { scaleSize         = scale; }
+	const glm::vec3& GetScale()         const  override { return scaleSize; }
+
+	// Inherited via IUniformMaterial
+	virtual const glm::vec4 GetAmbientColor()                const override;
+	virtual const glm::vec4 GetDiffuseColor()                const override { return glm::vec4(uniformMaterial.GetDiffuseColor()); }
+	virtual const glm::vec4 GetSpecularColor()               const override { return glm::vec4(uniformMaterial.GetSpecularColor()); }
+	virtual const float GetShininess()                       const override { return uniformMaterial.GetShininess(); }
+	virtual void SetAmbientColor(const glm::vec4& color)  override { this->color = color; }
+	virtual void SetDiffuseColor(const glm::vec4& color)  override { uniformMaterial.SetDiffuseColor(color); }
+	virtual void SetSpecularColor(const glm::vec4& color) override { uniformMaterial.SetSpecularColor(color); }
+	virtual void SetShininess(const float shininess)      override { uniformMaterial.SetShininess(shininess); }
 };

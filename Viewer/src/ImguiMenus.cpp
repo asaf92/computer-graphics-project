@@ -298,16 +298,15 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	int selectedModelIndex = scene.GetActiveModelIndex();
 	auto& activeModel = scene.GetActiveModel();
 	auto& activeModelTranslationVector = activeModel->GetTranslationVector();
-	auto& activeModelScalingSizes = activeModel->GetScalingVector();
+	auto& activeModelScalingSizes = activeModel->GetScale();
 	auto& models = scene.GetModelsVector();
 	auto color = activeModel->GetAmbientColor();
 
 	// Uniform Material variables
-	auto& uniformMaterial = activeModel->GetUniformMaterial();
-	auto ambientColor = uniformMaterial.GetAmbientColor();
-	auto specularColor = uniformMaterial.GetSpecularColor();
-	auto diffuseColor = uniformMaterial.GetDiffuseColor();
-	auto shininess = uniformMaterial.GetShininess();
+	auto ambientColor = activeModel->GetAmbientColor();
+	auto specularColor = activeModel->GetSpecularColor();
+	auto diffuseColor = activeModel->GetDiffuseColor();
+	auto shininess = activeModel->GetShininess();
 
 	static int selection_mask = (1 << 2);
 	ImGui::Text("Model Selection");
@@ -369,14 +368,14 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 		activeModel->SetTranslation(newTranslationVector);
 		activeModel->Scale(newScalingSizes);
 		activeModel->SetRotation(newAngle);
-		uniformMaterial.SetAmbientColor(ambientColor);
-		uniformMaterial.SetSpecularColor(specularColor);
-		uniformMaterial.SetDiffuseColor(diffuseColor);
-		uniformMaterial.SetShininess(shininess);
+		activeModel->SetAmbientColor(ambientColor);
+		activeModel->SetSpecularColor(specularColor);
+		activeModel->SetDiffuseColor(diffuseColor);
+		activeModel->SetShininess(shininess);
 	}
 
 	ImGui::Text("x: %.2f y: %.2f z: %.2f", activeModelTranslationVector.x, activeModelTranslationVector.y, activeModelTranslationVector.z);
-	activeModel->SetColor(color);
+	activeModel->SetAmbientColor(color);
 	scene.SetActiveModelIndex(selectedModelIndex);
 }
 

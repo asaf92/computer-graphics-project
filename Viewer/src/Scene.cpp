@@ -6,7 +6,7 @@ Scene::Scene() :
 	activeCameraIndex(0),
 	activeModelIndex(0),
 	activeLightsIndex(0),
-	ambientLight(glm::vec4(4.0f/255.0f)),
+	ambientLight(glm::vec4(0.17f)),
 	selectedShader(Phong),
 	fogStart(1.0f),
 	fogFinish(5.0f),

@@ -16,8 +16,4 @@ public:
 	virtual const std::vector<glm::vec3>& GetNormalsVector() =0;
 	virtual const glm::mat4x4& GetWorldTransformation() =0;
 
-	// Color data
-	virtual const glm::vec4 GetAmbientColor () const =0;
-	virtual const glm::vec4 GetDiffuseColor () const =0;
-	virtual const glm::vec4 GetSpecularColor() const =0;
 };
