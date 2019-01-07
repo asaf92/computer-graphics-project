@@ -55,7 +55,7 @@ protected:
 
 	// Vector calculations
 	const glm::vec4 calculateFaceWorldCenter() const { return (WorldPointA + WorldPointB + WorldPointC / 3.0f); }
-	const glm::vec4 calculateToCameraVector(const glm::vec4& worldPoint) const { return CameraWorldPoint - worldPoint; }
+	const glm::vec4 calculateToCameraVector(const glm::vec4& worldPoint) const { return glm::normalize(CameraWorldPoint - worldPoint); }
 
 public:
 	Shader(Scene& scene): scene(scene), ambientColor(scene.GetAmbientLight()) {}

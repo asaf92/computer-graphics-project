@@ -103,8 +103,6 @@ const glm::vec4 Shader::calculateSpecularPart(const glm::vec4& normal, const glm
 	result.z = std::fmax(result.z, 0.0f);
 	return result;
 }
-
-
 #pragma endregion
 
 #pragma region Setters
