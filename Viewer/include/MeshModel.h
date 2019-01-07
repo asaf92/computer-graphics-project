@@ -52,7 +52,7 @@ protected:
 	glm::vec3 maximums;
 
 public:
-	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, std::string& name) : MeshModel(faces, vertices, normals, glm::vec4(0.9f,0.9f,0.9f,1.0f), name) {}
+	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, std::string& name) : MeshModel(faces, vertices, normals, glm::vec4(0.1f,0.1f,0.1f,1.0f), name) {}
 	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const glm::vec4& color) : MeshModel(faces, vertices, normals, color, std::string("")) {}
 	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const glm::vec4& color, std::string& name );
 	virtual ~MeshModel();

@@ -8,10 +8,10 @@ private:
 	glm::vec4 direction;
 public:
 	// Constructor
-	ParallelLightSource()
+	ParallelLightSource() : LightSource()
 	{
 		name = "Parallel Light #" + std::to_string(id++);
-		direction = glm::vec4(0.0f,0.0f,1.0f,0.0f);
+		direction = glm::vec4(0.0f,-1.0f,0.0f,0.0f);
 	}
 
 	// Setters
