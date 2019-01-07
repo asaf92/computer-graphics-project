@@ -51,7 +51,7 @@ protected:
 	const glm::vec4 calculatePhongReflection(const glm::vec4& normal, const glm::vec4& worldPoint, const glm::vec4& toCamera) const;
 	const glm::vec4 calculateAmbientPart() const;
 	const glm::vec4 calculateDiffusePart(const glm::vec4& normal, const glm::vec4& worldPoint, const LightSource* lightSource) const;
-	const glm::vec4 calculateSpectralPart(const glm::vec4& normal, const glm::vec4& worldPoint, const glm::vec4& toCamera, const LightSource* lightSource) const;
+	const glm::vec4 calculateSpecularPart(const glm::vec4& normal, const glm::vec4& worldPoint, const glm::vec4& toCamera, const LightSource* lightSource) const;
 
 	// Vector calculations
 	const glm::vec4 calculateFaceWorldCenter() const { return (WorldPointA + WorldPointB + WorldPointC / 3.0f); }

@@ -67,7 +67,7 @@ const glm::vec4 Shader::calculatePhongReflection(const glm::vec4& normal,const g
 	for each (LightSource* light in scene.GetLightsVector())
 	{
 		glm::vec4 diffusePartSum = calculateDiffusePart (normal,worldPoint,light);
-		glm::vec4 spectralPartSum = calculateSpectralPart(normal,worldPoint,toCamera,light);
+		glm::vec4 spectralPartSum = calculateSpecularPart(normal,worldPoint,toCamera,light);
 		lightSum += diffusePartSum + spectralPartSum;
 	}
 	return ambientPart + lightSum;
@@ -91,7 +91,7 @@ const glm::vec4 Shader::calculateDiffusePart(const glm::vec4& normal, const glm:
 	return result;
 }
 
-const glm::vec4 Shader::calculateSpectralPart(const glm::vec4& normal, const glm::vec4& worldPoint, const glm::vec4& toCamera, const LightSource* lightSource) const
+const glm::vec4 Shader::calculateSpecularPart(const glm::vec4& normal, const glm::vec4& worldPoint, const glm::vec4& toCamera, const LightSource* lightSource) const
 {
 	glm::vec4 directionToLight = glm::normalize(-lightSource->GetDirectionToLightSource(worldPoint));
 	glm::vec4 reflection = glm::normalize(2.0f * (glm::dot(directionToLight, normal)) * normal - directionToLight);
