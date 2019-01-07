@@ -321,7 +321,6 @@ void Renderer::Render()
 
 	const auto& models = scene.GetModelsVector();
 	const auto& activeModel = scene.GetActiveModel();
-	
 
 	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator != models.end(); ++iterator)
 	{

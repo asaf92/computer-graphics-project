@@ -40,9 +40,9 @@ public:
 	virtual const glm::vec4* GetDirection() const =0;
 	virtual const glm::vec4* GetLocation()  const =0;
 	
-	// Interfaces
 	// Inherited via IMovable
 	virtual void Move(const glm::vec3 direction) override =0;
+
 	// Inherited via IRotatable
 	virtual void RotateX(const float angle) override =0;
 	virtual void RotateY(const float angle) override =0;

@@ -40,8 +40,6 @@ public:
 	// Constructors 
 	TriangleDrawer(Shader& shader, PixelPlacer& pixelPlacer, int viewportWidth, int viewportHeight);
 
-	// Getters
-
 	// Setters
 	void SetUnscaledPoints(const Point& pointA, const Point& pointB, const Point& pointC);
 
