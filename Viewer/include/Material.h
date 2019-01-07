@@ -10,7 +10,7 @@ private:
 	float shininess;
 public:
 	// Constructors
-	Material() : ambientColor(glm::vec4(0.0f)), diffuseColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f)), specularColor(glm::vec4(0.0f,1.0f,0.0f,1.0)) { shininess = 1.0f; }
+	Material() : ambientColor(glm::vec4(0.1f)), diffuseColor(glm::vec4(0.35f, 0.35f, 0.35f, 1.0f)), specularColor(glm::vec4(1.0f,1.0f,1.0f,1.0)) { shininess = 40.0f; }
 	Material(const Material& other) : ambientColor(other.GetAmbientColor()), diffuseColor(other.GetDiffuseColor()), specularColor(other.GetSpecularColor()) { shininess = other.GetShininess(); }
 
 	// Setters

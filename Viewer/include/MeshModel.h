@@ -7,6 +7,7 @@
 #include "IMovable.h"
 #include "IRotatable.h"
 #include "IMeshObject.h"
+#include "IScalable.h"
 
 /*
  * MeshModel class.
@@ -18,7 +19,7 @@
  *
  * Made by Asaf Agami 2018
  */
-class MeshModel: public IMovable, public IRotatable, public IMeshObject
+class MeshModel: public IMovable, public IRotatable, public IMeshObject, public IScalable
 {
 protected:
 	// Protected members
@@ -50,6 +51,9 @@ protected:
 	// Stuff that I haven't figured out what to do with yet
 	glm::vec3 minimums;
 	glm::vec3 maximums;
+	glm::vec3& GetCenterPoint()						        { return centerPoint; }
+	glm::vec3& GetMinimumsVector()					        { return minimums; }
+	glm::vec3& GetMaximumVectors()					        { return maximums; }
 
 public:
 	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, std::string& name) : MeshModel(faces, vertices, normals, glm::vec4(0.1f,0.1f,0.1f,1.0f), name) {}
@@ -60,25 +64,20 @@ public:
 	// Setters
 	void SetColor(const glm::vec4& color)               { this->color = color; }
 	void SetTranslation(glm::vec3 direction)            { translationVector = direction; }
-	void SetScaling(glm::vec3 scale)                    { scaleSize         = scale; }
 	void SetObjectDiffuseColor(const glm::vec4& color)  { uniformMaterial.SetDiffuseColor(color); }
 	void SetObjectSpecularColor(const glm::vec4& color) { uniformMaterial.SetSpecularColor(color); }
 	void SetRotation(const glm::vec3& angle);
 
 	//Getters
 	const glm::mat4x4& GetWorldTransformation();
-	const glm::vec4& GetAmbientColor()                      const;
 	const std::string& GetModelName()                const  { return modelName; }
 	const glm::vec3& GetTranslationVector()	         const  { return translationVector; }
 	const glm::vec3& GetScalingVector()              const  { return scaleSize; }
 	Material& GetUniformMaterial()                          { return uniformMaterial; }
-	glm::vec4 GetDiffuseColor()                      const	{ return glm::vec4(uniformMaterial.GetDiffuseColor()); }
-	glm::vec4 GetSpecularColor()                     const  { return glm::vec4(uniformMaterial.GetSpecularColor()); }
+	const glm::vec4& GetAmbientColor()                      const;
+	const glm::vec4& GetDiffuseColor()                      const	{ return glm::vec4(uniformMaterial.GetDiffuseColor()); }
+	const glm::vec4& GetSpecularColor()                     const  { return glm::vec4(uniformMaterial.GetSpecularColor()); }
 
-	// Not sure if needed
-	glm::vec3& GetCenterPoint()						        { return centerPoint; }
-	glm::vec3& GetMinimumsVector()					        { return minimums; }
-	glm::vec3& GetMaximumVectors()					        { return maximums; }
 
 	// Inherited via IMovable
 	virtual void Move(const glm::vec3 direction) override { SetTranslation(translationVector + direction); }
@@ -89,7 +88,11 @@ public:
 	virtual void RotateZ(const float angle) override;
 
 	// Inherited via IMeshObject
-	virtual std::vector<glm::vec3>& GetVerticesVector()     override    { return vertices; }
-	virtual const std::vector<glm::vec3>& GetNormalsVector()override    { return normals; }
-	virtual std::vector<Face>& GetFacesVector()				override	{ return faces; }
+	virtual std::vector<glm::vec3>& GetVerticesVector()      override    { return vertices; }
+	virtual const std::vector<glm::vec3>& GetNormalsVector() override    { return normals; }
+	virtual std::vector<Face>& GetFacesVector()				 override	 { return faces; }
+
+	// Inherited via IScalable
+	virtual void Scale(const float scale)      override                         { scaleSize         = glm::vec3(scale); }
+	virtual void Scale(const glm::vec3& scale) override                         { scaleSize         = scale; }
 };

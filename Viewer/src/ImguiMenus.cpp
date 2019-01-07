@@ -367,7 +367,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 		ImGui::TreePop();
 		ImGui::SliderFloat("Shininess", (float*)&shininess, 0.0f, 100.0f);
 		activeModel->SetTranslation(newTranslationVector);
-		activeModel->SetScaling(newScalingSizes);
+		activeModel->Scale(newScalingSizes);
 		activeModel->SetRotation(newAngle);
 		uniformMaterial.SetAmbientColor(ambientColor);
 		uniformMaterial.SetSpecularColor(specularColor);
