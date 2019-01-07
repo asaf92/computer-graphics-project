@@ -2,6 +2,8 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <memory>
+#include "ShadingModels.h"
+#include "IShaded.h"
 #include "Face.h"
 #include "Material.h"
 #include "IMovable.h"
@@ -20,7 +22,7 @@
  *
  * Made by Asaf Agami 2018
  */
-class MeshModel: public IMovable, public IRotatable, public IMeshObject, public IScalable, public IUniformMaterial
+class MeshModel: public IMovable, public IRotatable, public IMeshObject, public IScalable, public IUniformMaterial, public IShaded
 {
 protected:
 	// Protected members
@@ -31,6 +33,7 @@ protected:
 	glm::mat4x4 rotateTransformation;
 	std::string modelName;
 	Material uniformMaterial;
+	ShadingModels shadingModel;
 
 	// User inputs
 	glm::vec3 translationVector;
@@ -83,8 +86,12 @@ public:
 	virtual std::vector<glm::vec3>& GetVerticesVector()             override { return vertices; }
 	virtual const std::vector<glm::vec3>& GetNormalsVector()        override { return normals; }
 	virtual std::vector<Face>& GetFacesVector()				        override { return faces; }
-	const glm::mat4x4& GetWorldTransformation()				        override;
 
+	// Inherited via IShaded
+	virtual const glm::mat4x4& GetWorldTransformation()				override;
+	virtual const ShadingModels GetShadingMethod()                  override { return (ShadingModels)shadingModel; }
+	virtual bool SetShadingMethod(ShadingModels model)              override;
+	
 	// Inherited via IScalable
 	virtual void Scale(const float scale)      override                         { scaleSize         = glm::vec3(scale); }
 	virtual void Scale(const glm::vec3& scale) override                         { scaleSize         = scale; }

@@ -68,7 +68,7 @@ private:
 	void drawFog();
 	void drawModels(glm::vec4 &activeCameraLocation, const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
 	void drawFace(std::vector<Face>::iterator &facesIterator, std::vector<glm::vec3> & vertices, const glm::mat4x4 & worldTransform, const std::vector<glm::vec3> & normals, const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix, glm::mat4x4 &transformMatrix);
-	void drawLightSources(const std::vector<LightSource*>& lightsVector);
+	void drawLightSources(const std::vector<LightSource*>& lightsVector, glm::vec4 &activeCameraLocation, const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
 	void draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4 & projectionMatrix, const glm::mat4x4 & viewMatrix);
 	void draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4 & projectionMatrix, const glm::mat4x4 & viewMatrix, const glm::vec3 & color);
 

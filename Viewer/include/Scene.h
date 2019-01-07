@@ -11,16 +11,12 @@
 #include "ProjectionType.h"
 #include "PointLightSource.h"
 #include "ParallelLightSource.h"
+#include "ShadingModels.h"
+
 /*
  * Scene class.
  * This class holds all the scene information (models, cameras, lights, etc..)
  */
-
-enum ShadingModels {
-	Flat = 0,
-	Phong = 1,
-	Gouraud = 2
-};
 
 class Scene {
 private:

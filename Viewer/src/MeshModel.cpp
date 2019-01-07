@@ -38,6 +38,8 @@ MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3
 	centerPoint.x = (minimums.x + maximums.x) / 2.0f;
 	centerPoint.y = (minimums.y + maximums.y) / 2.0f;
 	centerPoint.z = (minimums.z + maximums.z) / 2.0f;
+
+	shadingModel = Phong;
 }
 
 MeshModel::~MeshModel()
@@ -169,6 +171,12 @@ const glm::mat4x4& MeshModel::GetWorldTransformation()
 
 	worldTransform = translate * rotate * scale;
 	return worldTransform;
+}
+
+bool MeshModel::SetShadingMethod(ShadingModels model)
+{
+	shadingModel = model; 
+	return true; 
 }
 
 void MeshModel::SetRotation(const glm::vec3 & angle)

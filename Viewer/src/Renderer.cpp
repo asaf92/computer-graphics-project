@@ -313,7 +313,7 @@ void Renderer::Render()
 	drawAxis(projectionMatrix, viewMatrix);
 	drawModels(activeCameraLocation, projectionMatrix, viewMatrix);
 	drawFog();
-	drawLightSources(lightsVector);
+	drawLightSources(lightsVector, activeCameraLocation, projectionMatrix, viewMatrix);
 
 	// Stop counting runtime
 	auto finish = std::chrono::high_resolution_clock::now();
@@ -333,7 +333,9 @@ void Renderer::drawFog()
 	fogger.AddFog();
 }
 
-void Renderer::drawModels(glm::vec4 &activeCameraLocation, const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix)
+void Renderer::drawModels(glm::vec4 &activeCameraLocation, 
+	const glm::mat4 & projectionMatrix, 
+	const glm::mat4 & viewMatrix)
 {
 	if (scene.GetModelCount() == 0)
 		return;
@@ -439,17 +441,33 @@ void Renderer::drawFace(std::vector<Face>::iterator &facesIterator,
 	draw3DLine(PointC, PointCNormalTip, glm::mat4(1), glm::mat4(1), glm::vec3(1));
 }
 
-void Renderer::drawLightSources(const std::vector<LightSource*> & lightsVector)
+void Renderer::drawLightSources(const std::vector<LightSource*> & lightsVector, 
+	glm::vec4 &activeCameraLocation, 
+	const glm::mat4 & projectionMatrix, 
+	const glm::mat4 & viewMatrix)
 {
 	if (lightsVector.empty()) 
 		return;
 
 	//for each (LightSource* const lightSource in lightsVector)
 	//{
-	//	auto faces = lightSource->GetFacesVector();
+	//	const auto& worldTransform = lightSource->GetWorldTransformation();
+	//	const auto& normals = lightSource->GetNormalsVector();
+	//	auto& vertices = lightSource->GetVerticesVector();
+	//	auto& faces = lightSource->GetFacesVector();
+
+	//	// Feeding the shader data
+	//	shader.SetObjectColor         (lightSource->GetColor());
+	//	shader.SetObjectDiffuseColor  (lightSource->GetColor());
+	//	shader.SetObjectSpecularColor (lightSource->GetColor());
+	//	//shader.SetShininess(lightSource->GetShininess());
+	//	shader.SetCameraWorldPoint(worldTransform * activeCameraLocation);
+	//	glm::mat4x4 transformMatrix = projectionMatrix * viewMatrix * worldTransform;
+
+	//	// Looping through all faces
 	//	for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
 	//	{
-
+	//		drawFace(facesIterator, vertices, worldTransform, normals, projectionMatrix, viewMatrix, transformMatrix);
 	//	}
 	//}
 }
