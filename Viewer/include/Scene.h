@@ -50,9 +50,16 @@ private:
 	// Shader
 	ShadingModels selectedShader;
 
+	// World
+	float worldRadius;
+
 public:
 	Scene();
 	~Scene();
+
+	// World
+	const float GetWorldRadius() const    { return worldRadius; }
+	void SetWorldRadius(const float size) { worldRadius = size; }
 
 	// Models
 	void AddModel(const std::shared_ptr<MeshModel>& model);

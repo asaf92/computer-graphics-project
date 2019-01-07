@@ -15,17 +15,19 @@
 #include <nfd.h>
 #include <random>
 
+// Globals 
+
 bool showDemoWindow = false;
 bool showAnotherWindow = false;
-
-// Statics
-static float worldRadius = 3.0f;
 
 // My Menu Bools
 static bool showModelControls =           false;
 static bool showCameraControls =          false;
 static bool showProjectionControls =      false;
 static bool showNormals =				  false;
+
+// World
+float worldRadius = 5.0f;
 
 glm::vec4 clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.00f);
 
@@ -39,6 +41,7 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 	ImGui::ShowDemoWindow();
 	DisplayMenuBar(io,scene);
 
+	worldRadius = scene.GetWorldRadius();
 	ImGui::Begin("Main Menu");
 	
 	if (ImGui::CollapsingHeader("General"))
@@ -46,6 +49,7 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		bool drawAxis = scene.GetDrawAxis();
 		ImGui::Checkbox("Show axis", &drawAxis);
 		ImGui::ColorEdit3("Background color", (float*)&clearColor, ImGuiColorEditFlags_NoInputs);
+		ImGui::SliderFloat("World Radius", &worldRadius, 0.1f, 10.0f);
 		// Execution stats
 		ImGui::Text("ImGui render execution time: %.3f", scene.GetImGuiRenderExecutionTime());
 		ImGui::Text("Color buffer clearing execution time: %.3f", scene.GetColorBufferExecutionTime());

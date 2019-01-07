@@ -9,7 +9,8 @@ Scene::Scene() :
 	ambientLight(glm::vec4(0.25f)),
 	selectedShader(Flat),
 	fogStart(1.0f),
-	fogFinish(5.0f)
+	fogFinish(5.0f),
+	worldRadius(5.0f)
 {
 	// Init first camera
 	AddCamera(*(new Camera()));
