@@ -69,15 +69,10 @@ public:
 	void SetRotation(const glm::vec3& angle);
 
 	//Getters
-	const glm::mat4x4& GetWorldTransformation();
 	const std::string& GetModelName()                const  { return modelName; }
 	const glm::vec3& GetTranslationVector()	         const  { return translationVector; }
 	const glm::vec3& GetScalingVector()              const  { return scaleSize; }
 	Material& GetUniformMaterial()                          { return uniformMaterial; }
-	const glm::vec4& GetAmbientColor()                      const;
-	const glm::vec4& GetDiffuseColor()                      const	{ return glm::vec4(uniformMaterial.GetDiffuseColor()); }
-	const glm::vec4& GetSpecularColor()                     const  { return glm::vec4(uniformMaterial.GetSpecularColor()); }
-
 
 	// Inherited via IMovable
 	virtual void Move(const glm::vec3 direction) override { SetTranslation(translationVector + direction); }
@@ -88,9 +83,13 @@ public:
 	virtual void RotateZ(const float angle) override;
 
 	// Inherited via IMeshObject
-	virtual std::vector<glm::vec3>& GetVerticesVector()      override    { return vertices; }
-	virtual const std::vector<glm::vec3>& GetNormalsVector() override    { return normals; }
-	virtual std::vector<Face>& GetFacesVector()				 override	 { return faces; }
+	virtual std::vector<glm::vec3>& GetVerticesVector()             override { return vertices; }
+	virtual const std::vector<glm::vec3>& GetNormalsVector()        override { return normals; }
+	virtual std::vector<Face>& GetFacesVector()				        override { return faces; }
+	const glm::mat4x4& GetWorldTransformation()				        override;
+	virtual const glm::vec4 GetAmbientColor()                const override;
+	virtual const glm::vec4 GetDiffuseColor()                const override { return glm::vec4(uniformMaterial.GetDiffuseColor()); }
+	virtual const glm::vec4 GetSpecularColor()               const override { return glm::vec4(uniformMaterial.GetSpecularColor()); }
 
 	// Inherited via IScalable
 	virtual void Scale(const float scale)      override                         { scaleSize         = glm::vec3(scale); }
