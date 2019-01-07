@@ -304,24 +304,38 @@ void Renderer::Render()
 	auto activeCameraLocation = Utils::Vec4FromVec3Point(activeCamera.GetCameraLocation());
 	auto& lightsVector = scene.GetLightsVector();
 	const glm::mat4& viewMatrix = activeCamera.GetViewMatrix();
-
 	activeCamera.RenderProjectionMatrix();
 	const glm::mat4& projectionMatrix = activeCamera.GetProjectionMatrix();
 
 	if (scene.GetDrawAxis()) { drawAxis(projectionMatrix, viewMatrix);}
+	drawModels(activeCameraLocation, projectionMatrix, viewMatrix);
+	drawFog();
 
-	if (scene.GetModelCount() == 0)
-	{
-		// Nothing to draw
-		auto finish = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<double> elapsed = finish - start;
-		scene.SetRenderExecutionTime(elapsed.count());
+	drawLightSources(lightsVector);
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed = finish - start;
+	scene.SetRenderExecutionTime(elapsed.count());
+}
+
+void Renderer::drawFog()
+{
+	if (!scene.GetFogEnabled())
 		return;
-	}
+	fogger.SetColorBuffer(colorBuffer);
+	fogger.SetZBuffer(zBuffer);
+	fogger.SetStart(scene.GetFogStart());
+	fogger.SetFinish(scene.GetFogFinish());
+	fogger.SetViewport(viewportWidth, viewportHeight);
+	fogger.AddFog();
+}
+
+void Renderer::drawModels(glm::vec4 &activeCameraLocation, const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix)
+{
+	if (scene.GetModelCount() == 0)
+		return;
 
 	const auto& models = scene.GetModelsVector();
 	const auto& activeModel = scene.GetActiveModel();
-
 	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator != models.end(); ++iterator)
 	{
 		auto currentModel = *iterator;
@@ -336,15 +350,15 @@ void Renderer::Render()
 		shader.SetObjectSpecularColor(currentModel->GetSpecularColor());
 		shader.SetShininess(currentModel->GetShininess());
 		shader.SetCameraWorldPoint(worldTransform * activeCameraLocation);
-		glm::mat4x4 transformMatrix = projectionMatrix *  viewMatrix * worldTransform;
-		
+		glm::mat4x4 transformMatrix = projectionMatrix * viewMatrix * worldTransform;
+
 		// Looping through all faces
 		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
 		{
 			// Getting the 3 vertices. These 3 index integers will be used later for normals as well
-			int firstIndex  = facesIterator->GetVertexIndex(0) - 1; // -1 because the indices start with 1
+			int firstIndex = facesIterator->GetVertexIndex(0) - 1; // -1 because the indices start with 1
 			int secondIndex = facesIterator->GetVertexIndex(1) - 1;
-			int thirdIndex  = facesIterator->GetVertexIndex(2) - 1;
+			int thirdIndex = facesIterator->GetVertexIndex(2) - 1;
 			auto PointA = Utils::Vec4FromVec3Point(vertices[firstIndex]);
 			auto PointB = Utils::Vec4FromVec3Point(vertices[secondIndex]);
 			auto PointC = Utils::Vec4FromVec3Point(vertices[thirdIndex]);
@@ -357,9 +371,9 @@ void Renderer::Render()
 			shader.SetWorldPoints(PointAWorld, PointBWorld, PointCWorld);
 
 			// Getting the 3 normals
-			firstIndex  = facesIterator->GetNormalIndex(0) - 1;
+			firstIndex = facesIterator->GetNormalIndex(0) - 1;
 			secondIndex = facesIterator->GetNormalIndex(1) - 1;
-			thirdIndex  = facesIterator->GetNormalIndex(2) - 1;
+			thirdIndex = facesIterator->GetNormalIndex(2) - 1;
 			glm::vec4 PointANormal = worldTransform * Utils::Vec4FromVec3DirectionVector(normals[firstIndex]);
 			glm::vec4 PointBNormal = worldTransform * Utils::Vec4FromVec3DirectionVector(normals[secondIndex]);
 			glm::vec4 PointCNormal = worldTransform * Utils::Vec4FromVec3DirectionVector(normals[thirdIndex]);
@@ -377,9 +391,9 @@ void Renderer::Render()
 				PointCNormalTip = PointC;
 			}
 
-			PointA = projectionMatrix *  viewMatrix * PointAWorld;
-			PointB = projectionMatrix *  viewMatrix * PointBWorld;
-			PointC = projectionMatrix *  viewMatrix * PointCWorld;
+			PointA = projectionMatrix * viewMatrix * PointAWorld;
+			PointB = projectionMatrix * viewMatrix * PointBWorld;
+			PointC = projectionMatrix * viewMatrix * PointCWorld;
 			PointA = PointA / PointA.w;
 			PointB = PointB / PointB.w;
 			PointC = PointC / PointC.w;
@@ -401,25 +415,11 @@ void Renderer::Render()
 			PointANormalTip = PointANormalTip / PointANormalTip.w;
 			PointBNormalTip = PointBNormalTip / PointBNormalTip.w;
 			PointCNormalTip = PointCNormalTip / PointCNormalTip.w;
-			draw3DLine(PointA, PointANormalTip, glm::mat4(1), glm::mat4(1),glm::vec3(1));
-			draw3DLine(PointB, PointBNormalTip, glm::mat4(1), glm::mat4(1),glm::vec3(1));
-			draw3DLine(PointC, PointCNormalTip, glm::mat4(1), glm::mat4(1),glm::vec3(1));
+			draw3DLine(PointA, PointANormalTip, glm::mat4(1), glm::mat4(1), glm::vec3(1));
+			draw3DLine(PointB, PointBNormalTip, glm::mat4(1), glm::mat4(1), glm::vec3(1));
+			draw3DLine(PointC, PointCNormalTip, glm::mat4(1), glm::mat4(1), glm::vec3(1));
 		}
 	}
-	if (scene.GetFogEnabled())
-	{
-		fogger.SetColorBuffer(colorBuffer);
-		fogger.SetZBuffer(zBuffer);
-		fogger.SetStart(scene.GetFogStart());
-		fogger.SetFinish(scene.GetFogFinish());
-		fogger.SetViewport(viewportWidth, viewportHeight);
-		fogger.AddFog();
-	}
-
-	drawLightSources(lightsVector);
-	auto finish = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> elapsed = finish - start;
-	scene.SetRenderExecutionTime(elapsed.count());
 }
 
 void Renderer::drawLightSources(const std::vector<LightSource*> & lightsVector)

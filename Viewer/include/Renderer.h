@@ -70,6 +70,8 @@ public:
 
 
 	void Render();
+	void drawFog();
+	void drawModels(glm::vec4 &activeCameraLocation, const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
 	void drawLightSources(const std::vector<LightSource*>& lightsVector);
 	void SwapBuffers();
 	void ClearColorBuffer(const glm::vec3& color);
