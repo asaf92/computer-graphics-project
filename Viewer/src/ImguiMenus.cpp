@@ -365,7 +365,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 		ImGui::Text("Diffuse Color");
 		ImGui::ColorEdit3("Diffuse", (float*)&diffuseColor);
 		ImGui::TreePop();
-		ImGui::SliderFloat("Shininess", (float*)&shininess, 0.0f, 50.0f);
+		ImGui::SliderFloat("Shininess", (float*)&shininess, 0.0f, 100.0f);
 		activeModel->SetTranslation(newTranslationVector);
 		activeModel->SetScaling(newScalingSizes);
 		activeModel->SetRotation(newAngle);
