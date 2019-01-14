@@ -15,6 +15,9 @@ Scene::Scene() :
 	// Init first camera
 	AddCamera(*(new Camera()));
 	SetActiveCameraIndex(1);
+
+	// Add default light
+	AddLight(Parallel);
 }
 
 Scene::~Scene()
