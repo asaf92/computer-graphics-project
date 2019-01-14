@@ -10,6 +10,7 @@ private:
 	float height;
 public:
 	Cube() : length(1.0f), width(1.0f), height(1.0f) {}
+
 	// IShaded
 	virtual const glm::mat4x4& GetWorldTransformation() { return glm::mat4x4(1); }
 	virtual const ShadingModels GetShadingMethod() { return Flat; };

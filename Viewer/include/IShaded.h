@@ -2,6 +2,9 @@
 #include<glm/glm.hpp>
 #include "ShadingModels.h"
 
+/*
+* Everything that gets passed to the shader has to implement this interface
+*/
 class IShaded
 {
 public:

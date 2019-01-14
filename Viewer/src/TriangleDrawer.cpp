@@ -40,10 +40,6 @@ void TriangleDrawer::DrawTriangle()
 	const int maxX = (int)ceil(borders.maxX);
 	const int maxY = (int)ceil(borders.maxY);
 	const float z = (screenPointA.z + screenPointB.z + screenPointC.z) / 3.0f;
-	// If A, B, C share X or Y value
-	//if((int)round(screenPointA.x) == (int)round(screenPointB.x)  ||
-	//	(int)round(screenPointA.x) == (int)round(screenPointC.x) ||
-	//	(int)round(screenPointB.x) == (int)round(screenPointC.x))
 	
 	for (int x = minX; x < maxX; x++)
 	{
