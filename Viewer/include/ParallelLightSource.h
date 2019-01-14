@@ -29,5 +29,13 @@ public:
 	virtual void RotateX(const float angle) override;
 	virtual void RotateY(const float angle) override;
 	virtual void RotateZ(const float angle) override;
-	virtual void Move(const glm::vec3 direction) override {} // Can't move a parallel light source
+	virtual void Move(const glm::vec3 direction) override {}
+	// Inherited via LightSource
+	virtual const glm::mat4x4 & GetWorldTransformation() override;
+	virtual const ShadingModels GetShadingMethod() override;
+	virtual bool SetShadingMethod(ShadingModels model) override;
+	virtual std::vector<glm::vec3>& GetVerticesVector() override;
+	virtual std::vector<Face>& GetFacesVector() override;
+	virtual const std::vector<glm::vec3>& GetNormalsVector() override;
+	// Can't move a parallel light source
 };
