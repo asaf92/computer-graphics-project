@@ -46,6 +46,9 @@ private:
 	// Shader
 	ShadingModels selectedShader;
 
+	// Lights
+	bool showingLights;
+
 	// World
 	float worldRadius;
 
@@ -98,12 +101,17 @@ public:
 	// Lights
 	const glm::vec4& GetAmbientLight() const { return ambientLight; }
 	void SetAmbientLight(const glm::vec4& light) { ambientLight = light; }
+
 	void AddLight(LightSourceType type);
 	const std::vector<LightSource*>& GetLightsVector() const { return lights; }
 	const int GetLightsCount() const { return lights.size(); }
+
 	void SetActiveLightsIndex(const int index) { activeLightsIndex = index; }
 	const int GetActiveLightsIndex() const { return activeLightsIndex; }
 	LightSource* GetActiveLight() { return lights[GetActiveLightsIndex()]; }
+
+	bool GetDrawLights() { return showingLights; }
+	void SetDrawLights(bool value) { showingLights = value; }
 
 	// Shader
 	ShadingModels GetSelectedShadingModel() const { return selectedShader; }

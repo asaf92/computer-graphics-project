@@ -446,7 +446,7 @@ void Renderer::drawLightSources(const std::vector<LightSource*> & lightsVector,
 	const glm::mat4 & projectionMatrix, 
 	const glm::mat4 & viewMatrix)
 {
-	if (lightsVector.empty()) 
+	if (lightsVector.empty() || !scene.GetDrawLights()) 
 		return;
 
 	//for each (LightSource* const lightSource in lightsVector)

@@ -466,6 +466,8 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 {
 	int selectedLightIndex = scene.GetActiveLightsIndex();
 	glm::vec4 ambientLight = scene.GetAmbientLight();
+	bool drawLightSources = scene.GetDrawLights();
+
 	ImGui::ColorEdit3("Ambient light color", (float*)&ambientLight, ImGuiColorEditFlags_NoInputs);
 	scene.SetAmbientLight(ambientLight);
 	//int selectedLightIndex = -1;
@@ -520,7 +522,10 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 		xyzSliders(newDirection, "Direction", worldRadius);
 	}
 	ImGui::ColorEdit3("Light color", (float*)&newActiveLightColor, ImGuiColorEditFlags_NoInputs);
+	ImGui::Checkbox("Draw light sources", &drawLightSources);
+
 	scene.SetActiveLightsIndex(selectedLightIndex);
+	scene.SetDrawLights(drawLightSources);
 	activeLight->SetDirection(newDirection);
 	activeLight->SetColor(newActiveLightColor);
 	ImGui::Text("Number of lights: %d",scene.GetLightsCount());

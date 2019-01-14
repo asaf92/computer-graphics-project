@@ -10,7 +10,8 @@ Scene::Scene() :
 	selectedShader(Phong),
 	fogStart(1.0f),
 	fogFinish(5.0f),
-	worldRadius(5.0f)
+	worldRadius(5.0f),
+	showingLights(true)
 {
 	// Init first camera
 	AddCamera(*(new Camera()));
