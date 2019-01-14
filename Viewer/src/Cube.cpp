@@ -1,17 +1,17 @@
 #include "Cube.h"
 using namespace std;
 
-Cube::Cube(): length(0.1f), width(0.1f), height(0.1f) 
+Cube::Cube(float size) : length(size), width(size), height(size)
 {
 	vertices = {
-		glm::vec3(-width, -height,  length),
-		glm::vec3(-width,  height,  length),
-		glm::vec3( width,  height,  length),
-		glm::vec3( width, -height,  length),
-		glm::vec3(-width, -height, -length),
-		glm::vec3(-width,  height, -length),
-		glm::vec3( width,  height, -length),
-		glm::vec3( width, -height, -length)
+	glm::vec3(-width, -height,  length),
+	glm::vec3(-width,  height,  length),
+	glm::vec3(width,  height,  length),
+	glm::vec3(width, -height,  length),
+	glm::vec3(-width, -height, -length),
+	glm::vec3(-width,  height, -length),
+	glm::vec3(width,  height, -length),
+	glm::vec3(width, -height, -length)
 	};
 
 	faces = {

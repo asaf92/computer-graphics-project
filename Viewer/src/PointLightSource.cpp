@@ -30,7 +30,7 @@ bool PointLightSource::SetShadingMethod(ShadingModels model)
 
 std::vector<glm::vec3> PointLightSource::GetVerticesVector()
 {
-	return std::vector<glm::vec3>(model.GetVerticesVector());
+	return model.GetVerticesVector();
 }
 
 std::vector<Face> PointLightSource::GetFacesVector()

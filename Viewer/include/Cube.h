@@ -14,7 +14,8 @@ private:
 	std::vector<glm::vec3> normals;
 	vector<Face> faces;
 public:
-	Cube();
+	Cube(): Cube(0.1f){}
+	Cube(float size);
 
 	// IShaded
 	virtual const glm::mat4x4 GetWorldTransformation() { return glm::mat4x4(1); }

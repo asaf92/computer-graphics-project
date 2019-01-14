@@ -18,7 +18,7 @@ Scene::Scene() :
 	SetActiveCameraIndex(1);
 
 	// Add default light
-	AddLight(PointSource);
+	AddLight(Parallel);
 }
 
 Scene::~Scene()

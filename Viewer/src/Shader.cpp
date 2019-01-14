@@ -3,6 +3,11 @@
 #pragma region Public Methods
 void Shader::CalculateVertexColors()
 {
+	if (scene.GetSelectedShadingModel() == Uniform) 
+	{
+		colorA = colorB = colorC = objectColor;
+		return;
+	}
 	colorA = calculatePhongReflection(NormalA, WorldPointA, calculateToCameraVector(WorldPointA));
 	colorB = calculatePhongReflection(NormalB, WorldPointB, calculateToCameraVector(WorldPointB));
 	colorC = calculatePhongReflection(NormalC, WorldPointC, calculateToCameraVector(WorldPointC));

@@ -1,21 +1,20 @@
 #pragma once
 #include "LightSource.h"
+#include "Globals.h"
+#include "Cube.h"
 
 class ParallelLightSource : public LightSource
 {
 private:
 	static int id;
 	glm::vec4 direction;
+	Cube model;
 public:
 	// Constructor
-	ParallelLightSource() : LightSource()
-	{
-		name = "Parallel Light #" + std::to_string(id++);
-		direction = glm::vec4(0.0f,-1.0f,0.0f,0.0f);
-	}
+	ParallelLightSource();
 
 	// Setters
-	virtual void SetDirection(const glm::vec4 & _direction) override { direction = _direction; }
+	virtual void SetDirection(const glm::vec4 & _direction) override { direction = glm::normalize(_direction); }
 	virtual void SetLocation(const glm::vec4 & _location) override { return; }
 
 	// Getters

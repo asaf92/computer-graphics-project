@@ -345,7 +345,7 @@ void Renderer::drawModels(glm::vec4 &activeCameraLocation,
 	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator != models.end(); ++iterator)
 	{
 		auto currentModel = *iterator;
-		const auto& worldTransform = currentModel->GetWorldTransformation();
+		const auto worldTransform = currentModel->GetWorldTransformation();
 		const auto& normals = currentModel->GetNormalsVector();
 		auto& vertices = currentModel->GetVerticesVector();
 		auto& faces = currentModel->GetFacesVector();
@@ -374,6 +374,8 @@ void Renderer::drawFace(std::vector<Face>::iterator &facesIterator,
 	const glm::mat4 & viewMatrix, 
 	glm::mat4x4 &transformMatrix)
 {
+	if (vertices.empty())
+		return;
 	// Getting the 3 vertices. These 3 index integers will be used later for normals as well
 	int firstIndex = facesIterator->GetVertexIndex(0) - 1; // -1 because the indices start with 1
 	int secondIndex = facesIterator->GetVertexIndex(1) - 1;
@@ -449,27 +451,33 @@ void Renderer::drawLightSources(const std::vector<LightSource*> & lightsVector,
 	if (lightsVector.empty() || !scene.GetDrawLights()) 
 		return;
 
-	//for each (LightSource* const lightSource in lightsVector)
-	//{
-	//	const auto& worldTransform = lightSource->GetWorldTransformation();
-	//	const auto& normals = lightSource->GetNormalsVector();
-	//	auto& vertices = lightSource->GetVerticesVector();
-	//	auto& faces = lightSource->GetFacesVector();
+	for each (LightSource* const lightSource in lightsVector)
+	{
+		const auto worldTransform = lightSource->GetWorldTransformation();
+		const auto normals = vector<glm::vec3>(lightSource->GetNormalsVector());
+		auto vertices = vector<glm::vec3>(lightSource->GetVerticesVector());
+		auto faces = vector<Face>(lightSource->GetFacesVector());
 
-	//	// Feeding the shader data
-	//	shader.SetObjectColor         (lightSource->GetColor());
-	//	shader.SetObjectDiffuseColor  (lightSource->GetColor());
-	//	shader.SetObjectSpecularColor (lightSource->GetColor());
-	//	//shader.SetShininess(lightSource->GetShininess());
-	//	shader.SetCameraWorldPoint(worldTransform * activeCameraLocation);
-	//	glm::mat4x4 transformMatrix = projectionMatrix * viewMatrix * worldTransform;
+		// Set shader
+		shader.SetObjectColor(lightSource->GetColor());
+		shader.SetObjectDiffuseColor(lightSource->GetColor());
+		shader.SetObjectSpecularColor(glm::vec4(0));
+		shader.SetCameraWorldPoint(worldTransform * activeCameraLocation);
+		
+		glm::mat4x4 transformMatrix = projectionMatrix * viewMatrix * worldTransform;
 
-	//	// Looping through all faces
-	//	for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
-	//	{
-	//		drawFace(facesIterator, vertices, worldTransform, normals, projectionMatrix, viewMatrix, transformMatrix);
-	//	}
-	//}
+		// Draw all faces
+		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
+		{
+			drawFace(facesIterator,
+				vertices,
+				worldTransform,
+				normals,
+				projectionMatrix,
+				viewMatrix,
+				transformMatrix);
+		}
+	}
 }
 
 void Renderer::drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix)
