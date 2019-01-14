@@ -13,6 +13,8 @@ const glm::mat4x4 & PointLightSource::GetWorldTransformation()
 	worldTransform[3].x = location.x;
 	worldTransform[3].y = location.y;
 	worldTransform[3].z = location.z;
+
+	return worldTransform;
 }
 
 const ShadingModels PointLightSource::GetShadingMethod()
