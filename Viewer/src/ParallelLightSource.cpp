@@ -18,7 +18,7 @@ void ParallelLightSource::RotateZ(const float angle)
 #pragma endregion
 
 #pragma region IShaded
-const glm::mat4x4 & ParallelLightSource::GetWorldTransformation()
+const glm::mat4x4  ParallelLightSource::GetWorldTransformation()
 {
 	return glm::mat4x4(0);
 }
@@ -35,17 +35,17 @@ bool ParallelLightSource::SetShadingMethod(ShadingModels model)
 #pragma endregion
 
 #pragma region IMeshObject
-std::vector<glm::vec3>& ParallelLightSource::GetVerticesVector()
+std::vector<glm::vec3> ParallelLightSource::GetVerticesVector()
 {
 	return std::vector<glm::vec3>();
 }
 
-std::vector<Face>& ParallelLightSource::GetFacesVector()
+std::vector<Face> ParallelLightSource::GetFacesVector()
 {
 	return std::vector<Face>();
 }
 
-const std::vector<glm::vec3>& ParallelLightSource::GetNormalsVector()
+const std::vector<glm::vec3> ParallelLightSource::GetNormalsVector()
 {
 	return std::vector<glm::vec3>();
 }

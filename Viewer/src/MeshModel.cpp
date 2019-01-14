@@ -161,7 +161,7 @@ glm::mat4x4 MeshModel::GetZRotationMatrix()
 	return translateToCenterInverse * rotationMatrix * translateToCenter;
 }
 
-const glm::mat4x4& MeshModel::GetWorldTransformation()
+const glm::mat4x4 MeshModel::GetWorldTransformation()
 {
 	worldTransform = glm::mat4x4(1);
 	glm::mat4x4 translate = GetTranslationMatrix();

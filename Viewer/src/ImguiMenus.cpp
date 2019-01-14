@@ -175,7 +175,7 @@ void ShowTransformationMatrices(ImGuiIO& io, Scene& scene)
 
 	if (scene.GetModelCount() == 0){ return; }
 	const auto& activeModel = scene.GetActiveModel();
-	const auto& worldMatrix = activeModel->GetWorldTransformation();
+	const auto worldMatrix = activeModel->GetWorldTransformation();
 	PrintMatrix(worldMatrix, "World Matrix");
 
 }

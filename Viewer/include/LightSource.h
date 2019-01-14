@@ -51,12 +51,12 @@ public:
 	virtual void RotateZ(const float angle) override =0;
 
 	// Inherited via IShaded
-	virtual const glm::mat4x4 & GetWorldTransformation() override =0;
+	virtual const glm::mat4x4  GetWorldTransformation() override =0;
 	virtual const ShadingModels GetShadingMethod()		 override =0;
 	virtual bool SetShadingMethod(ShadingModels model)   override =0;
 
 	// Inherited via IMeshObject
-	virtual std::vector<glm::vec3>&		  GetVerticesVector() = 0;
-	virtual std::vector<Face>&			  GetFacesVector()    = 0;
-	virtual const std::vector<glm::vec3>& GetNormalsVector()  = 0;
+	virtual std::vector<glm::vec3>		  GetVerticesVector() = 0;
+	virtual std::vector<Face>			  GetFacesVector()    = 0;
+	virtual const std::vector<glm::vec3> GetNormalsVector()  = 0;
 };

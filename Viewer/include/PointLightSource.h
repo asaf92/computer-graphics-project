@@ -1,15 +1,17 @@
 #pragma once
 #include "LightSource.h"
+#include "Cube.h"
 
 class PointLightSource : public LightSource
 {
 private:
 	static int id;
+	Cube model;
 	glm::vec4 location;
 public:
 	// Constructors
 	PointLightSource() : PointLightSource(glm::vec4(0.0f,0.0f,-1.0f,1.0f)) {}
-	PointLightSource(const glm::vec4& _location) : location(_location)
+	PointLightSource(const glm::vec4& _location) : location(_location), model()
 	{
 		name = "Point Light Source #" + std::to_string(id++);
 	}
@@ -31,13 +33,12 @@ public:
 	virtual void RotateZ(const float angle) override {} 
 
 	// Inherited via LightSource
-	virtual const glm::mat4x4 & GetWorldTransformation() override;
+	virtual const glm::mat4x4  GetWorldTransformation() override;
 	virtual const ShadingModels GetShadingMethod() override;
 	virtual bool SetShadingMethod(ShadingModels model) override;
 
 	// Inherited via LightSource
-	virtual std::vector<glm::vec3>& GetVerticesVector() override;
-	virtual std::vector<Face>& GetFacesVector() override;
-	virtual const std::vector<glm::vec3>& GetNormalsVector() override;
+	virtual std::vector<glm::vec3> GetVerticesVector() override;
+	virtual std::vector<Face> GetFacesVector() override;
+	virtual const std::vector<glm::vec3> GetNormalsVector() override;
 };
-

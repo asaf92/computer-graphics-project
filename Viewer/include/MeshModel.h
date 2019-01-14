@@ -83,12 +83,12 @@ public:
 	virtual void RotateZ(const float angle) override;
 
 	// Inherited via IMeshObject
-	virtual std::vector<glm::vec3>& GetVerticesVector()             override { return vertices; }
-	virtual const std::vector<glm::vec3>& GetNormalsVector()        override { return normals; }
-	virtual std::vector<Face>& GetFacesVector()				        override { return faces; }
+	virtual std::vector<glm::vec3> GetVerticesVector()             override { return vertices; }
+	virtual const std::vector<glm::vec3> GetNormalsVector()        override { return normals; }
+	virtual std::vector<Face> GetFacesVector()				        override { return faces; }
 
 	// Inherited via IShaded
-	virtual const glm::mat4x4& GetWorldTransformation()				override;
+	virtual const glm::mat4x4 GetWorldTransformation()				override;
 	virtual const ShadingModels GetShadingMethod()                  override { return (ShadingModels)shadingModel; }
 	virtual bool SetShadingMethod(ShadingModels model)              override;
 	
