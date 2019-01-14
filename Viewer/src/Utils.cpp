@@ -87,8 +87,10 @@ glm::vec3 Utils::ScreenVec3FromWorldPoint(const glm::vec4& _worldPoint, int _vie
 	float viewportHeight = float(_viewportHeight);
 	screenPoint.x += 1.0f;
 	screenPoint.y += 1.0f;
+	screenPoint.z += 1.0f;
 	screenPoint.x /= 2.0f;
 	screenPoint.y /= 2.0f;
+	screenPoint.z /= 2.0f;
 	screenPoint.x *= viewportWidth;
 	screenPoint.y *= viewportHeight;
 

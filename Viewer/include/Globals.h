@@ -1,2 +1,2 @@
 #pragma once
-#define PARALLEL_DRAWING_DISTANCE 7.0f
+#define PARALLEL_DRAWING_DISTANCE 12.0f
