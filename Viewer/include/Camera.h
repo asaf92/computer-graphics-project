@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
 #include "MeshModel.h"
 #include "ProjectionType.h"
 #include "LookAtParameters.h"
