@@ -51,6 +51,7 @@ private:
 
 	// World
 	float worldRadius;
+	glm::vec4 clearColor;
 
 public:
 	Scene();
@@ -59,6 +60,8 @@ public:
 	// World
 	const float GetWorldRadius() const    { return worldRadius; }
 	void SetWorldRadius(const float size) { worldRadius = size; }
+	const glm::vec4 GetClearColor() const { return clearColor; }
+	void SetClearColor(const glm::vec4 color) { clearColor = color; }
 
 	// Models
 	void AddModel(const std::shared_ptr<MeshModel>& model);

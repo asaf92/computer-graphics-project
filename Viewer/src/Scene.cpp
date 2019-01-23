@@ -11,7 +11,8 @@ Scene::Scene() :
 	fogStart(1.0f),
 	fogFinish(5.0f),
 	worldRadius(5.0f),
-	showingLights(true)
+	showingLights(true),
+	clearColor(0.0f, 0.0f, 0.0f, 1.00f)
 {
 	// Init first camera
 	AddCamera(*(new Camera()));

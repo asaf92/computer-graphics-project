@@ -29,13 +29,6 @@ static bool showNormals =				  false;
 // World
 float worldRadius = 5.0f;
 
-glm::vec4 clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.00f);
-
-const glm::vec4& GetClearColor()
-{
-	return clearColor;
-}
-
 void DrawMenus(ImGuiIO& io, Scene& scene)
 {
 	ImGui::ShowDemoWindow();
@@ -46,6 +39,7 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 	
 	if (ImGui::CollapsingHeader("General"))
 	{
+		glm::vec4 clearColor = scene.GetClearColor();
 		bool drawAxis = scene.GetDrawAxis();
 		ImGui::Checkbox("Show axis", &drawAxis);
 		ImGui::ColorEdit3("Background color", (float*)&clearColor, ImGuiColorEditFlags_NoInputs);
@@ -57,6 +51,7 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		ImGui::Text("Render execution time: %.3f", scene.GetRenderExecutionTime());
 
 		scene.SetDrawAxis(drawAxis);
+		scene.SetClearColor(clearColor);
 	}
 
 	if (ImGui::CollapsingHeader("Transformation Matrices"))

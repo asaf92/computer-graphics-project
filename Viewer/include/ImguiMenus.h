@@ -17,6 +17,5 @@ void ShowCameraControls(ImGuiIO& io, Scene& scene);
 void moveObjectControls(IMovable* movableObject, std::string title);
 void ShowShaderControls(ImGuiIO& io, Scene& scene);
 void ShowFogControls(ImGuiIO& io, Scene& scene);
-const glm::vec4& GetClearColor();
 void DisplayMenuBar(ImGuiIO& io, Scene& scene);
 void PrintMatrix(const glm::mat4x4& matrix, const char* name);
