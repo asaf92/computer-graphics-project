@@ -6,6 +6,7 @@
 #include "PixelPlacer.h"
 #include "TriangleDrawer.h"
 #include "Fogger.h"
+#include "ShaderProgram.h"
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -72,6 +73,9 @@ private:
 	void drawLightSources(const std::vector<LightSource*>& lightsVector, glm::vec4 &activeCameraLocation, const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
 	void draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4 & projectionMatrix, const glm::mat4x4 & viewMatrix);
 	void draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4 & projectionMatrix, const glm::mat4x4 & viewMatrix, const glm::vec3 & color);
+
+	// Shaders
+	ShaderProgram colorShader;
 
 public:
 	Renderer(Shader& shader, Scene& scene, int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
