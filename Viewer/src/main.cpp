@@ -54,6 +54,10 @@ int main(int argc, char **argv)
 
 	// Create the shader
 	Shader shader = Shader(scene);
+	
+	glm::vec4 clearColor = scene.GetClearColor();
+	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+	glEnable(GL_DEPTH_TEST);
 
 	// Create the renderer and the scene
 	Renderer renderer = Renderer(shader,scene,frameBufferWidth, frameBufferHeight);
@@ -144,30 +148,14 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 	int frameBufferWidth, frameBufferHeight;
 	glfwGetFramebufferSize(window, &frameBufferWidth, &frameBufferHeight);
 
-	// Resize handling here... (a suggestion)
-
-	// Clear the frame buffer
 	start = std::chrono::high_resolution_clock::now();
-	renderer.ClearColorBuffer(GetClearColor());
+	renderer.ClearBuffers();
 	finish = std::chrono::high_resolution_clock::now();
 	elapsed = finish - start;
 	scene.SetColorBufferExecutionTime(elapsed.count());
 
-	start = std::chrono::high_resolution_clock::now();
-	renderer.ClearZBuffer();
-	finish = std::chrono::high_resolution_clock::now();
-	elapsed = finish - start;
-	scene.SetZBufferExecutionTime(elapsed.count());
-
 	// Render the scene
-	renderer.Render(false);
-
-	// Swap buffers
-	start = std::chrono::high_resolution_clock::now();
-	renderer.SwapBuffers();
-	finish = std::chrono::high_resolution_clock::now();
-	elapsed = finish - start;
-	scene.SetSwapBuffersExecutionTime(elapsed.count());
+	renderer.Render(true);
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(window);

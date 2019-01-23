@@ -85,6 +85,7 @@ public:
 	void SwapBuffers();
 	void ClearColorBuffer(const glm::vec3& color);
 	void ClearZBuffer();
+	void ClearBuffers();
 	void SetViewport(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
 
 };

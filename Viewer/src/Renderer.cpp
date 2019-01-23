@@ -79,35 +79,11 @@ void Renderer::createBuffers(int viewportWidth, int viewportHeight)
 
 }
 
-void Renderer::ClearColorBuffer(const glm::vec3& color)
+void Renderer::ClearBuffers()
 {
-	int index;
-	int i = 0;
-	int j = 0;
-	for (int i = 0; i < viewportWidth; i++)
-	{
-		for (int j = 0; j < viewportHeight; j++)
-		{
-			index = INDEX(viewportWidth, i, j, 0);
-			colorBuffer[index++] = color.x;
-			colorBuffer[index++] = color.y;
-			colorBuffer[index] =   color.z;
-		}
-	}
-}
-
-void Renderer::ClearZBuffer()
-{
-	//if (!zBufferChanged) return;
-	int index;
-	for (int i = 0; i < viewportWidth; i++)
-	{
-		for (int j = 0; j < viewportHeight; j++)
-		{
-			index = INDEX(viewportWidth, i, j, 0);
-			zBuffer[index] = maxZ;
-		}
-	}
+	glm::vec4 clearColor = scene.GetClearColor();
+	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Renderer::drawLine(Line& line)
