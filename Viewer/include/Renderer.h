@@ -65,6 +65,7 @@ private:
 	int RenderExecutionTime;
 
 	// Render methods
+	void Render();
 	void drawFog();
 	void drawModels(glm::vec4 &activeCameraLocation, const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
 	void drawFace(std::vector<Face>::iterator &facesIterator, std::vector<glm::vec3> & vertices, const glm::mat4x4 & worldTransform, const std::vector<glm::vec3> & normals, const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix, glm::mat4x4 &transformMatrix);
@@ -76,7 +77,7 @@ public:
 	Renderer(Shader& shader, Scene& scene, int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
 	~Renderer();
 
-	void Render();
+	void Render(bool useOpenGL);
 	void SwapBuffers();
 	void ClearColorBuffer(const glm::vec3& color);
 	void ClearZBuffer();

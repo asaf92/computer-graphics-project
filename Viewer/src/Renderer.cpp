@@ -321,6 +321,13 @@ void Renderer::Render()
 	scene.SetRenderExecutionTime(elapsed.count());
 }
 
+void Renderer::Render(bool useOpenGL)
+{
+	if (!useOpenGL) return Render();
+	
+	return;
+}
+
 void Renderer::drawFog()
 {
 	if (!scene.GetFogEnabled())

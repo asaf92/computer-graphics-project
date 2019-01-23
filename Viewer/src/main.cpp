@@ -160,7 +160,7 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 	scene.SetZBufferExecutionTime(elapsed.count());
 
 	// Render the scene
-	renderer.Render();
+	renderer.Render(false);
 
 	// Swap buffers
 	start = std::chrono::high_resolution_clock::now();
