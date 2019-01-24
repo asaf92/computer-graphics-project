@@ -272,36 +272,27 @@ void Renderer::draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4&
 	Line line = Line(toScreenPixel(Point(PointA)), toScreenPixel(Point(PointB)));
 	drawLine(line,color);
 }
-
-void Renderer::Render()
-{
-	// Start counting runtime
-	auto start = std::chrono::high_resolution_clock::now();
-
-	zBufferChanged = true; // Keep it this way and figure out later how we can rule out that zBuffer has changed
-
-	auto& activeCamera = scene.GetActiveCamera();
-	auto activeCameraLocation = Utils::Vec4FromVec3Point(activeCamera.GetCameraLocation());
-	auto& lightsVector = scene.GetLightsVector();
-	const glm::mat4& viewMatrix = activeCamera.GetViewMatrix();
-	activeCamera.RenderProjectionMatrix();
-	const glm::mat4& projectionMatrix = activeCamera.GetProjectionMatrix();
-
-	// Start rendering everything in the scene
-	drawAxis(projectionMatrix, viewMatrix);
-	drawModels(activeCameraLocation, projectionMatrix, viewMatrix);
-	drawFog();
-	drawLightSources(lightsVector, activeCameraLocation, projectionMatrix, viewMatrix);
-
-	// Stop counting runtime
-	auto finish = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> elapsed = finish - start;
-	scene.SetRenderExecutionTime(elapsed.count());
-}
+//
+//void Renderer::renderWIthoutOpenGL()
+//{
+//	auto& activeCamera = scene.GetActiveCamera();
+//	auto activeCameraLocation = Utils::Vec4FromVec3Point(activeCamera.GetCameraLocation());
+//	auto& lightsVector = scene.GetLightsVector();
+//	const glm::mat4& viewMatrix = activeCamera.GetViewMatrix();
+//	activeCamera.RenderProjectionMatrix();
+//	const glm::mat4& projectionMatrix = activeCamera.GetProjectionMatrix();
+//
+//	// Start rendering everything in the scene
+//	drawAxis(projectionMatrix, viewMatrix);
+//	drawModels(activeCameraLocation, projectionMatrix, viewMatrix);
+//	drawFog();
+//	drawLightSources(lightsVector, activeCameraLocation, projectionMatrix, viewMatrix);
+//}
 
 void Renderer::Render(bool useOpenGL)
 {
-	if (!useOpenGL) return Render();
+	// Start counting runtime
+	auto start = std::chrono::high_resolution_clock::now();
 	
 	Face face = Face(
 		std::vector<int>{1, 2,3}, 
@@ -318,9 +309,14 @@ void Renderer::Render(bool useOpenGL)
 
 	MeshModel model = MeshModel(faces, vertices);
 	triangleDrawer.SetVao(model.GetVao());
-	triangleDrawer.SetVerticesNumber(model.GetModelVertices().size());
+	triangleDrawer.SetVerticesNumber(model.GetNumberOfVertices());
 	triangleDrawer.DrawTriangles();
 
+
+	// Stop counting runtime
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed = finish - start;
+	scene.SetRenderExecutionTime(elapsed.count());
 	return;
 }
 
@@ -336,167 +332,167 @@ void Renderer::drawFog()
 	fogger.AddFog();
 }
 
-void Renderer::drawModels(glm::vec4 &activeCameraLocation, 
-	const glm::mat4 & projectionMatrix, 
-	const glm::mat4 & viewMatrix)
-{
-	if (scene.GetModelCount() == 0)
-		return;
-
-	const auto& models = scene.GetModelsVector();
-	const auto& activeModel = scene.GetActiveModel();
-	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator != models.end(); ++iterator)
-	{
-		auto currentModel = *iterator;
-		const auto worldTransform = currentModel->GetWorldTransformation();
-		const auto& normals = currentModel->GetNormalsVector();
-		auto& vertices = currentModel->GetVerticesVector();
-		auto& faces = currentModel->GetFacesVector();
-
-		// Feeding the shader data
-		shader.SetObjectColor(currentModel->GetAmbientColor());
-		shader.SetObjectDiffuseColor(currentModel->GetDiffuseColor());
-		shader.SetObjectSpecularColor(currentModel->GetSpecularColor());
-		shader.SetShininess(currentModel->GetShininess());
-		shader.SetCameraWorldPoint(worldTransform * activeCameraLocation);
-		glm::mat4x4 transformMatrix = projectionMatrix * viewMatrix * worldTransform;
-
-		// Looping through all faces
-		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
-		{
-			drawFace(facesIterator, vertices, worldTransform, normals, projectionMatrix, viewMatrix, transformMatrix);
-		}
-	}
-}
-
-void Renderer::drawFace(std::vector<Face>::iterator &facesIterator, 
-	std::vector<glm::vec3> & vertices, 
-	const glm::mat4x4 & worldTransform, 
-	const std::vector<glm::vec3> & normals, 
-	const glm::mat4 & projectionMatrix, 
-	const glm::mat4 & viewMatrix, 
-	glm::mat4x4 &transformMatrix)
-{
-	if (vertices.empty())
-		return;
-	// Getting the 3 vertices. These 3 index integers will be used later for normals as well
-	int firstIndex = facesIterator->GetVertexIndex(0) - 1; // -1 because the indices start with 1
-	int secondIndex = facesIterator->GetVertexIndex(1) - 1;
-	int thirdIndex = facesIterator->GetVertexIndex(2) - 1;
-	auto PointA = Utils::Vec4FromVec3Point(vertices[firstIndex]);
-	auto PointB = Utils::Vec4FromVec3Point(vertices[secondIndex]);
-	auto PointC = Utils::Vec4FromVec3Point(vertices[thirdIndex]);
-	auto PointAWorld = worldTransform * PointA;
-	auto PointBWorld = worldTransform * PointB;
-	auto PointCWorld = worldTransform * PointC;
-	PointAWorld = PointAWorld / PointAWorld.w;
-	PointBWorld = PointBWorld / PointBWorld.w;
-	PointCWorld = PointCWorld / PointCWorld.w;
-	shader.SetWorldPoints(PointAWorld, PointBWorld, PointCWorld);
-
-	// Getting the 3 normals
-	firstIndex = facesIterator->GetNormalIndex(0) - 1;
-	secondIndex = facesIterator->GetNormalIndex(1) - 1;
-	thirdIndex = facesIterator->GetNormalIndex(2) - 1;
-	glm::vec4 PointANormal = worldTransform * Utils::Vec4FromVec3DirectionVector(normals[firstIndex]);
-	glm::vec4 PointBNormal = worldTransform * Utils::Vec4FromVec3DirectionVector(normals[secondIndex]);
-	glm::vec4 PointCNormal = worldTransform * Utils::Vec4FromVec3DirectionVector(normals[thirdIndex]);
-	shader.SetNormals(PointANormal, PointBNormal, PointCNormal);
-	glm::vec4 PointANormalTip;
-	glm::vec4 PointBNormalTip;
-	glm::vec4 PointCNormalTip;
-
-	//TODO remove this segment and calculate normals without calculating their tips
-	if (scene.GetShowNormals() == true)
-	{
-		// It's important to assign the value before PointA goes thorugh model to world transformation
-		PointANormalTip = PointA;
-		PointBNormalTip = PointB;
-		PointCNormalTip = PointC;
-	}
-
-	PointA = projectionMatrix * viewMatrix * PointAWorld;
-	PointB = projectionMatrix * viewMatrix * PointBWorld;
-	PointC = projectionMatrix * viewMatrix * PointCWorld;
-	PointA = PointA / PointA.w;
-	PointB = PointB / PointB.w;
-	PointC = PointC / PointC.w;
-	shader.CalculateVertexColors();
-	triangleDrawer.SetUnscaledPoints(PointA, PointB, PointC);
-	triangleDrawer.DrawTriangle();
-
-	if (scene.GetShowNormals() == false) 
-		return;
-
-	float drawLength = 0.05f;
-	firstIndex = facesIterator->GetNormalIndex(0) - 1; // -1 because the indices start with 1
-	secondIndex = facesIterator->GetNormalIndex(1) - 1;
-	thirdIndex = facesIterator->GetNormalIndex(2) - 1;
-	PointANormalTip += Utils::Vec4FromVec3Point(normals[firstIndex]) * drawLength;
-	PointBNormalTip += Utils::Vec4FromVec3Point(normals[secondIndex])* drawLength;
-	PointCNormalTip += Utils::Vec4FromVec3Point(normals[thirdIndex]) * drawLength;
-	PointANormalTip = transformMatrix * PointANormalTip;
-	PointBNormalTip = transformMatrix * PointBNormalTip;
-	PointCNormalTip = transformMatrix * PointCNormalTip;
-	PointANormalTip = PointANormalTip / PointANormalTip.w;
-	PointBNormalTip = PointBNormalTip / PointBNormalTip.w;
-	PointCNormalTip = PointCNormalTip / PointCNormalTip.w;
-	draw3DLine(PointA, PointANormalTip, glm::mat4(1), glm::mat4(1), glm::vec3(1));
-	draw3DLine(PointB, PointBNormalTip, glm::mat4(1), glm::mat4(1), glm::vec3(1));
-	draw3DLine(PointC, PointCNormalTip, glm::mat4(1), glm::mat4(1), glm::vec3(1));
-}
-
-void Renderer::drawLightSources(const std::vector<LightSource*> & lightsVector, 
-	glm::vec4 &activeCameraLocation, 
-	const glm::mat4 & projectionMatrix, 
-	const glm::mat4 & viewMatrix)
-{
-	if (lightsVector.empty() || !scene.GetDrawLights()) 
-		return;
-
-	for each (LightSource* const lightSource in lightsVector)
-	{
-		const auto worldTransform = lightSource->GetWorldTransformation();
-		const auto normals = vector<glm::vec3>(lightSource->GetNormalsVector());
-		auto vertices = vector<glm::vec3>(lightSource->GetVerticesVector());
-		auto faces = vector<Face>(lightSource->GetFacesVector());
-
-		// Set shader
-		shader.SetObjectColor(lightSource->GetColor());
-		shader.SetObjectDiffuseColor(lightSource->GetColor());
-		shader.SetObjectSpecularColor(glm::vec4(0));
-		shader.SetCameraWorldPoint(worldTransform * activeCameraLocation);
-		
-		glm::mat4x4 transformMatrix = projectionMatrix * viewMatrix * worldTransform;
-
-		// Draw all faces
-		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
-		{
-			drawFace(facesIterator,
-				vertices,
-				worldTransform,
-				normals,
-				projectionMatrix,
-				viewMatrix,
-				transformMatrix);
-		}
-	}
-}
-
-void Renderer::drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix)
-{
-	if (!scene.GetDrawAxis())
-		return;
-
-	glm::vec4 xAxis(0.3, 0.0, 0.0, 1.0);
-	glm::vec4 yAxis(0.0, 0.3, 0.0, 1.0);
-	glm::vec4 zAxis(0.0, 0.0, 0.3, 1.0);
-	glm::vec4 center(0.0, 0.0, 0.0, 1.0);
-
-	draw3DLine(center, xAxis, projectionMatrix, viewMatrix, glm::vec3(1, 0, 0));
-	draw3DLine(center, yAxis, projectionMatrix, viewMatrix, glm::vec3(0, 1, 0));
-	draw3DLine(center, zAxis, projectionMatrix, viewMatrix, glm::vec3(0, 0, 1));
-}
+//void Renderer::drawModels(glm::vec4 &activeCameraLocation, 
+//	const glm::mat4 & projectionMatrix, 
+//	const glm::mat4 & viewMatrix)
+//{
+//	if (scene.GetModelCount() == 0)
+//		return;
+//
+//	const auto& models = scene.GetModelsVector();
+//	const auto& activeModel = scene.GetActiveModel();
+//	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator != models.end(); ++iterator)
+//	{
+//		auto currentModel = *iterator;
+//		const auto worldTransform = currentModel->GetWorldTransformation();
+//		const auto& normals = currentModel->GetNormalsVector();
+//		auto& vertices = currentModel->GetVerticesVector();
+//		auto& faces = currentModel->GetFacesVector();
+//
+//		// Feeding the shader data
+//		shader.SetObjectColor(currentModel->GetAmbientColor());
+//		shader.SetObjectDiffuseColor(currentModel->GetDiffuseColor());
+//		shader.SetObjectSpecularColor(currentModel->GetSpecularColor());
+//		shader.SetShininess(currentModel->GetShininess());
+//		shader.SetCameraWorldPoint(worldTransform * activeCameraLocation);
+//		glm::mat4x4 transformMatrix = projectionMatrix * viewMatrix * worldTransform;
+//
+//		// Looping through all faces
+//		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
+//		{
+//			drawFace(facesIterator, vertices, worldTransform, normals, projectionMatrix, viewMatrix, transformMatrix);
+//		}
+//	}
+//}
+//
+//void Renderer::drawFace(std::vector<Face>::iterator &facesIterator, 
+//	std::vector<glm::vec3> & vertices, 
+//	const glm::mat4x4 & worldTransform, 
+//	const std::vector<glm::vec3> & normals, 
+//	const glm::mat4 & projectionMatrix, 
+//	const glm::mat4 & viewMatrix, 
+//	glm::mat4x4 &transformMatrix)
+//{
+//	if (vertices.empty())
+//		return;
+//	// Getting the 3 vertices. These 3 index integers will be used later for normals as well
+//	int firstIndex = facesIterator->GetVertexIndex(0) - 1; // -1 because the indices start with 1
+//	int secondIndex = facesIterator->GetVertexIndex(1) - 1;
+//	int thirdIndex = facesIterator->GetVertexIndex(2) - 1;
+//	auto PointA = Utils::Vec4FromVec3Point(vertices[firstIndex]);
+//	auto PointB = Utils::Vec4FromVec3Point(vertices[secondIndex]);
+//	auto PointC = Utils::Vec4FromVec3Point(vertices[thirdIndex]);
+//	auto PointAWorld = worldTransform * PointA;
+//	auto PointBWorld = worldTransform * PointB;
+//	auto PointCWorld = worldTransform * PointC;
+//	PointAWorld = PointAWorld / PointAWorld.w;
+//	PointBWorld = PointBWorld / PointBWorld.w;
+//	PointCWorld = PointCWorld / PointCWorld.w;
+//	shader.SetWorldPoints(PointAWorld, PointBWorld, PointCWorld);
+//
+//	// Getting the 3 normals
+//	firstIndex = facesIterator->GetNormalIndex(0) - 1;
+//	secondIndex = facesIterator->GetNormalIndex(1) - 1;
+//	thirdIndex = facesIterator->GetNormalIndex(2) - 1;
+//	glm::vec4 PointANormal = worldTransform * Utils::Vec4FromVec3DirectionVector(normals[firstIndex]);
+//	glm::vec4 PointBNormal = worldTransform * Utils::Vec4FromVec3DirectionVector(normals[secondIndex]);
+//	glm::vec4 PointCNormal = worldTransform * Utils::Vec4FromVec3DirectionVector(normals[thirdIndex]);
+//	shader.SetNormals(PointANormal, PointBNormal, PointCNormal);
+//	glm::vec4 PointANormalTip;
+//	glm::vec4 PointBNormalTip;
+//	glm::vec4 PointCNormalTip;
+//
+//	//TODO remove this segment and calculate normals without calculating their tips
+//	if (scene.GetShowNormals() == true)
+//	{
+//		// It's important to assign the value before PointA goes thorugh model to world transformation
+//		PointANormalTip = PointA;
+//		PointBNormalTip = PointB;
+//		PointCNormalTip = PointC;
+//	}
+//
+//	PointA = projectionMatrix * viewMatrix * PointAWorld;
+//	PointB = projectionMatrix * viewMatrix * PointBWorld;
+//	PointC = projectionMatrix * viewMatrix * PointCWorld;
+//	PointA = PointA / PointA.w;
+//	PointB = PointB / PointB.w;
+//	PointC = PointC / PointC.w;
+//	shader.CalculateVertexColors();
+//	triangleDrawer.SetUnscaledPoints(PointA, PointB, PointC);
+//	triangleDrawer.DrawTriangle();
+//
+//	if (scene.GetShowNormals() == false) 
+//		return;
+//
+//	float drawLength = 0.05f;
+//	firstIndex = facesIterator->GetNormalIndex(0) - 1; // -1 because the indices start with 1
+//	secondIndex = facesIterator->GetNormalIndex(1) - 1;
+//	thirdIndex = facesIterator->GetNormalIndex(2) - 1;
+//	PointANormalTip += Utils::Vec4FromVec3Point(normals[firstIndex]) * drawLength;
+//	PointBNormalTip += Utils::Vec4FromVec3Point(normals[secondIndex])* drawLength;
+//	PointCNormalTip += Utils::Vec4FromVec3Point(normals[thirdIndex]) * drawLength;
+//	PointANormalTip = transformMatrix * PointANormalTip;
+//	PointBNormalTip = transformMatrix * PointBNormalTip;
+//	PointCNormalTip = transformMatrix * PointCNormalTip;
+//	PointANormalTip = PointANormalTip / PointANormalTip.w;
+//	PointBNormalTip = PointBNormalTip / PointBNormalTip.w;
+//	PointCNormalTip = PointCNormalTip / PointCNormalTip.w;
+//	draw3DLine(PointA, PointANormalTip, glm::mat4(1), glm::mat4(1), glm::vec3(1));
+//	draw3DLine(PointB, PointBNormalTip, glm::mat4(1), glm::mat4(1), glm::vec3(1));
+//	draw3DLine(PointC, PointCNormalTip, glm::mat4(1), glm::mat4(1), glm::vec3(1));
+//}
+//
+//void Renderer::drawLightSources(const std::vector<LightSource*> & lightsVector, 
+//	glm::vec4 &activeCameraLocation, 
+//	const glm::mat4 & projectionMatrix, 
+//	const glm::mat4 & viewMatrix)
+//{
+//	if (lightsVector.empty() || !scene.GetDrawLights()) 
+//		return;
+//
+//	for each (LightSource* const lightSource in lightsVector)
+//	{
+//		const auto worldTransform = lightSource->GetWorldTransformation();
+//		const auto normals = vector<glm::vec3>(lightSource->GetNormalsVector());
+//		auto vertices = vector<glm::vec3>(lightSource->GetVerticesVector());
+//		auto faces = vector<Face>(lightSource->GetFacesVector());
+//
+//		// Set shader
+//		shader.SetObjectColor(lightSource->GetColor());
+//		shader.SetObjectDiffuseColor(lightSource->GetColor());
+//		shader.SetObjectSpecularColor(glm::vec4(0));
+//		shader.SetCameraWorldPoint(worldTransform * activeCameraLocation);
+//		
+//		glm::mat4x4 transformMatrix = projectionMatrix * viewMatrix * worldTransform;
+//
+//		// Draw all faces
+//		for (std::vector<Face>::iterator facesIterator = faces.begin(); facesIterator != faces.end(); ++facesIterator)
+//		{
+//			drawFace(facesIterator,
+//				vertices,
+//				worldTransform,
+//				normals,
+//				projectionMatrix,
+//				viewMatrix,
+//				transformMatrix);
+//		}
+//	}
+//}
+//
+//void Renderer::drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix)
+//{
+//	if (!scene.GetDrawAxis())
+//		return;
+//
+//	glm::vec4 xAxis(0.3, 0.0, 0.0, 1.0);
+//	glm::vec4 yAxis(0.0, 0.3, 0.0, 1.0);
+//	glm::vec4 zAxis(0.0, 0.0, 0.3, 1.0);
+//	glm::vec4 center(0.0, 0.0, 0.0, 1.0);
+//
+//	draw3DLine(center, xAxis, projectionMatrix, viewMatrix, glm::vec3(1, 0, 0));
+//	draw3DLine(center, yAxis, projectionMatrix, viewMatrix, glm::vec3(0, 1, 0));
+//	draw3DLine(center, zAxis, projectionMatrix, viewMatrix, glm::vec3(0, 0, 1));
+//}
 
 // Takes a point in the range between -1 and 1 and translates it to a pixel
 Point Renderer::toScreenPixel(const Point& point) const

@@ -3,6 +3,7 @@ using namespace std;
 
 Cube::Cube(float size) : length(size), width(size), height(size)
 {
+	std::vector<glm::vec3> vertices;
 	vertices = {
 	glm::vec3(-width, -height,  length),
 	glm::vec3(-width,  height,  length),
@@ -36,19 +37,44 @@ Cube::Cube(float size) : length(size), width(size), height(size)
 		glm::vec3(0,  0,  1),
 		glm::vec3(0,  0, -1)
 	};
+
+	modelVertices.reserve(3 * faces.size());
+	for (unsigned int i = 0; i < faces.size(); i++)
+	{
+		Face currentFace = faces.at(i);
+		for (int j = 0; j < 3; j++)
+		{
+			int vertexIndex = currentFace.GetVertexIndex(j) - 1;
+			int normalIndex = currentFace.GetNormalIndex(j) - 1;
+
+			Vertex vertex;
+			vertex.position = vertices[vertexIndex];
+			vertex.normal = normals[normalIndex];
+			modelVertices.push_back(vertex);
+		}
+	}
+
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+
+	glBindVertexArray(vao);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, modelVertices.size() * sizeof(Vertex), &modelVertices[0], GL_STATIC_DRAW);
+
+	// Vertex Positions
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+
+	// Normals attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+
+	// unbind to make sure other code does not change it somewhere else
+	glBindVertexArray(0);
 }
 
-vector<glm::vec3> Cube::GetVerticesVector()
+Cube::~Cube()
 {
-	return vertices;
-}
-
-vector<Face> Cube::GetFacesVector()
-{
-	return faces;
-}
-
-const std::vector<glm::vec3> Cube::GetNormalsVector()
-{
-	return normals;
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
 }

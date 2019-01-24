@@ -6,7 +6,8 @@ ParallelLightSource::ParallelLightSource(): LightSource()
 {
 	name = "Parallel Light #" + std::to_string(id++);
 	direction = glm::vec4(0.0f, -1.0f, 0.0f, 0.0f);
-	model = Cube(0.3f);
+	cubeModel = Cube(0.3f);
+	model = &cubeModel;
 }
 
 #pragma region IRotatable
@@ -25,15 +26,6 @@ void ParallelLightSource::RotateZ(const float angle)
 #pragma endregion
 
 #pragma region IShaded
-const glm::mat4x4  ParallelLightSource::GetWorldTransformation()
-{
-	auto worldTransform = glm::mat4x4(1);
-	worldTransform[3].x = -direction.x * PARALLEL_DRAWING_DISTANCE;
-	worldTransform[3].y = -direction.y * PARALLEL_DRAWING_DISTANCE;
-	worldTransform[3].z = -direction.z * PARALLEL_DRAWING_DISTANCE;
-
-	return worldTransform;
-}
 
 const ShadingModels ParallelLightSource::GetShadingMethod()
 {
@@ -44,21 +36,12 @@ bool ParallelLightSource::SetShadingMethod(ShadingModels model)
 {
 	return false;
 }
+const glm::mat4x4 ParallelLightSource::GetWorldTransformationOld()
+{
+	return glm::mat4x4();
+}
 #pragma endregion
 
 #pragma region IMeshObject
-std::vector<glm::vec3> ParallelLightSource::GetVerticesVector()
-{
-	return model.GetVerticesVector();
-}
 
-std::vector<Face> ParallelLightSource::GetFacesVector()
-{
-	return model.GetFacesVector();
-}
-
-const std::vector<glm::vec3> ParallelLightSource::GetNormalsVector()
-{
-	return model.GetNormalsVector();
-}
 #pragma endregion

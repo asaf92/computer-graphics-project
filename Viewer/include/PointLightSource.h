@@ -6,13 +6,15 @@ class PointLightSource : public LightSource
 {
 private:
 	static int id;
-	Cube model;
+	IMeshObject* model;
 	glm::vec4 location;
+	Cube cubeModel;
 public:
 	// Constructors
 	PointLightSource() : PointLightSource(glm::vec4(0.0f,0.0f,-1.0f,1.0f)) {}
 	PointLightSource(const glm::vec4& _location) : location(_location), model()
 	{
+		model = &cubeModel;
 		name = "Point Light Source #" + std::to_string(id++);
 	}
 
@@ -32,13 +34,17 @@ public:
 	virtual void RotateY(const float angle) override {} 
 	virtual void RotateZ(const float angle) override {} 
 
-	// Inherited via LightSource
-	virtual const glm::mat4x4  GetWorldTransformation() override;
+	// Inherited via IShaded
+	//virtual const glm::mat4x4  GetWorldTransformationOld() override;
 	virtual const ShadingModels GetShadingMethod() override;
 	virtual bool SetShadingMethod(ShadingModels model) override;
 
 	// Inherited via LightSource
-	virtual std::vector<glm::vec3> GetVerticesVector() override;
-	virtual std::vector<Face> GetFacesVector() override;
-	virtual const std::vector<glm::vec3> GetNormalsVector() override;
+	virtual const GLuint & GetVao()                  const override { return model->GetVao(); }
+	virtual const unsigned int GetNumberOfVertices() const override { return model->GetNumberOfVertices(); }
+	virtual const glm::mat4 GetWorldTransformation() const override { return model->GetWorldTransformation(); }
+	virtual const glm::mat4 GetModelTransformation() const override { return model->GetModelTransformation(); }
+
+	// Inherited via LightSource
+	virtual const glm::mat4x4 GetWorldTransformationOld() override;
 };

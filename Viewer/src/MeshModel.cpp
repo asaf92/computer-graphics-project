@@ -50,10 +50,6 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
 	modelName(modelName)
 {
 	worldTransform = glm::mat4x4(1);
-	//std::random_device rd;
-	//std::mt19937 mt(rd());
-	//std::uniform_real_distribution<double> dist(0, 1);
-	//color = glm::vec3(dist(mt), dist(mt), dist(mt));
 
 	modelVertices.reserve(3 * faces.size());
 	for (unsigned int i = 0; i < faces.size(); i++)
@@ -220,7 +216,7 @@ glm::mat4x4 MeshModel::GetZRotationMatrix()
 	return translateToCenterInverse * rotationMatrix * translateToCenter;
 }
 
-const glm::mat4x4 MeshModel::GetWorldTransformation()
+const glm::mat4x4 MeshModel::GetWorldTransformationOld()
 {
 	worldTransform = glm::mat4x4(1);
 	glm::mat4x4 translate = GetTranslationMatrix();

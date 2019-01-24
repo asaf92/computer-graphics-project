@@ -7,15 +7,15 @@ void PointLightSource::Move(const glm::vec3 direction)
 	location += Utils::Vec4FromVec3DirectionVector(direction);
 }
 
-const glm::mat4x4  PointLightSource::GetWorldTransformation()
-{
-	auto worldTransform = glm::mat4x4(1);
-	worldTransform[3].x = location.x;
-	worldTransform[3].y = location.y;
-	worldTransform[3].z = location.z;
-
-	return worldTransform;
-}
+//const glm::mat4x4  PointLightSource::GetWorldTransformationOld()
+//{
+//	auto worldTransform = glm::mat4x4(1);
+//	worldTransform[3].x = location.x;
+//	worldTransform[3].y = location.y;
+//	worldTransform[3].z = location.z;
+//
+//	return worldTransform;
+//}
 
 const ShadingModels PointLightSource::GetShadingMethod()
 {
@@ -28,17 +28,7 @@ bool PointLightSource::SetShadingMethod(ShadingModels model)
 	return false;
 }
 
-std::vector<glm::vec3> PointLightSource::GetVerticesVector()
+const glm::mat4x4 PointLightSource::GetWorldTransformationOld()
 {
-	return model.GetVerticesVector();
-}
-
-std::vector<Face> PointLightSource::GetFacesVector()
-{
-	return model.GetFacesVector();
-}
-
-const std::vector<glm::vec3> PointLightSource::GetNormalsVector()
-{
-	return model.GetNormalsVector();
+	return glm::mat4x4();
 }
