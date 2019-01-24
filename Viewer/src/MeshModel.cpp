@@ -42,6 +42,62 @@ MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3
 	shadingModel = Phong;
 }
 
+MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> textureCoords, const std::string& modelName) :
+	modelTransform(1),
+	worldTransform(1),
+	modelName(modelName)
+{
+	worldTransform = glm::mat4x4(1);
+	//std::random_device rd;
+	//std::mt19937 mt(rd());
+	//std::uniform_real_distribution<double> dist(0, 1);
+	//color = glm::vec3(dist(mt), dist(mt), dist(mt));
+
+	modelVertices.reserve(3 * faces.size());
+	for (int i = 0; i < faces.size(); i++)
+	{
+		Face currentFace = faces.at(i);
+		for (int j = 0; j < 3; j++)
+		{
+			int vertexIndex = currentFace.GetVertexIndex(j) - 1;
+
+			Vertex vertex;
+			vertex.position = vertices[vertexIndex];
+			vertex.normal = normals[vertexIndex];
+
+			//if (textureCoords.size() > 0)
+			//{
+			//	int textureCoordsIndex = currentFace.GetTextureIndex(j) - 1;
+			//	vertex.textureCoords = textureCoords[textureCoordsIndex];
+			//}
+
+			modelVertices.push_back(vertex);
+		}
+	}
+
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+
+	glBindVertexArray(vao);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, modelVertices.size() * sizeof(Vertex), &modelVertices[0], GL_STATIC_DRAW);
+
+	// Vertex Positions
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+
+	// Normals attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+
+	//// Vertex Texture Coords
+	//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
+	//glEnableVertexAttribArray(2);
+
+	// unbind to make sure other code does not change it somewhere else
+	glBindVertexArray(0);
+}
+
 MeshModel::~MeshModel()
 {
 

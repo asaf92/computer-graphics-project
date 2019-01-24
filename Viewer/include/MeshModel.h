@@ -1,16 +1,19 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <glad/glad.h>
 #include <string>
 #include <memory>
 #include "ShadingModels.h"
 #include "IShaded.h"
 #include "Face.h"
 #include "Material.h"
+#include "Vertex.h"
 #include "IMovable.h"
 #include "IRotatable.h"
 #include "IMeshObject.h"
 #include "IScalable.h"
 #include "IUniformMaterial.h"
+
 
 /*
  * MeshModel class.
@@ -59,10 +62,17 @@ protected:
 	glm::vec3& GetMinimumsVector()					        { return minimums; }
 	glm::vec3& GetMaximumVectors()					        { return maximums; }
 
+	// OpenGL stuff
+	glm::mat4x4 modelTransform;
+	std::vector<Vertex> modelVertices;
+	GLuint vao;
+	GLuint vbo;
+	
 public:
 	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, std::string& name) : MeshModel(faces, vertices, normals, glm::vec4(0.1f,0.1f,0.1f,1.0f), name) {}
 	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const glm::vec4& color) : MeshModel(faces, vertices, normals, color, std::string("")) {}
 	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const glm::vec4& color, std::string& name );
+	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> textureCoords, const std::string & modelName); // OpenGL oriented shader
 	virtual ~MeshModel();
 
 	// Setters
