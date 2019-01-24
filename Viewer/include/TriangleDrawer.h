@@ -40,7 +40,7 @@ private:
 
 	// OpenGL era
 	// Vertices
-	Vertex vertices[NUM_VERTICES];
+	std::vector<Vertex> vertices;
 
 public:
 	// Constructors 
