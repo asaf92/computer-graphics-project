@@ -21,12 +21,7 @@ public:
 	static glm::vec3 ScreenVec3FromWorldPoint(const Point & _worldPoint, int _viewportWidth, int _viewportHeightPar);
 	static glm::vec3 ScreenVec3FromWorldPoint(const glm::vec4 & worldPoint, int _viewportWidth, int _viewportHeight);
 	static MeshModel LoadMeshModel(const std::string& filePath);
-
-	// Add here more static utility functions...
-	// For example:
-	//	1. function that gets an angle, and returns a rotation matrix around a certian axis
-	//	2. function that gets a vector, and returns a translation matrix
-	//	3. anything else that may be useful in global scope
+	static std::vector<glm::vec3> CalculateNormals(std::vector<glm::vec3> vertices, std::vector<Face> faces);
 
 private:
 	static std::string GetFileName(const std::string& filePath);
