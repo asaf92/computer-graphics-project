@@ -97,8 +97,8 @@ void Camera::SetPerspectiveProjection()
 void Camera::SetPerspectiveProjection(
 	float fov,
 	float aspectRatio,
-	float near,
-	float far)
+	float zNear,
+	float zFar)
 {
 	fov = fov  * 0.01745329251994329576923690768489f;
 
@@ -108,9 +108,9 @@ void Camera::SetPerspectiveProjection(
 
 	result[0][0] = 1.0f / (aspectRatio * tanHalfFovy);
 	result[1][1] = 1.0f / (tanHalfFovy);
-	result[2][2] = -(far + near) / (far - near);
+	result[2][2] = -(zFar + zNear) / (zFar - zNear);
 	result[2][3] = -1.0f;
-	result[3][2] = -(2.0f * far * near) / (far - near);
+	result[3][2] = -(2.0f * zFar * zNear) / (zFar - zNear);
 	
 	//glm::mat4 compare = {
 	//	(),
@@ -122,13 +122,13 @@ void Camera::SetPerspectiveProjection(
 	projectionTransformation = result;
 }
 
-glm::mat4x4 Camera::CreateFrustum(float left, float right, float top, float bottom, float near, float far)
+glm::mat4x4 Camera::CreateFrustum(float left, float right, float top, float bottom, float zNear, float zFar)
 {
 	return glm::mat4x4(
-		{2.0f*near/(right- left),0,0,0},
-		{0,2.0f*near/(top-bottom),0,0},
-		{(right + left)/(right - left), (top + bottom) / (top - bottom), -(far+near)/(far - near), -1 },
-		{0,0,-2.0f*far*near / (far-near),0}
+		{2.0f*zNear/(right- left),0,0,0},
+		{0,2.0f*zNear/(top-bottom),0,0},
+		{(right + left)/(right - left), (top + bottom) / (top - bottom), -(zFar+zNear)/(zFar - zNear), -1 },
+		{0,0,-2.0f*zFar*zNear / (zFar-zNear),0}
 	);
 }
 
