@@ -3,8 +3,10 @@
 
 struct Vertex
 {
-	glm::vec3 positions;
+	glm::vec3 position;
+	glm::vec3 normal;
 
-	Vertex():positions(glm::vec3(0.0f)) {}
-	Vertex(glm::vec3 pos): positions(pos) { }
+	Vertex(glm::vec3 _position, glm::vec3 _normal) : position(_position), normal(_normal) { }
+	Vertex(glm::vec3 pos) : Vertex(pos,glm::vec3(0.0f)) {}
+	Vertex(): Vertex(glm::vec3(0.0f),glm::vec3(0.0f))   {}
 };
