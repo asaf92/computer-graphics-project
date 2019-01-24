@@ -10,7 +10,7 @@
 #include "Vertex.h"
 
 #define EPSILON 0.001f
-
+#define NUM_VERTICES 3
 
 class TriangleDrawer
 {
@@ -37,6 +37,11 @@ private:
 	bool pointInTriangle(const BycentricCoordinates & bycentricCoords) const;
 	BycentricCoordinates getBycentricCoordinates(int _x, int _y);
 	bool allPointsAreInFrame();
+
+	// OpenGL era
+	// Vertices
+	Vertex vertices[NUM_VERTICES];
+
 public:
 	// Constructors 
 	TriangleDrawer(Shader& shader, PixelPlacer& pixelPlacer, int viewportWidth, int viewportHeight);
@@ -49,6 +54,7 @@ public:
 	void SetViewport(int viewportWidth, int viewportHeight);
 
 	// OpenGL era
-	void TriangleDemo();
+	void TriangleDemo() const;
+	void SetPoints(Vertex& a, Vertex& b, Vertex& c);
 };
 
