@@ -42,6 +42,8 @@ MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3
 	shadingModel = Phong;
 }
 
+MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices) : MeshModel(faces,vertices,Utils::CalculateNormals(vertices,faces),std::vector<glm::vec2>(),"") { }
+
 MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> textureCoords, const std::string& modelName) :
 	modelTransform(1),
 	worldTransform(1),
@@ -54,7 +56,7 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
 	//color = glm::vec3(dist(mt), dist(mt), dist(mt));
 
 	modelVertices.reserve(3 * faces.size());
-	for (int i = 0; i < faces.size(); i++)
+	for (unsigned int i = 0; i < faces.size(); i++)
 	{
 		Face currentFace = faces.at(i);
 		for (int j = 0; j < 3; j++)

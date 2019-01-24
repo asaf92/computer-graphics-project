@@ -65,33 +65,13 @@ void TriangleDrawer::SetViewport(int viewportWidth, int viewportHeight)
 	this->viewportWidth = viewportWidth;
 	this->viewportHeight = viewportHeight;
 }
-
-void TriangleDrawer::SetPoints(Vertex & a, Vertex & b, Vertex & c)
-{
-	vertices[0] = a;
-	vertices[1] = b;
-	vertices[2] = c;
-}
-
+	
 void TriangleDrawer::TriangleDemo() const
 {
-	GLuint vao;
-	GLuint vbo;
-
-	glGenVertexArrays(1, &vao);
-
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBindVertexArray(vao);
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, NUM_VERTICES * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	glDrawArrays(GL_TRIANGLES, 0, NUM_VERTICES);
+	glDrawArrays(GL_TRIANGLES, 0, verticesNumber);
 	glBindVertexArray(0);
-
-	glDeleteVertexArrays(1, &vao);
-	glDeleteBuffers(1, &vbo);
 }
 #pragma endregion PublicMethods
 

@@ -4,10 +4,10 @@
 #include <string>
 #include <memory>
 #include "ShadingModels.h"
-#include "IShaded.h"
 #include "Face.h"
 #include "Material.h"
 #include "Vertex.h"
+#include "IShaded.h"
 #include "IMovable.h"
 #include "IRotatable.h"
 #include "IMeshObject.h"
@@ -69,10 +69,13 @@ protected:
 	GLuint vbo;
 	
 public:
+	// Old Ctors
 	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, std::string& name) : MeshModel(faces, vertices, normals, glm::vec4(0.1f,0.1f,0.1f,1.0f), name) {}
 	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const glm::vec4& color) : MeshModel(faces, vertices, normals, color, std::string("")) {}
 	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const glm::vec4& color, std::string& name );
-	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> textureCoords, const std::string & modelName); // OpenGL oriented shader
+	// New Ctors
+	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices);
+	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> textureCoords, const std::string & modelName); 
 	virtual ~MeshModel();
 
 	// Setters
@@ -84,6 +87,11 @@ public:
 	const glm::vec3& GetTranslationVector()	         const  { return translationVector; }
 	Material& GetUniformMaterial()                          { return uniformMaterial; }
 
+	// OpenGL stuff
+	const GLuint& GetVao() const { return vao; }
+	std::vector<Vertex> GetModelVertices() const { return modelVertices; }
+
+	#pragma region Interfaces Implementations
 	// Inherited via IMovable
 	virtual void Move(const glm::vec3 direction) override { SetTranslation(translationVector + direction); }
 
@@ -116,4 +124,5 @@ public:
 	virtual void SetDiffuseColor(const glm::vec4& color)  override { uniformMaterial.SetDiffuseColor(color); }
 	virtual void SetSpecularColor(const glm::vec4& color) override { uniformMaterial.SetSpecularColor(color); }
 	virtual void SetShininess(const float shininess)      override { uniformMaterial.SetShininess(shininess); }
+	#pragma endregion 
 };

@@ -302,12 +302,23 @@ void Renderer::Render()
 void Renderer::Render(bool useOpenGL)
 {
 	if (!useOpenGL) return Render();
+	
+	Face face = Face(std::vector<int>{1, 2,3}, std::vector<int>{1, 2, 3}, std::vector<int>{1});
+	std::vector<Face> faces{ face };
+	std::vector<glm::vec3> vertices{
+		glm::vec3(-1.0f,-1.0f,0.0f),
+		glm::vec3(1.0f,-1.0f,0.0f),
+		glm::vec3(0.0f,1.0f,0.0f)
+	};
 
-	triangleDrawer.SetPoints(
+	MeshModel model = MeshModel(faces, vertices);
+	/*triangleDrawer.SetPoints(
 		Vertex(glm::vec3(-1.0f, -1.0f, 0.0f)),
 		Vertex(glm::vec3(1.0f, -1.0f, 0.0f)),
 		Vertex(glm::vec3(0.0f, 1.0f, 0.0f))
-	);
+	);*/
+	triangleDrawer.SetVao(model.GetVao());
+	triangleDrawer.SetVerticesNumber(model.GetModelVertices().size());
 	triangleDrawer.TriangleDemo();
 
 	return;

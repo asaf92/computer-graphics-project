@@ -41,6 +41,8 @@ private:
 	// OpenGL era
 	// Vertices
 	std::vector<Vertex> vertices;
+	int verticesNumber;
+	GLuint vao;
 
 public:
 	// Constructors 
@@ -55,6 +57,7 @@ public:
 
 	// OpenGL era
 	void TriangleDemo() const;
-	void SetPoints(Vertex& a, Vertex& b, Vertex& c);
+	void SetVao(GLuint _vao) { vao = _vao; }
+	void SetVerticesNumber(int _size) { verticesNumber = _size; }
 };
 
