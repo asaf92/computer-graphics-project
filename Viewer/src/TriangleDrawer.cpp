@@ -80,7 +80,7 @@ void TriangleDrawer::TriangleDemo() const
 
 	glGenVertexArrays(1, &vao);
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBindVertexArray(vao);
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -91,6 +91,7 @@ void TriangleDrawer::TriangleDemo() const
 	glBindVertexArray(0);
 
 	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
 }
 #pragma endregion PublicMethods
 
