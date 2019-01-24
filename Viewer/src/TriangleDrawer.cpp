@@ -1,4 +1,6 @@
 #include "TriangleDrawer.h"
+#include "Vertex.h"
+
 #pragma region Constructors
 TriangleDrawer::TriangleDrawer(Shader & _shader, PixelPlacer & _pixelPlacer, int _viewportWidth, int _viewportHeight) :
 	shader(_shader),
@@ -63,6 +65,33 @@ void TriangleDrawer::SetViewport(int viewportWidth, int viewportHeight)
 {
 	this->viewportWidth = viewportWidth;
 	this->viewportHeight = viewportHeight;
+}
+
+void TriangleDrawer::TriangleDemo()
+{
+	GLuint vao;
+	GLuint vbo;
+	std::vector<Vertex> vertices;
+	vertices.push_back(Vertex());
+	vertices.push_back(Vertex());
+	vertices.push_back(Vertex());
+	vertices[0].positions = glm::vec3(0.0f, 0.5f, 0.0f);
+	vertices[1].positions = glm::vec3(-0.5f, -0.5f, 0.0f);
+	vertices[2].positions = glm::vec3(0.5f, -0.5f, 0.0f);
+
+	glGenVertexArrays(1, &vao);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glBindVertexArray(vao);
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+	glBindVertexArray(0);
+
+	glDeleteVertexArrays(1, &vao);
 }
 #pragma endregion PublicMethods
 

@@ -7,6 +7,7 @@
 #include "BycentricCoordinates.h"
 #include <glm/glm.hpp>
 #include <algorithm> // For std::min
+#include "Vertex.h"
 
 #define EPSILON 0.001f
 
@@ -46,5 +47,8 @@ public:
 	// Methods
 	void DrawTriangle();
 	void SetViewport(int viewportWidth, int viewportHeight);
+
+	// OpenGL era
+	void TriangleDemo();
 };
 

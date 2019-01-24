@@ -4,11 +4,13 @@
 #include "InitShader.h"
 #include "MeshModel.h"
 #include "Utils.h"
+#include "Vertex.h"
 #include <imgui/imgui.h>
 #include <vector>
 #include <cmath>
 #include <algorithm>
 #include <iostream>
+#include <glad/glad.h>
 
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 
@@ -300,7 +302,9 @@ void Renderer::Render()
 void Renderer::Render(bool useOpenGL)
 {
 	if (!useOpenGL) return Render();
-	
+
+	triangleDrawer.TriangleDemo();
+
 	return;
 }
 
