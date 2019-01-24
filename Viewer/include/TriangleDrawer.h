@@ -56,7 +56,7 @@ public:
 	void SetViewport(int viewportWidth, int viewportHeight);
 
 	// OpenGL era
-	void TriangleDemo() const;
+	void DrawTriangles() const;
 	void SetVao(GLuint _vao) { vao = _vao; }
 	void SetVerticesNumber(int _size) { verticesNumber = _size; }
 };

@@ -66,7 +66,7 @@ void TriangleDrawer::SetViewport(int viewportWidth, int viewportHeight)
 	this->viewportHeight = viewportHeight;
 }
 	
-void TriangleDrawer::TriangleDemo() const
+void TriangleDrawer::DrawTriangles() const
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBindVertexArray(vao);
