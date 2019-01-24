@@ -100,7 +100,8 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
 
 MeshModel::~MeshModel()
 {
-
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
 }
 
 // AKA translate
