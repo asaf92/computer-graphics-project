@@ -24,18 +24,15 @@ class Renderer
 private:
 	// Depndencies
 	Scene& scene;
-
-	// Viewport
-	int viewportWidth;
-	int viewportHeight;
-	int viewportX;
-	int viewportY;
-
-	// Fogger
 	Fogger fogger;
 
 	// Drawing
 	TriangleDrawer triangleDrawer;
+
+
+	// Shaders
+	ShaderProgram colorShader;
+	ShaderProgram lightShader;
 
 	// Calculations
 	XYBorders minMax(const Point& A, const Point& B, const Point& C) const;
@@ -44,12 +41,12 @@ private:
 	void drawModels();
 	void demoTriangle();
 
-	// Shaders
-	ShaderProgram colorShader;
+	void LoadShaders();
+	void LoadTextures();
 
 public:
-	Renderer(Shader& shader, Scene& scene, int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
-	~Renderer();
+	Renderer(Scene& scene);
+	~Renderer() {}
 
 	void Render();
 	void ClearBuffers();

@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 	glEnable(GL_DEPTH_TEST);
 
 	// Create the renderer and the scene
-	Renderer renderer = Renderer(shader,scene,frameBufferWidth, frameBufferHeight);
+	Renderer renderer = Renderer(scene);
 
 	// Setup ImGui
 	ImGuiIO& io = SetupDearImgui(window);

@@ -12,15 +12,9 @@
 #include <iostream>
 #include <glad/glad.h>
 
-Renderer::Renderer(Shader& shader, Scene& scene, int viewportWidth, int viewportHeight, int viewportX, int viewportY) :
-	scene(scene),
-	triangleDrawer(TriangleDrawer()),
-	fogger(Fogger())
-{
-}
-
-Renderer::~Renderer()
-{
+Renderer::Renderer(Scene& scene) : scene(scene), triangleDrawer(TriangleDrawer()), fogger(Fogger()) 
+{ 
+	colorShader.loadShaders("vshader_color.glsl", "fshader_color.glsl"); 
 }
 
 void Renderer::ClearBuffers()
@@ -46,6 +40,10 @@ void Renderer::Render()
 {
 	// Start counting runtime
 	auto start = std::chrono::high_resolution_clock::now();
+	colorShader.use();
+	colorShader.setUniform("model", glm::mat4x4(1.0f));
+	colorShader.setUniform("view", glm::mat4x4(1.0f));
+	colorShader.setUniform("projection", glm::mat4x4(1.0f));
 	demoTriangle();
 
 	// Stop counting runtime

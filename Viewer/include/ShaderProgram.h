@@ -40,7 +40,6 @@ private:
 	string fileToString(const string& filename);
 	void  checkCompileErrors(GLuint shader, ShaderType type);
 
-
 	GLuint programHandle;
 	std::map<string, GLint> uniformLocations;
 };
