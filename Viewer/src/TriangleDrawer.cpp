@@ -11,14 +11,6 @@ TriangleDrawer::TriangleDrawer(Shader & _shader, PixelPlacer & _pixelPlacer, int
 #pragma endregion Constructors
 
 #pragma region PublicMethods
-void TriangleDrawer::SetUnscaledPoints(const Point & pointA, const Point & pointB, const Point & pointC)
-{
-	unscaledPointA = Utils::Vec4FromPoint(pointA);
-	unscaledPointB = Utils::Vec4FromPoint(pointB);
-	unscaledPointC = Utils::Vec4FromPoint(pointC);
-}
-
-
 void TriangleDrawer::DrawTriangle()
 {
 	// Convert points to screenPoints and update shader
@@ -66,6 +58,13 @@ void TriangleDrawer::SetViewport(int viewportWidth, int viewportHeight)
 	this->viewportHeight = viewportHeight;
 }
 	
+void TriangleDrawer::SetModel(const IMeshObject * _model)
+{
+	model = _model; 
+	SetVao(model->GetVao());
+	SetVerticesNumber(model->GetNumberOfVertices());
+}
+
 void TriangleDrawer::DrawTriangles() const
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

@@ -26,7 +26,6 @@ Renderer::Renderer(Shader& shader, Scene& scene, int viewportWidth, int viewport
 	fogger(Fogger())
 {
 	initOpenGLRendering();
-	SetViewport(viewportWidth, viewportHeight, viewportX, viewportY);
 }
 
 Renderer::~Renderer()
@@ -41,174 +40,11 @@ Renderer::~Renderer()
 	}
 }
 
-void Renderer::putPixel(const int i, const int j, const glm::vec3& color,const float z = maxZ)
-{
-	pixelPlacer.PutPixel(i, j,color,z);
-}
-
-void Renderer::createBuffers(int viewportWidth, int viewportHeight)
-{
-	pixelPlacer.SetViewportWidth(viewportWidth);
-	pixelPlacer.SetViewportHeight(viewportHeight);
-	if (zBuffer)
-	{
-		delete[] zBuffer;
-	}
-	if (colorBuffer)
-	{
-		delete[] colorBuffer;
-	}
-
-	zBuffer = new float[3 * viewportWidth * viewportHeight];
-	pixelPlacer.SetZBuffer(zBuffer);
-	for (int x = 0; x < viewportWidth; x++)
-	{
-		for (int y = 0; y < viewportHeight; y++)
-		{
-			zBuffer[INDEX(viewportWidth,x,y,0)] = maxZ;
-		}
-	}
-
-	colorBuffer = new float[3* viewportWidth * viewportHeight];
-	pixelPlacer.SetColorBuffer(colorBuffer);
-	for (int x = 0; x < viewportWidth; x++)
-	{
-		for (int y = 0; y < viewportHeight; y++)
-		{
-			putPixel(x, y, glm::vec3(0.0f, 0.0f, 0.0f));
-		}
-	}
-
-}
-
 void Renderer::ClearBuffers()
 {
 	glm::vec4 clearColor = scene.GetClearColor();
 	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-void Renderer::drawLine(Line& line)
-{
-	drawLine(line, glm::vec3(0));
-}
-
-void Renderer::drawLine(Line& line, const glm::vec3& color)
-{
-	if (line.IsVertical())
-	{
-		const int x = (int)floor(line.PointA.X);
-		float z;
-		line.SetAToHaveSmallerYValue();
-		z = line.PointA.Z;
-		const int minY = (int)floor(line.PointA.Y);
-		const int maxY = (int)ceil(line.PointB.Y);
-		const float zStep = (line.PointB.Z - line.PointA.Z) / (line.PointB.Y - line.PointA.Y);
-		for (int y = minY; y < maxY; y++)
-		{
-			putPixel(x, y, color, z);
-			z += zStep;
-		}
-		return;
-	}
-	if (line.IsHorizontal())
-	{
-		const int y = (int)round(line.PointA.Y);
-		float z;
-		line.SetAToHaveSmallerXValue();
-		z = line.PointA.Z;
-		const int minX = (int)floor(line.PointA.X);
-		const int maxX = (int)ceil(line.PointB.X);
-		const float zStep = (line.PointB.Z - line.PointA.Z) / (line.PointB.X - line.PointA.X);
-		for (int x = minX; x < maxX; x++)
-		{
-			putPixel(x, y, color, z);
-			z += zStep;
-		}
-		return;
-	}
-
-	float deltaX;
-	float deltaY;
-	float deltaZ;
-	float zStep;
-	float deltaE;
-	float Error;
-	int x;
-	int y;
-	float z;
-	float slope = line.GetSlope();
-	if (abs(slope) < 1)
-	{
-		line.SetAToHaveSmallerXValue();
-		deltaX = line.PointB.X - line.PointA.X;
-		deltaY = line.PointB.Y - line.PointA.Y;
-		deltaZ = line.PointB.Z - line.PointA.Z;
-		zStep = deltaZ / (float)deltaX;
-		deltaE = abs(deltaY / deltaX);
-		Error = 0.0;
-
-		x = (int)floor(line.PointA.X);
-		y = (int)floor(line.PointA.Y);
-		z = line.PointA.Z;
-		for (; x <= line.PointB.X; x++)
-		{
-			putPixel(x, y, color,z);
-			Error = Error + deltaE;
-			if (Error >= 0.5f)
-			{
-				if (deltaY < 0.0f)
-				{
-					y--;
-					Error = Error - 1.0f;
-				}
-
-				if (deltaY > 0)
-				{
-					y++;
-					Error = Error - 1.0f;
-				}
-			}
-			z += zStep;
-		}
-		return;
-	}
-	line.SetAToHaveSmallerYValue();
-	deltaX = line.PointB.X - line.PointA.X;
-	deltaY = line.PointB.Y - line.PointA.Y;
-	deltaZ = line.PointB.Z - line.PointA.Z;
-	zStep = deltaZ / (float)deltaX;
-	deltaE = abs(deltaX / deltaY);
-	Error = 0.0;
-
-	//// keeping everything in view range
-	//int x = std::max(0, line.PointA.X);
-	//int y = std::max(0, line.PointA.Y);
-	//x1 = std::min(x1, viewportWidth);
-	//y1 = std::min(y1, viewportHeight);
-	x = (int)floor(line.PointA.X);
-	y = (int)floor(line.PointA.Y);
-	z = line.PointA.Z;
-	for (; y <= line.PointB.Y; y++)
-	{
-		putPixel(x, y, color, z);
-		Error = Error + deltaE;
-		if (Error >= 0.5f)
-		{
-			if (deltaX < 0.0f)
-			{
-				x--;
-				Error = Error - 1.0f;
-			}
-
-			if (deltaX > 0)
-			{
-				x++;
-				Error = Error - 1.0f;
-			}
-		}
-		z += zStep;
-	}
 }
 
 /* Function to scan min/max of X and Y values of 3 different Points fast*/
@@ -223,73 +59,11 @@ XYBorders Renderer::minMax(const Point & A, const Point & B, const Point & C) co
 	return out;
 }
 
-float Renderer::CalcWTwoValue(const Point & A, const Point & B, const Point & C, int _y, float w1)
-{
-	//if (C.Y == A.Y) return 0.0f;
-	float y = (float)_y;
-	float nominator = (y - A.Y - (w1 * (B.Y - A.Y)));
-	float denominator = (C.Y - A.Y);
-	return nominator / denominator;
-}
-
-float Renderer::CalcWOneValue(const Point & A, const Point & B, const Point & C, int _x, int _y)
-{
-	//if (A.Y == C.Y) return 0.0f;
-	float x = (float)_x;
-	float y = (float)_y;
-	float nominator = (A.X*(C.Y - A.Y) + (y - A.Y)*(C.X - A.X) - x * (C.Y - A.Y));
-	float denominator = ((B.Y - A.Y)*(C.X - A.X) - (B.X - A.X)*(C.Y - A.Y));
-	return nominator / denominator;
-}
-
-void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX, int viewportY)
-{
-	this->viewportX = viewportX;
-	this->viewportY = viewportY;
-	this->viewportWidth = viewportWidth;
-	this->viewportHeight = viewportHeight;
-	pixelPlacer.SetViewport(viewportWidth, viewportHeight);
-	createBuffers(viewportWidth, viewportHeight);
-	createOpenGLBuffer();
-}
-
-void Renderer::draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix)
-{
-	draw3DLine(PointA, PointB, projectionMatrix, viewMatrix, glm::vec3(0));
-}
-
-void Renderer::draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4& projectionMatrix, const glm::mat4x4& viewMatrix, const glm::vec3& color)
-{
-	PointA = projectionMatrix * viewMatrix * PointA;
-	PointB = projectionMatrix * viewMatrix * PointB;
-	PointA = PointA / PointA.w;
-	PointB = PointB / PointB.w;
-	Line line = Line(toScreenPixel(Point(PointA)), toScreenPixel(Point(PointB)));
-	drawLine(line,color);
-}
-
 void Renderer::Render()
 {
 	// Start counting runtime
 	auto start = std::chrono::high_resolution_clock::now();
-	
-	Face face = Face(
-		std::vector<int>{1, 2,3}, 
-		std::vector<int>{1, 2, 3}, 
-		std::vector<int>{1}
-	);
-	std::vector<Face> faces{ face };
-
-	std::vector<glm::vec3> vertices{
-		glm::vec3(-1.0f,-1.0f,0.0f),
-		glm::vec3(1.0f,-1.0f,0.0f),
-		glm::vec3(0.0f,1.0f,0.0f)
-	};
-
-	MeshModel model = MeshModel(faces, vertices);
-	triangleDrawer.SetVao(model.GetVao());
-	triangleDrawer.SetVerticesNumber(model.GetNumberOfVertices());
-	triangleDrawer.DrawTriangles();
+	demoTriangle();
 
 	// Stop counting runtime
 	auto finish = std::chrono::high_resolution_clock::now();
@@ -298,17 +72,38 @@ void Renderer::Render()
 	return;
 }
 
-// Takes a point in the range between -1 and 1 and translates it to a pixel
-Point Renderer::toScreenPixel(const Point& point) const
+void Renderer::drawModels()
 {
-	Point out;
-	float ratioX = (point.X + 1) / 2;
-	float ratioY = (point.Y + 1) / 2;
+	if (scene.GetModelCount() == 0) return;
 
-	out.X = (float)viewportWidth  * ratioX;
-	out.Y = (float)viewportHeight * ratioY;
-	out.Z = point.Z;
-	return out;
+	std::vector<std::shared_ptr<MeshModel>> models = scene.GetModelsVector();
+	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator!= models.cend(); ++iterator)
+	{
+		auto& model = **iterator; // Dereferences to MeshModel
+
+		triangleDrawer.SetModel(&model);
+		triangleDrawer.DrawTriangles();
+	}
+}
+
+void Renderer::demoTriangle()
+{
+	Face face = Face(
+		std::vector<int>{1, 2, 3},
+		std::vector<int>{1, 2, 3},
+		std::vector<int>()
+	);
+	std::vector<Face> faces{ face };
+
+	std::vector<glm::vec3> vertices{
+		glm::vec3(-0.5f,-0.5f,0.0f),
+		glm::vec3(0.5f,-0.5f,0.0f),
+		glm::vec3(0.0f,0.5f,0.0f)
+	};
+
+	MeshModel model = MeshModel(faces, vertices);
+	triangleDrawer.SetModel(&model);
+	triangleDrawer.DrawTriangles();
 }
 
 //##############################
@@ -422,30 +217,4 @@ void Renderer::SwapBuffers()
 
 	// Finally renders the data.
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-}
-
-void Renderer::drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor)
-{
-	if (y0 == y1)
-	{
-		for (int i = x0; i <= x1; i++)
-		{
-			putPixel(i, y0, lineColor);
-		}
-		return;
-	}
-
-	if (x0 == x1)
-	{
-		// ensure y0 < y1
-		if (y0 > y1)
-		{
-			std::swap(y0, y1);
-		}
-		for (int i = y0; i < y1; i++)
-		{
-			putPixel(x0, i, lineColor);
-		}
-		return;
-	}
 }

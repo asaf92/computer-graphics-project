@@ -45,17 +45,9 @@ private:
 	// Drawing
 	TriangleDrawer triangleDrawer;
 	PixelPlacer pixelPlacer;
-	void putPixel(int x, int y, const glm::vec3& color,float z);
-	void drawLine(Line& line);
-	void drawLine(Line & line, const glm::vec3 & color);
-	//void drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
-	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
 
 	// Calculations
 	XYBorders minMax(const Point& A, const Point& B, const Point& C) const;
-	float CalcWOneValue(const Point & A, const Point & B, const Point & C, int y, int x);
-	float CalcWTwoValue(const Point & A, const Point & B, const Point & C, int y, float w1);
-	Point toScreenPixel(const Point& point) const;
 
 	GLuint glScreenTex;
 	GLuint glScreenVtc;
@@ -65,8 +57,8 @@ private:
 	int RenderExecutionTime;
 
 	// Render methods
-	void draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4 & projectionMatrix, const glm::mat4x4 & viewMatrix);
-	void draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4 & projectionMatrix, const glm::mat4x4 & viewMatrix, const glm::vec3 & color);
+	void drawModels();
+	void demoTriangle();
 
 	// Shaders
 	ShaderProgram colorShader;
@@ -78,6 +70,5 @@ public:
 	void Render();
 	void SwapBuffers();
 	void ClearBuffers();
-	void SetViewport(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
-
+	
 };

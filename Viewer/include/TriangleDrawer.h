@@ -40,6 +40,7 @@ private:
 
 	// OpenGL era
 	// Vertices
+	IMeshObject const* model;
 	std::vector<Vertex> vertices;
 	int verticesNumber;
 	GLuint vao;
@@ -49,15 +50,15 @@ public:
 	TriangleDrawer(Shader& shader, PixelPlacer& pixelPlacer, int viewportWidth, int viewportHeight);
 
 	// Setters
-	void SetUnscaledPoints(const Point& pointA, const Point& pointB, const Point& pointC);
+	void SetModel(const IMeshObject * const _model);
+	void SetVao(GLuint _vao) { vao = _vao; }
+	void SetVerticesNumber(int _size) { verticesNumber = _size; }
 
 	// Methods
+	void DrawTriangles() const;
 	void DrawTriangle();
 	void SetViewport(int viewportWidth, int viewportHeight);
 
 	// OpenGL era
-	void DrawTriangles() const;
-	void SetVao(GLuint _vao) { vao = _vao; }
-	void SetVerticesNumber(int _size) { verticesNumber = _size; }
 };
 
