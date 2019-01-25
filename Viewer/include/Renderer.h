@@ -48,7 +48,6 @@ private:
 	void putPixel(int x, int y, const glm::vec3& color,float z);
 	void drawLine(Line& line);
 	void drawLine(Line & line, const glm::vec3 & color);
-	void drawTriangle(const Point& PointA, const Point& PointB, const Point& PointC);
 	//void drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
 	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
 

@@ -242,11 +242,6 @@ float Renderer::CalcWOneValue(const Point & A, const Point & B, const Point & C,
 	return nominator / denominator;
 }
 
-void Renderer::drawTriangle(const Point & worldPointA, const Point & worldPointB, const Point & worldPointC)
-{	
-	triangleDrawer.DrawTriangle();
-}
-
 void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX, int viewportY)
 {
 	this->viewportX = viewportX;
