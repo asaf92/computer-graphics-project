@@ -98,4 +98,6 @@ void Renderer::demoTriangle()
 	MeshModel model = MeshModel(faces, vertices);
 	triangleDrawer.SetModel(&model);
 	triangleDrawer.DrawTriangles();
+	colorShader.setUniform("color", glm::vec3(0, 1.0, 0));
+	triangleDrawer.FillTriangles();
 }

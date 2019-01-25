@@ -24,6 +24,6 @@ public:
 
 	// Methods
 	void DrawTriangles() const;
-
+	void FillTriangles() const;
 };
 

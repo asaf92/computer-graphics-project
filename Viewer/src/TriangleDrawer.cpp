@@ -20,4 +20,12 @@ void TriangleDrawer::DrawTriangles() const
 	glDrawArrays(GL_TRIANGLES, 0, verticesNumber);
 	glBindVertexArray(0);
 }
+
+void TriangleDrawer::FillTriangles() const
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glBindVertexArray(vao);
+	glDrawArrays(GL_TRIANGLES, 0, verticesNumber);
+	glBindVertexArray(0);
+}
 #pragma endregion PublicMethods
