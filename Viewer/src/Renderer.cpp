@@ -69,6 +69,10 @@ void Renderer::drawModels()
 	}
 }
 
+/*
+* Demo to succesfully display a MeshModel with two faces
+* to form a star of david
+*/
 void Renderer::demoTriangle()
 {
 	Face face = Face(
@@ -76,12 +80,21 @@ void Renderer::demoTriangle()
 		std::vector<int>{1, 2, 3},
 		std::vector<int>()
 	);
-	std::vector<Face> faces{ face };
+	Face secondFace = Face(
+		std::vector<int>{4, 5, 6},
+		std::vector<int>{4, 5, 6},
+		std::vector<int>()
+	);
+	std::vector<Face> faces{ face, secondFace };
 
 	std::vector<glm::vec3> vertices{
 		glm::vec3(-0.5f,-0.5f,0.0f),
 		glm::vec3(0.5f,-0.5f,0.0f),
-		glm::vec3(0.0f,0.5f,0.0f)
+		glm::vec3(0.0f,0.75f,0.0f),
+		glm::vec3(-0.5f,0.5f,0.0f),
+		glm::vec3(0.5f,0.5f,0.0f),
+		glm::vec3(0.0f,-0.75f,0.0f),
+
 	};
 
 	MeshModel model = MeshModel(faces, vertices);
