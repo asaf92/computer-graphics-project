@@ -24,14 +24,6 @@ class Renderer
 private:
 	// Depndencies
 	Scene& scene;
-	Shader& shader;
-
-	// Buffers
-	void createBuffers(int viewportWidth, int viewportHeight);
-	float *colorBuffer;
-	float *zBuffer;
-	static const float maxZ;
-	bool zBufferChanged;
 
 	// Viewport
 	int viewportWidth;
@@ -44,17 +36,9 @@ private:
 
 	// Drawing
 	TriangleDrawer triangleDrawer;
-	PixelPlacer pixelPlacer;
 
 	// Calculations
 	XYBorders minMax(const Point& A, const Point& B, const Point& C) const;
-
-	GLuint glScreenTex;
-	GLuint glScreenVtc;
-
-	void createOpenGLBuffer();
-	void initOpenGLRendering();
-	int RenderExecutionTime;
 
 	// Render methods
 	void drawModels();
@@ -68,7 +52,6 @@ public:
 	~Renderer();
 
 	void Render();
-	void SwapBuffers();
 	void ClearBuffers();
 	
 };

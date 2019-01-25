@@ -17,26 +17,8 @@ class TriangleDrawer
 private:
 	// Dependencies
 	Shader& shader;
-	PixelPlacer& pixelPlacer;
 	int viewportWidth;
 	int viewportHeight;
-
-	// Screen Points
-	glm::vec3 screenPointA;
-	glm::vec3 screenPointB;
-	glm::vec3 screenPointC;
-
-	// World Points
-	glm::vec4 unscaledPointA;
-	glm::vec4 unscaledPointB;
-	glm::vec4 unscaledPointC;
-
-	// Private methods
-	XYBorders minMax() const;
-	bool pointInTriangle(int _x, int _y);
-	bool pointInTriangle(const BycentricCoordinates & bycentricCoords) const;
-	BycentricCoordinates getBycentricCoordinates(int _x, int _y);
-	bool allPointsAreInFrame();
 
 	// OpenGL era
 	// Vertices
@@ -47,7 +29,7 @@ private:
 
 public:
 	// Constructors 
-	TriangleDrawer(Shader& shader, PixelPlacer& pixelPlacer, int viewportWidth, int viewportHeight);
+	TriangleDrawer(Shader & _shader, int _viewportWidth, int _viewportHeight);
 
 	// Setters
 	void SetModel(const IMeshObject * const _model);
@@ -56,9 +38,7 @@ public:
 
 	// Methods
 	void DrawTriangles() const;
-	void DrawTriangle();
 	void SetViewport(int viewportWidth, int viewportHeight);
 
-	// OpenGL era
 };
 
