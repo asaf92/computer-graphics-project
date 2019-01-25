@@ -14,7 +14,7 @@
 
 Renderer::Renderer(Shader& shader, Scene& scene, int viewportWidth, int viewportHeight, int viewportX, int viewportY) :
 	scene(scene),
-	triangleDrawer(TriangleDrawer(shader, viewportWidth, viewportHeight)),
+	triangleDrawer(TriangleDrawer()),
 	fogger(Fogger())
 {
 }
