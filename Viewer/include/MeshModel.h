@@ -29,9 +29,6 @@ class MeshModel: public IMovable, public IRotatable, public IMeshObject, public 
 {
 protected:
 	// Protected members
-	std::vector<Face> faces;
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> normals;
 	glm::mat4x4 worldTransform;
 	glm::mat4x4 rotateTransformation;
 	std::string modelName;
@@ -69,10 +66,6 @@ protected:
 	GLuint vbo;
 	
 public:
-	// Old Ctors
-	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, std::string& name) : MeshModel(faces, vertices, normals, glm::vec4(0.1f,0.1f,0.1f,1.0f), name) {}
-	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const glm::vec4& color) : MeshModel(faces, vertices, normals, color, std::string("")) {}
-	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const glm::vec4& color, std::string& name );
 	// New Ctors
 	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices);
 	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> textureCoords, const std::string & modelName); 
@@ -98,7 +91,7 @@ public:
 
 	// Inherited via IMeshObject
 	virtual const GLuint&      GetVao() const override { return vao; }
-	virtual const unsigned int GetNumberOfVertices() const override { return vertices.size(); }
+	virtual const unsigned int GetNumberOfVertices() const override { return modelVertices.size(); }
 	virtual const glm::mat4 GetWorldTransformation() const { return glm::mat4(1.0f); }
 	virtual const glm::mat4 GetModelTransformation() const { return glm::mat4(1.0f); }
 

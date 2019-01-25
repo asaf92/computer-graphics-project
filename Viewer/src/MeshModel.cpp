@@ -8,41 +8,7 @@
 #include <algorithm>
 #include <math.h>
 
-
-MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const glm::vec4& color, std::string& name) :
-	faces(faces),
-	vertices(vertices),
-	normals(normals),
-	modelName(name),
-	worldTransform(glm::mat4x4(1)),
-	scaleSize(1.0f, 1.0f, 1.0f),
-	rotateAngle(0.0f),
-	rotateTransformation(1),
-	translationVector(glm::vec3(0.0f, 0.0f, 0.0f)),
-	minimums(0),
-	maximums(0),
-	centerPoint(0),
-	color(color),
-	uniformMaterial(Material())
-{
-	for (std::vector<glm::vec3>::const_iterator iterator = vertices.cbegin(); iterator != vertices.end(); ++iterator)
-	{
-		// Init the minimums and maximums vector
-		minimums.x = std::min(minimums.x, iterator->x);
-		minimums.y = std::min(minimums.y, iterator->y);
-		minimums.z = std::min(minimums.z, iterator->z);
-		maximums.x = std::max(maximums.x, iterator->x);
-		maximums.y = std::max(maximums.y, iterator->y);
-		maximums.z = std::max(maximums.z, iterator->z);
-	}
-	centerPoint.x = (minimums.x + maximums.x) / 2.0f;
-	centerPoint.y = (minimums.y + maximums.y) / 2.0f;
-	centerPoint.z = (minimums.z + maximums.z) / 2.0f;
-
-	shadingModel = Phong;
-}
-
-MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices) : MeshModel(faces,vertices,Utils::CalculateNormals(vertices,faces),std::vector<glm::vec2>(),"") { }
+MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices) : MeshModel(faces, vertices, Utils::CalculateNormals(vertices, faces), std::vector<glm::vec2>(), "") { }
 
 MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> textureCoords, const std::string& modelName) :
 	modelTransform(1),
@@ -58,10 +24,11 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
 		for (int j = 0; j < 3; j++)
 		{
 			int vertexIndex = currentFace.GetVertexIndex(j) - 1;
+			int normalIndex = currentFace.GetNormalIndex(j) - 1;
 
 			Vertex vertex;
 			vertex.position = vertices[vertexIndex];
-			vertex.normal = normals[vertexIndex];
+			vertex.normal = normals[normalIndex];
 
 			//if (textureCoords.size() > 0)
 			//{
