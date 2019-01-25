@@ -190,12 +190,12 @@ std::vector<glm::vec3> Utils::CalculateNormals(std::vector<glm::vec3> vertices, 
 	std::vector<glm::vec3> normals(vertices.size());
 	std::vector<int> adjacent_faces_count(vertices.size());
 
-	for (int i = 0; i < adjacent_faces_count.size(); i++)
+	for (unsigned int i = 0; i < adjacent_faces_count.size(); i++)
 	{
 		adjacent_faces_count[i] = 0;
 	}
 
-	for (int i = 0; i < faces.size(); i++)
+	for (unsigned int i = 0; i < faces.size(); i++)
 	{
 		Face currentFace = faces.at(i);
 
@@ -220,7 +220,7 @@ std::vector<glm::vec3> Utils::CalculateNormals(std::vector<glm::vec3> vertices, 
 		adjacent_faces_count.at(index2) += 1;
 	}
 
-	for (int i = 0; i < normals.size(); i++)
+	for (unsigned int i = 0; i < normals.size(); i++)
 	{
 		normals[i] /= adjacent_faces_count[i];
 		normals[i] = glm::normalize(normals[i]);
