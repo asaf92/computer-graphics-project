@@ -123,7 +123,6 @@ ImGuiIO& SetupDearImgui(GLFWwindow* window)
 
 	// Setup style
 	ImGui::StyleColorsDark();
-	//ImGui::StyleColorsClassic();
 
 	return io;
 }
@@ -155,7 +154,7 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 	scene.SetColorBufferExecutionTime(elapsed.count());
 
 	// Render the scene
-	renderer.Render(true);
+	renderer.Render();
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(window);

@@ -49,7 +49,7 @@ private:
 	void drawLine(Line& line);
 	void drawLine(Line & line, const glm::vec3 & color);
 	void drawTriangle(const Point& PointA, const Point& PointB, const Point& PointC);
-	void drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
+	//void drawAxis(const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
 	void drawStraightLine( int &y0,  int &y1,  int x0,  int x1, glm::vec3 & lineColor);
 
 	// Calculations
@@ -66,11 +66,6 @@ private:
 	int RenderExecutionTime;
 
 	// Render methods
-	//void renderWIthoutOpenGL();
-	void drawFog();
-	//void drawModels(glm::vec4 &activeCameraLocation, const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
-	//void drawFace(std::vector<Face>::iterator &facesIterator, std::vector<glm::vec3> & vertices, const glm::mat4x4 & worldTransform, const std::vector<glm::vec3> & normals, const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix, glm::mat4x4 &transformMatrix);
-	//void drawLightSources(const std::vector<LightSource*>& lightsVector, glm::vec4 &activeCameraLocation, const glm::mat4 & projectionMatrix, const glm::mat4 & viewMatrix);
 	void draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4 & projectionMatrix, const glm::mat4x4 & viewMatrix);
 	void draw3DLine(glm::vec4 PointA, glm::vec4 PointB, const glm::mat4x4 & projectionMatrix, const glm::mat4x4 & viewMatrix, const glm::vec3 & color);
 
@@ -81,10 +76,8 @@ public:
 	Renderer(Shader& shader, Scene& scene, int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
 	~Renderer();
 
-	void Render(bool useOpenGL);
+	void Render();
 	void SwapBuffers();
-	//void ClearColorBuffer(const glm::vec3& color);
-	//void ClearZBuffer();
 	void ClearBuffers();
 	void SetViewport(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
 
