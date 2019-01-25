@@ -30,11 +30,11 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
 			vertex.position = vertices[vertexIndex];
 			vertex.normal = normals[normalIndex];
 
-			//if (textureCoords.size() > 0)
-			//{
-			//	int textureCoordsIndex = currentFace.GetTextureIndex(j) - 1;
-			//	vertex.textureCoords = textureCoords[textureCoordsIndex];
-			//}
+			if (textureCoords.size() > 0)
+			{
+				int textureCoordsIndex = currentFace.GetTextureIndex(j) - 1;
+				vertex.textureCoords = textureCoords[textureCoordsIndex];
+			}
 
 			modelVertices.push_back(vertex);
 		}
@@ -55,9 +55,9 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
 
-	//// Vertex Texture Coords
-	//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
-	//glEnableVertexAttribArray(2);
+	// Vertex Texture Coords
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
 
 	// unbind to make sure other code does not change it somewhere else
 	glBindVertexArray(0);
