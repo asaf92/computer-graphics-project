@@ -20,7 +20,7 @@ public:
 	static glm::vec4 Vec4FromVec3WithZero(const glm::vec3 & other);
 	static glm::vec3 ScreenVec3FromWorldPoint(const Point & _worldPoint, int _viewportWidth, int _viewportHeightPar);
 	static glm::vec3 ScreenVec3FromWorldPoint(const glm::vec4 & worldPoint, int _viewportWidth, int _viewportHeight);
-	static MeshModel LoadMeshModel(const std::string& filePath);
+	static MeshModel* LoadMeshModel(const std::string& filePath);
 	static std::vector<glm::vec3> CalculateNormals(std::vector<glm::vec3> vertices, std::vector<Face> faces);
 
 private:

@@ -8,15 +8,36 @@
 #include <algorithm>
 #include <math.h>
 
-MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices) : MeshModel(faces, vertices, Utils::CalculateNormals(vertices, faces), std::vector<glm::vec2>(), "") { }
+MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, const std::string& modelName) : 
+	MeshModel(faces, 
+		vertices, 
+		Utils::CalculateNormals(vertices, faces), 
+		std::vector<glm::vec2>(), 
+		modelName) 
+{ }
+
+MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec2> textureCoords, const std::string& modelName) : MeshModel(
+	faces, 
+	vertices, 
+	Utils::CalculateNormals(vertices, faces), 
+	textureCoords, 
+	modelName) 
+{ }
 
 MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> textureCoords, const std::string& modelName) :
 	modelTransform(1),
 	worldTransform(1),
-	modelName(modelName)
+	modelName(modelName),
+	scaleSize(1.0f, 1.0f, 1.0f),
+	rotateAngle(0.0f),
+	rotateTransformation(1),
+	translationVector(glm::vec3(0.0f, 0.0f, 0.0f)),
+	minimums(0),
+	maximums(0),
+	centerPoint(0),
+	color(glm::vec4(0.2f,0.2f,0.2f,1.0f)),
+	uniformMaterial(Material())
 {
-	worldTransform = glm::mat4x4(1);
-
 	modelVertices.reserve(3 * faces.size());
 	for (unsigned int i = 0; i < faces.size(); i++)
 	{
@@ -24,11 +45,10 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, s
 		for (int j = 0; j < 3; j++)
 		{
 			int vertexIndex = currentFace.GetVertexIndex(j) - 1;
-			int normalIndex = currentFace.GetNormalIndex(j) - 1;
 
 			Vertex vertex;
 			vertex.position = vertices[vertexIndex];
-			vertex.normal = normals[normalIndex];
+			vertex.normal = normals[vertexIndex];
 
 			if (textureCoords.size() > 0)
 			{

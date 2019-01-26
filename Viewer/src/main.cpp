@@ -51,9 +51,6 @@ int main(int argc, char **argv)
 
 	// Create the scene
 	Scene scene = Scene();
-
-	// Create the shader
-	Shader shader = Shader(scene);
 	
 	glm::vec4 clearColor = scene.GetClearColor();
 	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);

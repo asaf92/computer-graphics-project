@@ -20,7 +20,7 @@
 
 class Scene {
 private:
-	std::vector<std::shared_ptr<MeshModel>> models;
+	std::vector<MeshModel*> models;
 	std::vector<Camera> cameras;
 	std::vector<LightSource*> lights;
 	glm::vec4 ambientLight;
@@ -37,6 +37,7 @@ private:
 	bool showNormals = false;
 	bool fillTriangles = true;
 	bool drawAxis = true;
+	bool demoTriangles = false;
 
 	// Fog
 	bool fogEnabled = false;
@@ -64,9 +65,9 @@ public:
 	void SetClearColor(const glm::vec4 color) { clearColor = color; }
 
 	// Models
-	void AddModel(const std::shared_ptr<MeshModel>& model);
-	const std::vector<std::shared_ptr<MeshModel>> GetModelsVector() const { return models; };
-	std::shared_ptr<MeshModel> GetActiveModel() const;
+	void AddModel(MeshModel * const model);
+	const std::vector<MeshModel*> GetModelsVector() const { return models; };
+	MeshModel* GetActiveModel() const;
 	const int GetModelCount() const;
 	void SetActiveModelIndex(const int index);
 	const int GetActiveModelIndex() const;
@@ -88,6 +89,8 @@ public:
 	bool GetFillTriangles() const { return fillTriangles; }
 	void SetDrawAxis(const bool value) { drawAxis = value; }
 	bool GetDrawAxis() const { return drawAxis; }
+	void SetDemoTriangles(const bool value) { demoTriangles = value; }
+	bool GetDemoTriangles() { return demoTriangles; }
 
 	// Stats
 	const double GetRenderExecutionTime() const { return renderExecutionTime; }

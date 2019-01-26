@@ -41,7 +41,12 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 	{
 		glm::vec4 clearColor = scene.GetClearColor();
 		bool drawAxis = scene.GetDrawAxis();
+		bool demoTriangle = scene.GetDemoTriangles();
+		bool fillTriangles = scene.GetFillTriangles();
+
 		ImGui::Checkbox("Show axis", &drawAxis);
+		ImGui::Checkbox("Show demo triangles", &demoTriangle);
+		ImGui::Checkbox("Fill triangles", &fillTriangles);
 		ImGui::ColorEdit3("Background color", (float*)&clearColor, ImGuiColorEditFlags_NoInputs);
 		ImGui::SliderFloat("World Radius", &worldRadius, 0.1f, 10.0f);
 		// Execution stats
@@ -51,6 +56,8 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		ImGui::Text("Render execution time: %.3f", scene.GetRenderExecutionTime());
 
 		scene.SetDrawAxis(drawAxis);
+		scene.SetDemoTriangles(demoTriangle);
+		scene.SetFillTriangles(fillTriangles);
 		scene.SetClearColor(clearColor);
 	}
 
@@ -291,7 +298,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 	}
 
 	int selectedModelIndex = scene.GetActiveModelIndex();
-	auto& activeModel = scene.GetActiveModel();
+	MeshModel* activeModel = scene.GetActiveModel();
 	auto& activeModelTranslationVector = activeModel->GetTranslationVector();
 	auto& activeModelScalingSizes = activeModel->GetScale();
 	auto& models = scene.GetModelsVector();
@@ -323,8 +330,8 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 			selection_mask = (1 << selectedModelIndex);           // Click to single-select
 	}
 
-	moveObjectControls(activeModel.get(), "Model");
-	rotationControls(activeModel.get(), "Model");
+	moveObjectControls(activeModel, "Model");
+	rotationControls(activeModel, "Model");
 	if (ImGui::TreeNode("Advanced options"))
 	{
 		ImGui::Text("Color");
@@ -442,7 +449,7 @@ void DisplayMenuBar(ImGuiIO& io, Scene& scene)
 				nfdchar_t *outPath = NULL;
 				nfdresult_t result = NFD_OpenDialog("obj;png,jpg", NULL, &outPath);
 				if (result == NFD_OKAY) {
-					scene.AddModel(std::make_shared<MeshModel>(Utils::LoadMeshModel(outPath)));
+					scene.AddModel(Utils::LoadMeshModel(outPath));
 					free(outPath);
 				}
 				else if (result == NFD_CANCEL) {

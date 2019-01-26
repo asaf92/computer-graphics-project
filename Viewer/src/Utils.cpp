@@ -97,7 +97,7 @@ glm::vec3 Utils::ScreenVec3FromWorldPoint(const glm::vec4& _worldPoint, int _vie
 	return screenPoint;
 }
 
-MeshModel Utils::LoadMeshModel(const std::string& filePath)
+MeshModel* Utils::LoadMeshModel(const std::string& filePath)
 {
 	std::vector<Face> faces;
 	std::vector<glm::vec3> vertices;
@@ -146,7 +146,7 @@ MeshModel Utils::LoadMeshModel(const std::string& filePath)
 	}
 
 	//return MeshModel(faces, vertices, normals, Utils::GetFileName(filePath));
-	return MeshModel(faces, vertices, normals, textureCoords, Utils::GetFileName(filePath));
+	return new MeshModel(faces, vertices, textureCoords, Utils::GetFileName(filePath));
 }
 
 std::string Utils::GetFileName(const std::string& filePath)
