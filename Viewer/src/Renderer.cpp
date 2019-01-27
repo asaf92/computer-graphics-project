@@ -32,18 +32,6 @@ void Renderer::ClearBuffers()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-/* Function to scan min/max of X and Y values of 3 different Points fast*/
-XYBorders Renderer::minMax(const Point & A, const Point & B, const Point & C) const
-{
-	XYBorders out;
-	out.minX = (float)std::min(A.X, std::min(B.X, C.X));
-	out.minY = (float)std::min(A.Y, std::min(B.Y, C.Y));
-	out.maxX = (float)std::max(A.X, std::max(B.X, C.X));
-	out.maxY = (float)std::max(A.Y, std::max(B.Y, C.Y));
-
-	return out;
-}
-
 void Renderer::Render()
 {
 	// Start counting runtime

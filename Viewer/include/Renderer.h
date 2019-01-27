@@ -36,9 +36,6 @@ private:
 	ShaderProgram colorShader;
 	ShaderProgram lightShader;
 
-	// Calculations
-	XYBorders minMax(const Point& A, const Point& B, const Point& C) const;
-
 	// Render methods
 	void drawModels();
 	void demoTriangle();
