@@ -13,7 +13,8 @@
 class IMeshObject
 {
 public:
-	
+	virtual ~IMeshObject() {};
+
 	// Mesh data
 	virtual const GLuint&      GetVao() const = 0;
 	virtual const unsigned int GetNumberOfVertices() const = 0;
