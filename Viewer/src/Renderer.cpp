@@ -69,6 +69,7 @@ void Renderer::drawModels()
 		auto& model = **iterator; // Dereferences to MeshModel
 		auto modelToWorld = model.GetWorldTransformation();
 		auto worldToView = activeCamera.GetViewMatrix();
+		activeCamera.RenderProjectionMatrix();
 		auto projectionMatrix = activeCamera.GetProjectionMatrix();
 		colorShader.use();
 		colorShader.setUniform("model", modelToWorld );
