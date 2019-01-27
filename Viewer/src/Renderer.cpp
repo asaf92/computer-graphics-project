@@ -63,6 +63,8 @@ void Renderer::drawModels()
 		colorShader.setUniform("model", modelToWorld );
 		colorShader.setUniform("view", worldToView);
 		colorShader.setUniform("projection", projectionMatrix);
+		colorShader.setUniform("ambiantColor", model.GetAmbientColor());
+		colorShader.setUniform("ambiantLighting", scene.GetAmbientLight());
 		triangleDrawer.SetModel(&model);
 		triangleDrawer.DrawTriangles();
 		if(scene.GetFillTriangles()) triangleDrawer.FillTriangles();
