@@ -12,10 +12,18 @@
 #include <iostream>
 #include <glad/glad.h>
 
-Renderer::Renderer(Scene& scene) : scene(scene), triangleDrawer(TriangleDrawer()), fogger(Fogger()) 
+Renderer::Renderer(Scene& scene) : scene(scene), activeCamera(scene.GetActiveCamera()), triangleDrawer(TriangleDrawer()), fogger(Fogger()) 
 { 
 	colorShader.loadShaders("vshader_color.glsl", "fshader_color.glsl"); 
+	createDemoTriangle();
 }
+
+Renderer::~Renderer()
+{
+	delete demoTriangleModel;
+}
+
+
 
 void Renderer::ClearBuffers()
 {
@@ -40,11 +48,9 @@ void Renderer::Render()
 {
 	// Start counting runtime
 	auto start = std::chrono::high_resolution_clock::now();
-	colorShader.use();
-	colorShader.setUniform("model", glm::mat4x4(1.0f));
-	colorShader.setUniform("view", glm::mat4x4(1.0f));
-	colorShader.setUniform("projection", glm::mat4x4(1.0f));
+
 	demoTriangle();
+	drawModels();
 
 	// Stop counting runtime
 	auto finish = std::chrono::high_resolution_clock::now();
@@ -57,13 +63,20 @@ void Renderer::drawModels()
 {
 	if (scene.GetModelCount() == 0) return;
 
-	std::vector<std::shared_ptr<MeshModel>> models = scene.GetModelsVector();
-	for (std::vector<std::shared_ptr<MeshModel>>::const_iterator iterator = models.cbegin(); iterator!= models.cend(); ++iterator)
+	std::vector<MeshModel*> models = scene.GetModelsVector();
+	for (std::vector<MeshModel*>::const_iterator iterator = models.cbegin(); iterator!= models.cend(); ++iterator)
 	{
 		auto& model = **iterator; // Dereferences to MeshModel
-
+		auto modelToWorld = model.GetWorldTransformation();
+		auto worldToView = activeCamera.GetViewMatrix();
+		auto projectionMatrix = activeCamera.GetProjectionMatrix();
+		colorShader.use();
+		colorShader.setUniform("model", modelToWorld );
+		colorShader.setUniform("view", worldToView);
+		colorShader.setUniform("projection", projectionMatrix);
 		triangleDrawer.SetModel(&model);
 		triangleDrawer.DrawTriangles();
+		if(scene.GetFillTriangles()) triangleDrawer.FillTriangles();
 	}
 }
 
@@ -72,6 +85,24 @@ void Renderer::drawModels()
 * to form a star of david
 */
 void Renderer::demoTriangle()
+{
+	if (!scene.GetDemoTriangles()) return;
+
+	colorShader.use();
+	auto modelToWorld =     glm::mat4(1.0f);
+	modelToWorld[1][1] = 0.2f;
+	modelToWorld[0][0] = 0.15f;
+	auto worldToView =      glm::mat4(1.0f);
+	auto projectionMatrix = glm::mat4(1.0f);
+	colorShader.setUniform("model", modelToWorld);
+	colorShader.setUniform("view", worldToView);
+	colorShader.setUniform("projection", projectionMatrix);
+	triangleDrawer.SetModel(demoTriangleModel);
+	triangleDrawer.DrawTriangles();
+	if(scene.GetFillTriangles()) triangleDrawer.FillTriangles();
+}
+
+void Renderer::createDemoTriangle()
 {
 	Face face = Face(
 		std::vector<int>{1, 2, 3},
@@ -95,9 +126,5 @@ void Renderer::demoTriangle()
 
 	};
 
-	MeshModel model = MeshModel(faces, vertices);
-	triangleDrawer.SetModel(&model);
-	triangleDrawer.DrawTriangles();
-	colorShader.setUniform("color", glm::vec3(0, 1.0, 0));
-	triangleDrawer.FillTriangles();
+	demoTriangleModel = new MeshModel(faces, vertices, "Demo Triangle");
 }

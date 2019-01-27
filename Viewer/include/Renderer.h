@@ -25,6 +25,8 @@ private:
 	// Depndencies
 	Scene& scene;
 	Fogger fogger;
+	Camera& activeCamera;
+	IMeshObject* demoTriangleModel;
 
 	// Drawing
 	TriangleDrawer triangleDrawer;
@@ -41,12 +43,11 @@ private:
 	void drawModels();
 	void demoTriangle();
 
-	void LoadShaders();
-	void LoadTextures();
+	void createDemoTriangle();
 
 public:
 	Renderer(Scene& scene);
-	~Renderer() {}
+	~Renderer();
 
 	void Render();
 	void ClearBuffers();

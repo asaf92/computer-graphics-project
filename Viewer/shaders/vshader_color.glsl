@@ -5,9 +5,9 @@ layout(location = 1) in vec3 normal;
 layout(location = 2) in vec2 texCoords;
 
 // The model/view/projection matrices
-// uniform mat4 model;
-// uniform mat4 view;
-// uniform mat4 projection;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 // These outputs will be available in the fragment shader as inputs
 // out vec3 fragPos;
@@ -26,5 +26,5 @@ void main()
 	// fragTexCoords = texCoords;
 
 	// This is an internal OpenGL variable, we must set a value to this variable
-	gl_Position = vec4(pos.x, pos.y, 0.0f, 1.0f);
+	gl_Position = projection * view * model * vec4(pos.x, pos.y, 0.0f, 1.0f);
 }
