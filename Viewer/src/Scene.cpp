@@ -6,13 +6,13 @@ Scene::Scene() :
 	activeCameraIndex(0),
 	activeModelIndex(0),
 	activeLightsIndex(0),
-	ambientLight(glm::vec4(0.17f)),
 	selectedShader(Phong),
 	fogStart(1.0f),
 	fogFinish(5.0f),
 	worldRadius(5.0f),
 	showingLights(true),
-	clearColor(0.2f, 0.2f, 0.2f, 1.00f)
+	clearColor(0.2f, 0.2f, 0.2f, 1.0f),
+	ambientLight(0.2f,0.2f,0.0f,1.0f)
 {
 	// Init first camera
 	AddCamera(*(new Camera()));

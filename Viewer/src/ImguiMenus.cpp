@@ -37,6 +37,11 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 	worldRadius = scene.GetWorldRadius();
 	ImGui::Begin("Main Menu");
 	
+	if (ImGui::Button("Add Banana"))
+	{
+		scene.AddModel(Utils::LoadMeshModel("C:\\Users\\aagami\\Documents\\project-de-west-denya-massiv\\Data\\banana.obj"));
+	}
+
 	if (ImGui::CollapsingHeader("General"))
 	{
 		glm::vec4 clearColor = scene.GetClearColor();
