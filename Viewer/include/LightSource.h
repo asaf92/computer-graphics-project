@@ -1,7 +1,6 @@
 #pragma once
 #include "IMovable.h"
 #include "IRotatable.h"
-#include "IShaded.h"
 #include "IMeshObject.h"
 #include "glm/glm.hpp"
 #include "Utils.h"
@@ -14,7 +13,7 @@ enum LightSourceType
 };
 
 // Abstract class
-class LightSource: public IMovable,public IRotatable,public IShaded, public IMeshObject
+class LightSource: public IMovable,public IRotatable, public IMeshObject
 {
 protected:
 	glm::vec4 color;
@@ -49,12 +48,6 @@ public:
 	virtual void RotateX(const float angle) override =0;
 	virtual void RotateY(const float angle) override =0;
 	virtual void RotateZ(const float angle) override =0;
-
-	// Inherited via IShaded
-	virtual const glm::mat4x4  GetWorldTransformationOld() override =0;
-	virtual const ShadingModels GetShadingMethod()		 override =0;
-	virtual bool SetShadingMethod(ShadingModels model)   override =0;
-
 
 	// Inherited via IMeshObject
 	virtual const GLuint & GetVao() const override =0;

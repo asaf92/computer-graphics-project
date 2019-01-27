@@ -3,7 +3,7 @@
 #include "MeshModel.h"
 using namespace std;
 
-class Cube : public IMeshObject, public IShaded
+class Cube : public IMeshObject
 {
 private:
 	float length;
@@ -20,11 +20,6 @@ public:
 	Cube(): Cube(0.1f){}
 	Cube(float size);
 	~Cube();
-
-	// IShaded
-	virtual const glm::mat4x4 GetWorldTransformationOld() { return glm::mat4x4(1); }
-	virtual const ShadingModels GetShadingMethod() { return Flat; };
-	virtual bool SetShadingMethod(ShadingModels model) { return false; };
 
 	// Inherited via IMeshObject
 	virtual const GLuint & GetVao() const override { return vao; }

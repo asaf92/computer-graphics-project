@@ -34,16 +34,8 @@ public:
 	virtual void Move(const glm::vec3 direction) override {}
 
 	// Inherited via LightSource
-	//virtual const glm::mat4x4  GetWorldTransformationOld() override;
-	virtual const ShadingModels GetShadingMethod() override;
-	virtual bool SetShadingMethod(ShadingModels model) override;
-
-	// Inherited via LightSource
 	virtual const GLuint & GetVao()                  const override {return model->GetVao();}
 	virtual const unsigned int GetNumberOfVertices() const override {return model->GetNumberOfVertices();}
 	virtual const glm::mat4 GetWorldTransformation() const override {return model->GetWorldTransformation();}
 	virtual const glm::mat4 GetModelTransformation() const override {return model->GetModelTransformation();}
-
-	// Inherited via LightSource
-	virtual const glm::mat4x4 GetWorldTransformationOld() override;
 };

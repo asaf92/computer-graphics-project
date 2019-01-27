@@ -25,23 +25,6 @@ void ParallelLightSource::RotateZ(const float angle)
 }
 #pragma endregion
 
-#pragma region IShaded
-
-const ShadingModels ParallelLightSource::GetShadingMethod()
-{
-	return Flat;
-}
-
-bool ParallelLightSource::SetShadingMethod(ShadingModels model)
-{
-	return false;
-}
-const glm::mat4x4 ParallelLightSource::GetWorldTransformationOld()
-{
-	return glm::mat4x4();
-}
-#pragma endregion
-
 #pragma region IMeshObject
 
 #pragma endregion

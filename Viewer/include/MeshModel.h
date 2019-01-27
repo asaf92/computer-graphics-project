@@ -7,7 +7,6 @@
 #include "Face.h"
 #include "Material.h"
 #include "Vertex.h"
-#include "IShaded.h"
 #include "IMovable.h"
 #include "IRotatable.h"
 #include "IMeshObject.h"
@@ -25,7 +24,7 @@
  *
  * Made by Asaf Agami 2018
  */
-class MeshModel: public IMovable, public IRotatable, public IMeshObject, public IScalable, public IUniformMaterial, public IShaded
+class MeshModel: public IMovable, public IRotatable, public IMeshObject, public IScalable, public IUniformMaterial
 {
 protected:
 	// Protected members
@@ -42,12 +41,12 @@ protected:
 	glm::vec3 rotateAngle;
 
 	// Member functions that return transformation matrices
-	glm::mat4x4 GetTranslationMatrix();
-	glm::mat4x4 GetScalingMatrix();
-	glm::mat4x4 GetRotationMatrix();
-	glm::mat4x4 GetXRotationMatrix();
-	glm::mat4x4 GetYRotationMatrix();
-	glm::mat4x4 GetZRotationMatrix();
+	glm::mat4x4 GetRotationMatrix()    const;
+	glm::mat4x4 GetTranslationMatrix() const;
+	glm::mat4x4 GetScalingMatrix()     const;
+	glm::mat4x4 GetXRotationMatrix()   const;
+	glm::mat4x4 GetYRotationMatrix()   const;
+	glm::mat4x4 GetZRotationMatrix()   const;
 	
 	// Necessary for rotations
 	glm::vec3 centerPoint;
@@ -93,13 +92,8 @@ public:
 	// Inherited via IMeshObject
 	virtual const GLuint&      GetVao() const override { return vao; }
 	virtual const unsigned int GetNumberOfVertices() const override { return modelVertices.size(); }
-	virtual const glm::mat4 GetWorldTransformation() const { return glm::mat4(1.0f); }
+	virtual const glm::mat4 GetWorldTransformation() const;
 	virtual const glm::mat4 GetModelTransformation() const { return glm::mat4(1.0f); }
-
-	// Inherited via IShaded
-	virtual const glm::mat4x4 GetWorldTransformationOld()		    override;
-	virtual const ShadingModels GetShadingMethod()                  override { return (ShadingModels)shadingModel; }
-	virtual bool SetShadingMethod(ShadingModels model)              override;
 	
 	// Inherited via IScalable
 	virtual void Scale(const float scale)      override                         { scaleSize         = glm::vec3(scale); }

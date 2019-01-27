@@ -90,7 +90,7 @@ MeshModel::~MeshModel()
 }
 
 // AKA translate
-glm::mat4x4 MeshModel::GetTranslationMatrix() 
+glm::mat4x4 MeshModel::GetTranslationMatrix() const
 {
 	glm::mat4x4 translate(1);
 	translate[3].x = translationVector.x;
@@ -99,7 +99,7 @@ glm::mat4x4 MeshModel::GetTranslationMatrix()
 	return translate;
 }
 
-glm::mat4x4 MeshModel::GetScalingMatrix() 
+glm::mat4x4 MeshModel::GetScalingMatrix() const
 {
 	glm::mat4x4 translateToCenter(1);
 	translateToCenter[3].x = -centerPoint.x;
@@ -117,24 +117,12 @@ glm::mat4x4 MeshModel::GetScalingMatrix()
 	return translateToCenterInverse * scale * translateToCenter;
 }
 
-glm::mat4x4 MeshModel::GetRotationMatrix()
+glm::mat4x4 MeshModel::GetRotationMatrix() const
 {
-	if (rotateAngle.x != 0)
-	{
-		return rotateTransformation = GetXRotationMatrix() * rotateTransformation;
-	}
-	if (rotateAngle.y != 0)
-	{
-		return rotateTransformation = GetYRotationMatrix() * rotateTransformation;
-	}
-	if (rotateAngle.z != 0)
-	{
-		return rotateTransformation = GetZRotationMatrix() * rotateTransformation;
-	}
 	return rotateTransformation;
 }
 
-glm::mat4x4 MeshModel::GetXRotationMatrix()
+glm::mat4x4 MeshModel::GetXRotationMatrix() const
 {
 	float pi = atan(1.0f) * 4.0f;
 
@@ -157,7 +145,7 @@ glm::mat4x4 MeshModel::GetXRotationMatrix()
 	return translateToCenterInverse * rotationMatrix * translateToCenter;
 }
 
-glm::mat4x4 MeshModel::GetYRotationMatrix()
+glm::mat4x4 MeshModel::GetYRotationMatrix() const
 {
 	float pi = atan(1.0f) * 4.0f;
 	
@@ -180,7 +168,7 @@ glm::mat4x4 MeshModel::GetYRotationMatrix()
 	return translateToCenterInverse * rotationMatrix * translateToCenter;
 }
 
-glm::mat4x4 MeshModel::GetZRotationMatrix()
+glm::mat4x4 MeshModel::GetZRotationMatrix() const
 {
 	float pi = atan(1.0f) * 4.0f;
 
@@ -203,22 +191,15 @@ glm::mat4x4 MeshModel::GetZRotationMatrix()
 	return translateToCenterInverse * rotationMatrix * translateToCenter;
 }
 
-const glm::mat4x4 MeshModel::GetWorldTransformationOld()
+const glm::mat4x4 MeshModel::GetWorldTransformation() const
 {
-	worldTransform = glm::mat4x4(1);
+	auto worldTransform = glm::mat4x4(1);
 	glm::mat4x4 translate = GetTranslationMatrix();
 	glm::mat4x4 rotate	  = GetRotationMatrix();
-	rotateAngle = glm::vec3(0.0f);
 	glm::mat4x4 scale     = GetScalingMatrix();
 
 	worldTransform = translate * rotate * scale;
 	return worldTransform;
-}
-
-bool MeshModel::SetShadingMethod(ShadingModels model)
-{
-	shadingModel = model; 
-	return true; 
 }
 
 void MeshModel::SetRotation(const glm::vec3 & angle)
@@ -248,14 +229,20 @@ const glm::vec4 MeshModel::GetAmbientColor() const
 void MeshModel::RotateX(const float angle)
 {
 	rotateAngle.x += angle;
+	rotateTransformation = GetXRotationMatrix() * rotateTransformation;
+	rotateAngle = glm::vec3(0.0f);
 }
 
 void MeshModel::RotateY(const float angle)
 {
 	rotateAngle.y += angle;
+	rotateTransformation = GetYRotationMatrix() * rotateTransformation;
+	rotateAngle = glm::vec3(0.0f);
 }
 
 void MeshModel::RotateZ(const float angle)
 {
 	rotateAngle.z += angle;
+	rotateTransformation = GetZRotationMatrix() * rotateTransformation;
+	rotateAngle = glm::vec3(0.0f);
 }

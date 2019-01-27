@@ -347,8 +347,6 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 		newScalingSizes.y = activeModelScalingSizes.y;
 		newScalingSizes.z = activeModelScalingSizes.z;
 
-		glm::vec3 newAngle(0);
-
 		ImGui::Text("Translation");
 		ImGui::SliderFloat("X Translation",&newTranslationVector.x,-worldRadius,worldRadius);
 		ImGui::SliderFloat("Y Translation",&newTranslationVector.y,-worldRadius,worldRadius);
@@ -369,7 +367,6 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 		ImGui::SliderFloat("Shininess", (float*)&shininess, 0.0f, 100.0f);
 		activeModel->SetTranslation(newTranslationVector);
 		activeModel->Scale(newScalingSizes);
-		activeModel->SetRotation(newAngle);
 		activeModel->SetAmbientColor(ambientColor);
 		activeModel->SetSpecularColor(specularColor);
 		activeModel->SetDiffuseColor(diffuseColor);
