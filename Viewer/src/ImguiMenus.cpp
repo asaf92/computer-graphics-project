@@ -38,8 +38,18 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 	ImGui::Begin("Main Menu");
 	
 	if (ImGui::Button("Add Banana"))
-	{
+	{	
 		scene.AddModel(Utils::LoadMeshModel("C:\\Users\\aagami\\Documents\\project-de-west-denya-massiv\\Data\\banana.obj"));
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Add Pawn"))
+	{
+		scene.AddModel(Utils::LoadMeshModel("C:\\Users\\aagami\\Documents\\project-de-west-denya-massiv\\Data\\pawn.obj"));
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Add Bishop"))
+	{
+		scene.AddModel(Utils::LoadMeshModel("C:\\Users\\aagami\\Documents\\project-de-west-denya-massiv\\Data\\bishop.obj"));
 	}
 
 	if (ImGui::CollapsingHeader("General"))

@@ -17,7 +17,7 @@ Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
 	zoom(1.0)
 {
 	orthographicProjectionParameters = { -1.0f ,1.0f ,-1.0f ,1.0f ,-1.0f ,1.0f };
-	perspectiveProjectionParameters = { 60.0f, 4 / 3, 1.0f,4.0f };
+	perspectiveProjectionParameters = { 10.0f, 4 / 3, 1.0f,40.0f };
 	SetCameraLookAt(eye, at, up);
 	projectionTransformation = glm::mat4x4(1);
 	activeProjectionType = Perspective;

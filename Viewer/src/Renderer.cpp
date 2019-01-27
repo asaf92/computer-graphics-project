@@ -55,19 +55,36 @@ void Renderer::drawModels()
 	for (std::vector<MeshModel*>::const_iterator iterator = models.cbegin(); iterator!= models.cend(); ++iterator)
 	{
 		auto& model = **iterator; // Dereferences to MeshModel
+		auto& lights = scene.GetLightsVector();
+		auto& activeLight = lights[0];
 		auto modelToWorld = model.GetWorldTransformation();
 		auto worldToView = activeCamera.GetViewMatrix();
 		activeCamera.RenderProjectionMatrix();
 		auto projectionMatrix = activeCamera.GetProjectionMatrix();
+		
+		// Vertex shader params
 		colorShader.use();
 		colorShader.setUniform("model", modelToWorld );
 		colorShader.setUniform("view", worldToView);
 		colorShader.setUniform("projection", projectionMatrix);
+
+		// Fragment shader params
 		colorShader.setUniform("ambiantColor", model.GetAmbientColor());
 		colorShader.setUniform("ambiantLighting", scene.GetAmbientLight());
+		colorShader.setUniform("lightColor", activeLight->GetColor());
+		colorShader.setUniform("diffuseColor", model.GetDiffuseColor());
+		colorShader.setUniform("specularColor", model.GetSpecularColor());
+		colorShader.setUniform("lightSourceLocation", Utils::Vec3FromVec4(*activeLight->GetLocation()));
+		colorShader.setUniform("shininess", model.GetShininess());
+		colorShader.setUniform("cameraLocation", activeCamera.GetCameraLocation());
 		triangleDrawer.SetModel(&model);
 		triangleDrawer.DrawTriangles();
 		if(scene.GetFillTriangles()) triangleDrawer.FillTriangles();
+		//lightShader.use();
+		//lightShader.setUniform("model", modelToWorld);
+		//lightShader.setUniform("view", worldToView);
+		//lightShader.setUniform("projection", projectionMatrix);
+		//if (scene.GetFillTriangles()) triangleDrawer.FillTriangles();
 	}
 }
 
@@ -88,6 +105,7 @@ void Renderer::demoTriangle()
 	colorShader.setUniform("model", modelToWorld);
 	colorShader.setUniform("view", worldToView);
 	colorShader.setUniform("projection", projectionMatrix);
+	lightShader.use();
 	triangleDrawer.SetModel(demoTriangleModel);
 	triangleDrawer.DrawTriangles();
 	if(scene.GetFillTriangles()) triangleDrawer.FillTriangles();
