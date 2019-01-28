@@ -1,4 +1,5 @@
 #include "ShaderProgram.h"
+#include "Scene.h"  // For LIGHTS_NUM_LIMIT 
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -27,8 +28,19 @@ ShaderProgram::~ShaderProgram()
 //-----------------------------------------------------------------------------
 bool ShaderProgram::loadShaders(const char* vsFilename, const char* fsFilename)
 {
-	string vsString = fileToString(vsFilename);
-	string fsString = fileToString(fsFilename);
+	string vsString;
+	string fsString;
+	string maxLightsConstant;
+	maxLightsConstant += '\n';
+	maxLightsConstant += '#';
+	maxLightsConstant += "define MAX_LIGHTS_NUMBER ";
+	maxLightsConstant += std::to_string(MAX_LIGHTS_NUMBER);
+	maxLightsConstant += "\n";
+
+	vsString += fileToString(vsFilename);
+	fsString += fileToString(fsFilename);
+	fsString.insert(fsString.find_first_of('\n'),maxLightsConstant.c_str());
+
 	const GLchar* vsSourcePtr = vsString.c_str();
 	const GLchar* fsSourcePtr = fsString.c_str();
 

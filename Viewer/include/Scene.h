@@ -13,6 +13,8 @@
 #include "ParallelLightSource.h"
 #include "ShadingModels.h"
 
+#define MAX_LIGHTS_NUMBER 8
+
 /*
  * Scene class.
  * This class holds all the scene information (models, cameras, lights, etc..)
@@ -105,19 +107,17 @@ public:
 	void SetSwapBuffersExecutionTime(double time) { swapBuffersExecutionTime = time; }
 
 	// Lights
-	const glm::vec4& GetAmbientLight() const { return ambientLight; }
-	void SetAmbientLight(const glm::vec4& light) { ambientLight = light; }
-
 	void AddLight(LightSourceType type);
+	LightSource* GetActiveLight() { return lights[GetActiveLightsIndex()]; }
+	const int GetActiveLightsIndex() const { return activeLightsIndex; }
+	void SetActiveLightsIndex(const int index) { activeLightsIndex = index; }
 	const std::vector<LightSource*>& GetLightsVector() const { return lights; }
 	const int GetLightsCount() const { return lights.size(); }
-
-	void SetActiveLightsIndex(const int index) { activeLightsIndex = index; }
-	const int GetActiveLightsIndex() const { return activeLightsIndex; }
-	LightSource* GetActiveLight() { return lights[GetActiveLightsIndex()]; }
-
+	const glm::vec4& GetAmbientLight() const { return ambientLight; }
+	void SetAmbientLight(const glm::vec4& light) { ambientLight = light; }
 	bool GetDrawLights() { return showingLights; }
 	void SetDrawLights(bool value) { showingLights = value; }
+	unsigned int GetLightsNumberLimit() { return MAX_LIGHTS_NUMBER; }
 
 	// Shader
 	ShadingModels GetSelectedShadingModel() const { return selectedShader; }
