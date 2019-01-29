@@ -19,6 +19,7 @@ private:
 public:
 	Cube(glm::vec4 location): Cube(location, 0.005f){}
 	Cube(glm::vec4 location,float size);
+	Cube(glm::vec4 location, float length, float width, float height);
 	~Cube();
 
 	virtual const GLuint & GetVao() const override { return vao; }

@@ -1,18 +1,20 @@
 #include "Cube.h"
 using namespace std;
 
-Cube::Cube(glm::vec4 location, float size) : length(size), width(size), height(size),location(location)
+Cube::Cube(glm::vec4 location, float size) :Cube(location,size,size,size) {}
+
+Cube::Cube(glm::vec4 location, float length, float width, float height) : length(length), width(width), height(height), location(location)
 {
 	std::vector<glm::vec3> vertices;
 	vertices = {
 	glm::vec3(-width, -height,  length),
 	glm::vec3(-width,  height,  length),
-	glm::vec3( width,  height,  length),
-	glm::vec3( width, -height,  length),
+	glm::vec3(width,  height,  length),
+	glm::vec3(width, -height,  length),
 	glm::vec3(-width, -height, -length),
 	glm::vec3(-width,  height, -length),
-	glm::vec3( width,  height, -length),
-	glm::vec3( width, -height, -length)
+	glm::vec3(width,  height, -length),
+	glm::vec3(width, -height, -length)
 	};
 
 	faces = {
@@ -30,12 +32,12 @@ Cube::Cube(glm::vec4 location, float size) : length(size), width(size), height(s
 		Face(vector<int> {6, 7, 8}, vector<int> {6, 6, 6}, vector<int>())
 	};
 	normals = {
-		glm::vec3( 1,  0,  0),
+		glm::vec3(1,  0,  0),
 		glm::vec3(-1,  0,  0),
-		glm::vec3( 0,  1,  0),
-		glm::vec3( 0, -1,  0),
-		glm::vec3( 0,  0,  1),
-		glm::vec3( 0,  0, -1)
+		glm::vec3(0,  1,  0),
+		glm::vec3(0, -1,  0),
+		glm::vec3(0,  0,  1),
+		glm::vec3(0,  0, -1)
 	};
 
 	modelVertices.reserve(3 * faces.size());
