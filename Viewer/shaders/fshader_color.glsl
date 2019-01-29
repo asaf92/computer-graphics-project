@@ -52,7 +52,7 @@ vec4 calculateDiffusePart(vec3 lightSourceLocation, vec4 lightColor)
 
 vec4 calculateSpecularPart(vec3 lightSourceLocation, vec4 lightColor)
 {
-	vec4 directionToCamera = vec4(normalize(cameraLocation - fragPosition),0.0f);
+	vec4 directionToCamera = -vec4(normalize(cameraLocation - fragPosition),0.0f);
 	vec4 directionToLight = vec4(normalize(lightSourceLocation - fragPosition),0.0f);
 	vec4 reflection = normalize(2.0f * (dot(directionToLight, vec4(fragNormal,0.0f))) * vec4(fragNormal,0.0f) - directionToLight);
 	float scalar = dot(reflection, directionToCamera);

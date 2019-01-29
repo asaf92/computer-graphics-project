@@ -41,9 +41,9 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		scene.AddModel(Utils::LoadMeshModel("C:\\Users\\aagami\\Documents\\project-de-west-denya-massiv\\Data\\banana.obj"));
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Add Pawn"))
+	if (ImGui::Button("Add Cow"))
 	{
-		scene.AddModel(Utils::LoadMeshModel("C:\\Users\\aagami\\Documents\\project-de-west-denya-massiv\\Data\\pawn.obj"));
+		scene.AddModel(Utils::LoadMeshModel("C:\\Users\\aagami\\Documents\\project-de-west-denya-massiv\\Data\\cow.obj"));
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Add Bishop"))
