@@ -228,3 +228,12 @@ std::vector<glm::vec3> Utils::CalculateNormals(std::vector<glm::vec3> vertices, 
 
 	return normals;
 }
+
+glm::mat4 Utils::TranslationMatrix(glm::vec3 direction)
+{
+	auto out = glm::mat4(1.0f);
+	out[3].x = direction.x;
+	out[3].y = direction.y;
+	out[3].z = direction.z;
+	return out;
+}

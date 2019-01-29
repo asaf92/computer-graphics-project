@@ -2,11 +2,10 @@
 
 int ParallelLightSource::id = 0;
 
-ParallelLightSource::ParallelLightSource(): LightSource()
+ParallelLightSource::ParallelLightSource(): LightSource(), cubeModel(-direction * PARALLEL_DRAWING_DISTANCE, 0.3f)
 {
 	name = "Parallel Light #" + std::to_string(id++);
 	direction = glm::vec4(0.0f, -1.0f, 0.0f, 0.0f);
-	cubeModel = Cube(0.3f);
 	model = &cubeModel;
 }
 

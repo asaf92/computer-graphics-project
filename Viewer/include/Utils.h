@@ -23,6 +23,9 @@ public:
 	static MeshModel* LoadMeshModel(const std::string& filePath);
 	static std::vector<glm::vec3> CalculateNormals(std::vector<glm::vec3> vertices, std::vector<Face> faces);
 
+	// Matrix operations
+	static glm::mat4 TranslationMatrix(glm::vec3 direction);
+
 private:
 	static std::string GetFileName(const std::string& filePath);
 };

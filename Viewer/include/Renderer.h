@@ -37,8 +37,8 @@ private:
 
 	// Render methods
 	void drawModels();
+	void drawLights();
 	void demoTriangle();
-
 	void createDemoTriangle();
 
 public:

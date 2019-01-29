@@ -39,6 +39,7 @@ void Renderer::Render()
 
 	demoTriangle();
 	drawModels();
+	drawLights();
 
 	// Stop counting runtime
 	auto finish = std::chrono::high_resolution_clock::now();
@@ -87,7 +88,40 @@ void Renderer::drawModels()
 		colorShader.setUniform("cameraLocation", activeCamera.GetCameraLocation());
 		triangleDrawer.SetModel(&model);
 		triangleDrawer.DrawTriangles();
-		if(scene.GetFillTriangles()) triangleDrawer.FillTriangles();	}
+		if(scene.GetFillTriangles()) triangleDrawer.FillTriangles();	
+	}
+}
+
+void Renderer::drawLights()
+{
+	if (!scene.GetDrawLights()) return;
+
+	std::vector<LightSource*> lights = scene.GetLightsVector();
+	int numberOfLights = (int)lights.size();
+	if (numberOfLights == 0) return;
+
+	for (std::vector<LightSource*>::const_iterator iterator = lights.cbegin(); iterator != lights.cend(); ++iterator)
+	{
+		auto& lightSource = **iterator; // Dereferences to LightSource
+		auto& lightColor = lightSource.GetColor();
+		auto modelToWorld = lightSource.GetWorldTransformation();
+		auto worldToView = activeCamera.GetViewMatrix();
+		activeCamera.RenderProjectionMatrix();
+		auto projectionMatrix = activeCamera.GetProjectionMatrix();
+
+		// Vertex shader params
+		colorShader.use();
+		colorShader.setUniform("model", modelToWorld);
+		colorShader.setUniform("view", worldToView);
+		colorShader.setUniform("projection", projectionMatrix);
+		colorShader.setUniform("numberOfLights", 0);
+		colorShader.setUniform("ambiantColor", lightColor);
+		colorShader.setUniform("ambiantLighting", lightColor);
+		colorShader.setUniform("cameraLocation", activeCamera.GetCameraLocation());
+		triangleDrawer.SetModel(&lightSource);
+		triangleDrawer.DrawTriangles();
+		triangleDrawer.FillTriangles();
+	}
 }
 
 /*
