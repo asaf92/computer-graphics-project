@@ -38,6 +38,10 @@ private:
 	// Render methods
 	void drawModels();
 	void drawLights();
+	void drawFloor();
+	void drawMeshModel(const MeshModel & model);
+
+	// Demo stuff
 	void demoTriangle();
 	void createDemoTriangle();
 

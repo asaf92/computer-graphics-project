@@ -9,10 +9,11 @@ Scene::Scene() :
 	selectedShader(Phong),
 	fogStart(1.0f),
 	fogFinish(5.0f),
-	worldRadius(5.0f),
+	worldRadius(10.0f),
 	showingLights(true),
 	clearColor(0.2f, 0.2f, 0.2f, 1.0f),
-	ambientLight(0.2f,0.2f,0.0f,1.0f)
+	ambientLight(0.2f,0.2f,0.2f,1.0f),
+	floor(glm::vec4(0.0f,0.0f,0.0f,1.0f),worldRadius,worldRadius,0.01f)
 {
 	// Init first camera
 	AddCamera(*(new Camera()));
@@ -20,6 +21,8 @@ Scene::Scene() :
 
 	// Add default light
 	AddLight(PointSource);
+	floor.SetAmbientColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+	floor.SetShininess(50.0f);
 }
 
 Scene::~Scene()

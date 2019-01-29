@@ -40,6 +40,7 @@ void Renderer::Render()
 	demoTriangle();
 	drawModels();
 	drawLights();
+	drawFloor();
 
 	// Stop counting runtime
 	auto finish = std::chrono::high_resolution_clock::now();
@@ -56,40 +57,45 @@ void Renderer::drawModels()
 	for (std::vector<MeshModel*>::const_iterator iterator = models.cbegin(); iterator!= models.cend(); ++iterator)
 	{
 		auto& model = **iterator; // Dereferences to MeshModel
-		auto& lights = scene.GetLightsVector();
-		auto& activeLight = lights[0];
-		auto modelToWorld = model.GetWorldTransformation();
-		auto worldToView = activeCamera.GetViewMatrix();
-		activeCamera.RenderProjectionMatrix();
-		auto projectionMatrix = activeCamera.GetProjectionMatrix();
-		int numberOfLights = (int)lights.size();
-
-		// Vertex shader params
-		colorShader.use();
-		colorShader.setUniform("model", modelToWorld );
-		colorShader.setUniform("view", worldToView);
-		colorShader.setUniform("projection", projectionMatrix);
-		colorShader.setUniform("numberOfLights", numberOfLights);
-
-		// Fragment shader params
-		for(int i = 0; i != numberOfLights; i++)
-		{
-			string lightsColorArrayString = std::string("lightColors[" + std::to_string(i) + ']').c_str();
-			string lightsLocationArrayString = std::string("lightsPositions[" + std::to_string(i) + ']').c_str();
-			colorShader.setUniform(lightsColorArrayString.c_str(), lights[i]->GetColor());
-			colorShader.setUniform(lightsLocationArrayString.c_str(), Utils::Vec3FromVec4(lights[i]->GetLocation()));
-		}
-
-		colorShader.setUniform("ambiantColor", model.GetAmbientColor());
-		colorShader.setUniform("ambiantLighting", scene.GetAmbientLight());
-		colorShader.setUniform("diffuseColor", model.GetDiffuseColor());
-		colorShader.setUniform("specularColor", model.GetSpecularColor());
-		colorShader.setUniform("shininess", model.GetShininess());
-		colorShader.setUniform("cameraLocation", activeCamera.GetCameraLocation());
-		triangleDrawer.SetModel(&model);
-		triangleDrawer.DrawTriangles();
-		if(scene.GetFillTriangles()) triangleDrawer.FillTriangles();	
+		drawMeshModel(model);
 	}
+}
+
+void Renderer::drawMeshModel(const MeshModel & model)
+{
+	auto& lights = scene.GetLightsVector();
+	auto& activeLight = lights[0];
+	auto modelToWorld = model.GetWorldTransformation();
+	auto worldToView = activeCamera.GetViewMatrix();
+	activeCamera.RenderProjectionMatrix();
+	auto projectionMatrix = activeCamera.GetProjectionMatrix();
+	int numberOfLights = (int)lights.size();
+
+	// Vertex shader params
+	colorShader.use();
+	colorShader.setUniform("model", modelToWorld);
+	colorShader.setUniform("view", worldToView);
+	colorShader.setUniform("projection", projectionMatrix);
+	colorShader.setUniform("numberOfLights", numberOfLights);
+
+	// Fragment shader params
+	for (int i = 0; i != numberOfLights; i++)
+	{
+		string lightsColorArrayString = std::string("lightColors[" + std::to_string(i) + ']').c_str();
+		string lightsLocationArrayString = std::string("lightsPositions[" + std::to_string(i) + ']').c_str();
+		colorShader.setUniform(lightsColorArrayString.c_str(), lights[i]->GetColor());
+		colorShader.setUniform(lightsLocationArrayString.c_str(), Utils::Vec3FromVec4(lights[i]->GetLocation()));
+	}
+
+	colorShader.setUniform("ambiantColor", model.GetAmbientColor());
+	colorShader.setUniform("ambiantLighting", scene.GetAmbientLight());
+	colorShader.setUniform("diffuseColor", model.GetDiffuseColor());
+	colorShader.setUniform("specularColor", model.GetSpecularColor());
+	colorShader.setUniform("shininess", model.GetShininess());
+	colorShader.setUniform("cameraLocation", activeCamera.GetCameraLocation());
+	triangleDrawer.SetModel(&model);
+	triangleDrawer.DrawTriangles();
+	if (scene.GetFillTriangles()) triangleDrawer.FillTriangles();
 }
 
 void Renderer::drawLights()
@@ -122,6 +128,12 @@ void Renderer::drawLights()
 		triangleDrawer.DrawTriangles();
 		triangleDrawer.FillTriangles();
 	}
+}
+
+void Renderer::drawFloor()
+{
+	if (!scene.GetShowFloor()) return;
+	drawMeshModel(*scene.GetFloor());
 }
 
 /*

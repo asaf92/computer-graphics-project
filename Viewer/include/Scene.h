@@ -40,6 +40,7 @@ private:
 	bool fillTriangles = true;
 	bool drawAxis = true;
 	bool demoTriangles = false;
+	bool showFloor = true;
 
 	// Fog
 	bool fogEnabled = false;
@@ -56,6 +57,9 @@ private:
 	float worldRadius;
 	glm::vec4 clearColor;
 
+	// Generic models
+	Cube floor;
+
 public:
 	Scene();
 	~Scene();
@@ -65,6 +69,9 @@ public:
 	void SetWorldRadius(const float size) { worldRadius = size; }
 	const glm::vec4 GetClearColor() const { return clearColor; }
 	void SetClearColor(const glm::vec4 color) { clearColor = color; }
+
+	// Floor
+	const MeshModel* GetFloor() { return &floor; }
 
 	// Models
 	void AddModel(MeshModel * const model);
@@ -93,6 +100,8 @@ public:
 	bool GetDrawAxis() const { return drawAxis; }
 	void SetDemoTriangles(const bool value) { demoTriangles = value; }
 	bool GetDemoTriangles() { return demoTriangles; }
+	void SetShowFloor(const bool value) { showFloor = value; }
+	bool GetShowFloor() { return showFloor; }
 
 	// Stats
 	const double GetRenderExecutionTime() const { return renderExecutionTime; }

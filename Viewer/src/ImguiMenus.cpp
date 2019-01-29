@@ -57,10 +57,12 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		bool drawAxis = scene.GetDrawAxis();
 		bool demoTriangle = scene.GetDemoTriangles();
 		bool fillTriangles = scene.GetFillTriangles();
+		bool showFloor = scene.GetShowFloor();
 
 		ImGui::Checkbox("Show axis", &drawAxis);
 		ImGui::Checkbox("Show demo triangles", &demoTriangle);
 		ImGui::Checkbox("Fill triangles", &fillTriangles);
+		ImGui::Checkbox("Show floor", &showFloor);
 		ImGui::ColorEdit3("Background color", (float*)&clearColor, ImGuiColorEditFlags_NoInputs);
 		ImGui::SliderFloat("World Radius", &worldRadius, 0.1f, 10.0f);
 		// Execution stats
@@ -71,6 +73,7 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		scene.SetDrawAxis(drawAxis);
 		scene.SetDemoTriangles(demoTriangle);
 		scene.SetFillTriangles(fillTriangles);
+		scene.SetShowFloor(showFloor);
 		scene.SetClearColor(clearColor);
 	}
 
