@@ -2,7 +2,7 @@
 #include "LightSource.h"
 #include "Cube.h"
 
-class PointLightSource : public LightSource
+class PointLightSource : public LightSource, public IMovable
 {
 private:
 	static int id;
@@ -19,20 +19,10 @@ public:
 	}
 
 	// Base class 
-	/*Returns the normalized vector from the worldPoint to the light source*/
-	virtual const glm::vec4 GetDirectionToLightSource(const glm::vec4 & worldPoint) const override { return glm::normalize(location - worldPoint); }
-	virtual const glm::vec4 * GetDirection() const override { return nullptr; };
-	virtual const glm::vec4 * GetLocation() const override { return &location; };
+	virtual const glm::vec4 GetLocation() const override { return location; };
 
-	// Base class setters
-	virtual void SetDirection(const glm::vec4 & _direction) override { return; }
-	virtual void SetLocation(const glm::vec4 & _location)   override { location = _location; }
-
-	// Inherited via LightSource
+	// Inherited via IMovable
 	virtual void Move(const glm::vec3 direction) override;
-	virtual void RotateX(const float angle) override {} // Point light source emits light everywhere
-	virtual void RotateY(const float angle) override {} 
-	virtual void RotateZ(const float angle) override {} 
 
 	// Inherited via LightSource
 	virtual const GLuint & GetVao()                  const override { return model->GetVao(); }

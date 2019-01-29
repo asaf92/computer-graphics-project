@@ -3,7 +3,9 @@
 #include "Globals.h"
 #include "Cube.h"
 
-class ParallelLightSource : public LightSource
+constexpr float PARALLEL_LIGHT_POSITION_DISTANCE = 1000.0f;
+
+class ParallelLightSource : public LightSource, public IRotatable
 {
 private:
 	static int id;
@@ -14,24 +16,13 @@ public:
 	// Constructor
 	ParallelLightSource();
 
-	// Setters
-	virtual void SetDirection(const glm::vec4 & _direction) override { direction = glm::normalize(_direction); }
-	virtual void SetLocation(const glm::vec4 & _location) override { return; }
-
 	// Getters
-	virtual const glm::vec4 * GetDirection() const override { return &direction; }
-	virtual const glm::vec4 * GetLocation() const override { return nullptr; };
+	virtual const glm::vec4 GetLocation() const override { return -direction * PARALLEL_LIGHT_POSITION_DISTANCE; };
 
-	// Methods
-	virtual const glm::vec4 GetDirectionToLightSource(const glm::vec4 & worldPoint) const override { return -direction; };
-
-	// Inherited via LightSource
+	// Inherited via IRotatable
 	virtual void RotateX(const float angle) override;
 	virtual void RotateY(const float angle) override;
 	virtual void RotateZ(const float angle) override;
-
-	// Can't move a parallel light source
-	virtual void Move(const glm::vec3 direction) override {}
 
 	// Inherited via LightSource
 	virtual const GLuint & GetVao()                  const override {return model->GetVao();}

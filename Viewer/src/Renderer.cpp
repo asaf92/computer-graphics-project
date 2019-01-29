@@ -61,31 +61,33 @@ void Renderer::drawModels()
 		auto worldToView = activeCamera.GetViewMatrix();
 		activeCamera.RenderProjectionMatrix();
 		auto projectionMatrix = activeCamera.GetProjectionMatrix();
-		
+		int numberOfLights = (int)lights.size();
+
 		// Vertex shader params
 		colorShader.use();
 		colorShader.setUniform("model", modelToWorld );
 		colorShader.setUniform("view", worldToView);
 		colorShader.setUniform("projection", projectionMatrix);
+		colorShader.setUniform("numberOfLights", numberOfLights);
 
 		// Fragment shader params
+		for(int i = 0; i != numberOfLights; i++)
+		{
+			string lightsColorArrayString = std::string("lightColors[" + std::to_string(i) + ']').c_str();
+			string lightsLocationArrayString = std::string("lightsPositions[" + std::to_string(i) + ']').c_str();
+			colorShader.setUniform(lightsColorArrayString.c_str(), lights[i]->GetColor());
+			colorShader.setUniform(lightsLocationArrayString.c_str(), Utils::Vec3FromVec4(lights[i]->GetLocation()));
+		}
+
 		colorShader.setUniform("ambiantColor", model.GetAmbientColor());
 		colorShader.setUniform("ambiantLighting", scene.GetAmbientLight());
-		colorShader.setUniform("lightColor", activeLight->GetColor());
 		colorShader.setUniform("diffuseColor", model.GetDiffuseColor());
 		colorShader.setUniform("specularColor", model.GetSpecularColor());
-		colorShader.setUniform("lightSourceLocation", Utils::Vec3FromVec4(*activeLight->GetLocation()));
 		colorShader.setUniform("shininess", model.GetShininess());
 		colorShader.setUniform("cameraLocation", activeCamera.GetCameraLocation());
 		triangleDrawer.SetModel(&model);
 		triangleDrawer.DrawTriangles();
-		if(scene.GetFillTriangles()) triangleDrawer.FillTriangles();
-		//lightShader.use();
-		//lightShader.setUniform("model", modelToWorld);
-		//lightShader.setUniform("view", worldToView);
-		//lightShader.setUniform("projection", projectionMatrix);
-		//if (scene.GetFillTriangles()) triangleDrawer.FillTriangles();
-	}
+		if(scene.GetFillTriangles()) triangleDrawer.FillTriangles();	}
 }
 
 /*

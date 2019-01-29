@@ -13,7 +13,6 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "ImguiMenus.h"
-#include "Shader.h"
 #include "Fogger.h"
 
 // Function declarations

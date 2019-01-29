@@ -5,7 +5,6 @@
 #include "MeshModel.h"
 #include "Camera.h"
 #include "Utils.h"
-#include "Shader.h"
 #include <cmath>
 #include <memory>
 #include <stdio.h>
@@ -502,11 +501,6 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 	auto activeLight = scene.GetActiveLight();
 	glm::vec4 newActiveLightColor = activeLight->GetColor();
 
-	// Get abstract properties
-	const glm::vec4* lightLocation =  activeLight->GetLocation();
-	const glm::vec4* lightDirection = activeLight->GetDirection();
-	glm::vec4 newDirection;
-
 	static int selection_mask = (1 << 2);
 	for (unsigned int i = 0, lightsSize = lights.size(); i < lightsSize; i++)
 	{
@@ -526,21 +520,19 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 		else //if (!(selection_mask & (1 << node_clicked))) // Depending on selection behavior you want, this commented bit preserve selection when clicking on item that is part of the selection
 			selection_mask = (1 << selectedLightIndex);           // Click to single-select
 	}
-	if (lightLocation != nullptr)
+	if (IMovable* movableLight = dynamic_cast<IMovable*>(activeLight))
 	{
-		moveObjectControls(activeLight,"Light");
+		moveObjectControls(movableLight,"Light");
 	}
-	if (lightDirection != nullptr)
+	if (IRotatable* rotatableLight = dynamic_cast<IRotatable*>(activeLight))
 	{
-		newDirection = *lightDirection;
-		xyzSliders(newDirection, "Direction", worldRadius);
+		rotationControls(rotatableLight, "Light");
 	}
 	ImGui::ColorEdit3("Light color", (float*)&newActiveLightColor, ImGuiColorEditFlags_NoInputs);
 	ImGui::Checkbox("Draw light sources", &drawLightSources);
 
 	scene.SetActiveLightsIndex(selectedLightIndex);
 	scene.SetDrawLights(drawLightSources);
-	activeLight->SetDirection(newDirection);
 	activeLight->SetColor(newActiveLightColor);
 	ImGui::Text("Number of lights: %d",scene.GetLightsCount());
 	ImGui::Text("Active light number: %d", selectedLightIndex + 1);

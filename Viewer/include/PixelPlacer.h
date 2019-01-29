@@ -1,6 +1,5 @@
 #pragma once
 #include <glm/glm.hpp>
-#include "Shader.h"
 
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 

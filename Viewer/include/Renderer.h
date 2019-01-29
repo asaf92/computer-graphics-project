@@ -2,7 +2,6 @@
 #include "Scene.h"
 #include "Line.h"
 #include "XYBorders.h"
-#include "Shader.h"
 #include "PixelPlacer.h"
 #include "TriangleDrawer.h"
 #include "Fogger.h"
