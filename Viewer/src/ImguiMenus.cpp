@@ -66,7 +66,6 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		// Execution stats
 		ImGui::Text("ImGui render execution time: %.3f", scene.GetImGuiRenderExecutionTime());
 		ImGui::Text("Color buffer clearing execution time: %.3f", scene.GetColorBufferExecutionTime());
-		ImGui::Text("Z-Buffer clearing execution time: %.3f", scene.GetZBufferExecutionTime());
 		ImGui::Text("Render execution time: %.3f", scene.GetRenderExecutionTime());
 
 		scene.SetDrawAxis(drawAxis);

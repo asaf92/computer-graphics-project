@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class Cube : public IMeshObject, public IMovable
+class Cube : public MeshModel
 {
 private:
 	float length;
@@ -16,9 +16,6 @@ private:
 	std::vector<glm::vec3> normals;
 	vector<Face> faces;
 
-	GLuint vao;
-	GLuint vbo;
-	std::vector<Vertex> modelVertices;
 public:
 	Cube(glm::vec4 location): Cube(location, 0.005f){}
 	Cube(glm::vec4 location,float size);

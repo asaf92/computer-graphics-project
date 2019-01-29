@@ -66,6 +66,7 @@ protected:
 	
 public:
 	// ctors
+	MeshModel() {}
 	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, const std::string& modelName);
 	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec2> textureCoords, const std::string& modelName);
 	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> textureCoords, const std::string & modelName); 
