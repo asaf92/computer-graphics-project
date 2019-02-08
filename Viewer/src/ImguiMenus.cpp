@@ -572,4 +572,18 @@ void rotationControls(IRotatable* rotatable, std::string title)
 	rotatable->RotateY(angle.y);
 	rotatable->RotateZ(angle.z);
 }
+
+void directionalControls(IDirectional* directional, std::string title)
+{
+	static float rotationSliderLimit = 2.0f;
+	glm::vec2 angle(0.0f);
+	const auto direction = directional->GetDirection();
+
+	ImGui::Text("Rotation");
+	ImGui::SliderFloat(std::string("Pan##" + title).c_str(), &angle.x, -rotationSliderLimit, rotationSliderLimit);
+	ImGui::SliderFloat(std::string("Tilt##" + title).c_str(), &angle.y, -rotationSliderLimit, rotationSliderLimit);
+	directional->Pan(angle.x);
+	directional->Tilt(angle.y);
+	ImGui::Text("Direction: x: %f.2,y: %f.2", direction.x, direction.y);
+}
 #pragma endregion
