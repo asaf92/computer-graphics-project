@@ -5,6 +5,7 @@
 #include "MeshModel.h"
 #include "Camera.h"
 #include "Utils.h"
+#include "IDirectional.h"
 #include <cmath>
 #include <memory>
 #include <stdio.h>
@@ -15,9 +16,11 @@
 #include <random>
 
 // Globals 
-
 bool showDemoWindow = false;
 bool showAnotherWindow = false;
+static float directionalSliderLimit = 2.0f;
+static float rotationSliderLimit = 20.0f;
+static float lightRotationSliderLimit = 1.0f;
 
 // My Menu Bools
 static bool showModelControls =           false;
@@ -482,6 +485,8 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 	int selectedLightIndex = scene.GetActiveLightsIndex();
 	glm::vec4 ambientLight = scene.GetAmbientLight();
 	bool drawLightSources = scene.GetDrawLights();
+	glm::vec3 lightLocation = glm::vec3(0.0f);
+	glm::vec3 lightDirection = glm::vec3(0.0f);
 
 	ImGui::ColorEdit3("Ambient light color", (float*)&ambientLight, ImGuiColorEditFlags_NoInputs);
 	scene.SetAmbientLight(ambientLight);
@@ -526,10 +531,14 @@ void ShowLightsControls(ImGuiIO& io, Scene& scene)
 	{
 		moveObjectControls(movableLight,"Light");
 	}
-	if (IRotatable* rotatableLight = dynamic_cast<IRotatable*>(activeLight))
+
+	if (IDirectional* directionalLight = dynamic_cast<IDirectional*>(activeLight))
 	{
-		rotationControls(rotatableLight, "Light");
+		auto direction = directionalLight->GetDirection();
+		ImGui::Text("Direction: x:%.2f y:%.2f z:%.2f", direction.x, direction.y, direction.z);
+		directionalControls(directionalLight, "Light");
 	}
+
 	ImGui::ColorEdit3("Light color", (float*)&newActiveLightColor, ImGuiColorEditFlags_NoInputs);
 	ImGui::Checkbox("Draw light sources", &drawLightSources);
 
@@ -562,12 +571,17 @@ void moveObjectControls(IMovable* movableObject, const std::string title)
 
 void rotationControls(IRotatable* rotatable, std::string title)
 {
-	static float rotationSliderLimit = 20.0f;
+	rotationControls(rotatable, title, rotationSliderLimit);
+}
+
+void rotationControls(IRotatable* rotatable, std::string title, float rotationLimit)
+{
+	float limit = rotationLimit;
 	glm::vec3 angle(0);
 	ImGui::Text("Rotation");
-	ImGui::SliderFloat(std::string("X Rotation##" + title).c_str(), &angle.x, -rotationSliderLimit, rotationSliderLimit);
-	ImGui::SliderFloat(std::string("Y Rotation##" + title).c_str(), &angle.y, -rotationSliderLimit, rotationSliderLimit);
-	ImGui::SliderFloat(std::string("Z Rotation##" + title).c_str(), &angle.z, -rotationSliderLimit, rotationSliderLimit);
+	ImGui::SliderFloat(std::string("X Rotation##" + title).c_str(), &angle.x, -limit, limit);
+	ImGui::SliderFloat(std::string("Y Rotation##" + title).c_str(), &angle.y, -limit, limit);
+	ImGui::SliderFloat(std::string("Z Rotation##" + title).c_str(), &angle.z, -limit, limit);
 	rotatable->RotateX(angle.x);
 	rotatable->RotateY(angle.y);
 	rotatable->RotateZ(angle.z);
@@ -575,13 +589,12 @@ void rotationControls(IRotatable* rotatable, std::string title)
 
 void directionalControls(IDirectional* directional, std::string title)
 {
-	static float rotationSliderLimit = 2.0f;
 	glm::vec2 angle(0.0f);
 	const auto direction = directional->GetDirection();
 
 	ImGui::Text("Rotation");
-	ImGui::SliderFloat(std::string("Pan##" + title).c_str(), &angle.x, -rotationSliderLimit, rotationSliderLimit);
-	ImGui::SliderFloat(std::string("Tilt##" + title).c_str(), &angle.y, -rotationSliderLimit, rotationSliderLimit);
+	ImGui::SliderFloat(std::string("Pan##" + title).c_str(), &angle.x,  -directionalSliderLimit, directionalSliderLimit);
+	ImGui::SliderFloat(std::string("Tilt##" + title).c_str(), &angle.y, -directionalSliderLimit, directionalSliderLimit);
 	directional->Pan(angle.x);
 	directional->Tilt(angle.y);
 	ImGui::Text("Direction: x: %f.2,y: %f.2", direction.x, direction.y);
