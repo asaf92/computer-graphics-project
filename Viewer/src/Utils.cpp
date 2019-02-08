@@ -185,6 +185,39 @@ std::string Utils::GetFileName(const std::string& filePath)
 	return filePath.substr(index + 1, len - index);
 }
 
+glm::mat4 Utils::xRotationMatrix(float rotationAngle)
+{
+	glm::mat4 rotationMatrix = glm::mat4(1.0f);
+	rotationMatrix[1][1] =  cos(rotationAngle);
+	rotationMatrix[2][2] =  cos(rotationAngle);
+	rotationMatrix[2][1] = -sin(rotationAngle);
+	rotationMatrix[1][2] =  sin(rotationAngle);
+
+	return rotationMatrix;
+}
+
+glm::mat4 Utils::yRotationMatrix(float rotationAngle)
+{
+	glm::mat4 rotationMatrix = glm::mat4(1.0f);
+	rotationMatrix[0][0] =  cos(rotationAngle);
+	rotationMatrix[2][2] =  cos(rotationAngle);
+	rotationMatrix[0][2] = -sin(rotationAngle);
+	rotationMatrix[2][0] =  sin(rotationAngle);
+
+	return rotationMatrix;
+}
+
+glm::mat4 Utils::zRotationMatrix(float rotationAngle)
+{
+	glm::mat4 rotationMatrix = glm::mat4(1.0f);
+	rotationMatrix[0][0] =  cos(rotationAngle);
+	rotationMatrix[1][1] =  cos(rotationAngle);
+	rotationMatrix[1][0] = -sin(rotationAngle);
+	rotationMatrix[0][1] =  sin(rotationAngle);
+
+	return rotationMatrix;
+}
+
 std::vector<glm::vec3> Utils::CalculateNormals(std::vector<glm::vec3> vertices, std::vector<Face> faces)
 {
 	std::vector<glm::vec3> normals(vertices.size());
@@ -229,6 +262,11 @@ std::vector<glm::vec3> Utils::CalculateNormals(std::vector<glm::vec3> vertices, 
 	return normals;
 }
 
+float Utils::degreesToRadians(float degrees)
+{
+	return degrees * PI / 180.0f ;
+}
+
 glm::mat4 Utils::TranslationMatrix(glm::vec3 direction)
 {
 	auto out = glm::mat4(1.0f);
@@ -236,4 +274,9 @@ glm::mat4 Utils::TranslationMatrix(glm::vec3 direction)
 	out[3].y = direction.y;
 	out[3].z = direction.z;
 	return out;
+}
+
+glm::mat4 Utils::rotationMatrix(glm::vec3 angles)
+{
+	return zRotationMatrix(degreesToRadians(angles.z)) * yRotationMatrix(degreesToRadians(angles.y)) * xRotationMatrix(degreesToRadians(angles.x)) * glm::mat4(1.0f);
 }

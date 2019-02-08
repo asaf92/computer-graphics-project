@@ -3,6 +3,7 @@
 #include <string>
 #include "MeshModel.h"
 #include "Point.h"
+constexpr auto PI = 3.141592653589793238462643383279502884f;
 
 /*
  * Utils class.
@@ -23,9 +24,15 @@ public:
 	static MeshModel* LoadMeshModel(const std::string& filePath);
 	static std::vector<glm::vec3> CalculateNormals(std::vector<glm::vec3> vertices, std::vector<Face> faces);
 
+	// Common math
+	static float degreesToRadians(float degress);
+
 	// Matrix operations
 	static glm::mat4 TranslationMatrix(glm::vec3 direction);
-
+	static glm::mat4 rotationMatrix(glm::vec3 angles);
 private:
 	static std::string GetFileName(const std::string& filePath);
+	static glm::mat4 xRotationMatrix(float rotationAngle);
+	static glm::mat4 yRotationMatrix(float rotationAngle);
+	static glm::mat4 zRotationMatrix(float rotationAngle);
 };
