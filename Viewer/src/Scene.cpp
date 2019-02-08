@@ -22,7 +22,9 @@ Scene::Scene() :
 	// Add default light
 	AddLight(PointSource);
 	floor.SetAmbientColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-	floor.SetShininess(50.0f);
+	floor.SetDiffuseColor(glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
+	floor.SetSpecularColor(glm::vec4(0.3f, 0.3f, 0.0f, 1.0f));
+	floor.SetShininess(500.0f);
 }
 
 Scene::~Scene()

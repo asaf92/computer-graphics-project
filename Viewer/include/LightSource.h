@@ -20,7 +20,7 @@ protected:
 	std::string name;
 public:
 	// Constructors
-	LightSource() :color(glm::vec4(0.3f,0.0f,0.0f,1.0f)) {}
+	LightSource() :color(glm::vec4(0.3f,0.3f,0.3f,1.0f)) {}
 	LightSource(const glm::vec4& color): color(color) {}
 	
 	// Setters

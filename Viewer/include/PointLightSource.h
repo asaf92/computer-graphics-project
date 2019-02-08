@@ -10,11 +10,9 @@ private:
 	Cube cubeModel;
 public:
 	// Constructors
-	PointLightSource() : PointLightSource(glm::vec4(0.0f,1.0f,0.0f,1.0f)) {}
-	PointLightSource(const glm::vec4& _location) : location(_location),cubeModel(location)
-	{
-		name = "Point Light Source #" + std::to_string(id++);
-	}
+	PointLightSource() : PointLightSource(glm::vec4(0.5f,0.5f,0.5f,1.0f)) {}
+	PointLightSource(const glm::vec4& _location);
+
 
 	// Base class 
 	virtual const glm::vec4 GetLocation() const override { return location; };

@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-Camera::Camera() : Camera::Camera(glm::vec3(5.0f, 5.0f, -1.0f),
+Camera::Camera() : Camera::Camera(glm::vec3(10.0f, 10.0f, -10.0f),
 								  glm::vec3(0.0f, 0.0f, 0.0f),
 								  glm::vec3(0.0f, 1.0f, 0.0f))
 {
@@ -17,7 +17,7 @@ Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
 	zoom(1.0)
 {
 	orthographicProjectionParameters = { -1.0f ,1.0f ,-1.0f ,1.0f ,-1.0f ,1.0f };
-	perspectiveProjectionParameters = { 10.0f, 4 / 3, 1.0f,40.0f };
+	perspectiveProjectionParameters = { 30.0f, 4 / 3, 1.0f,40.0f };
 	SetCameraLookAt(eye, at, up);
 	projectionTransformation = glm::mat4x4(1);
 	activeProjectionType = Perspective;
