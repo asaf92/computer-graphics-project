@@ -8,7 +8,7 @@ class IDirectional
 {
 public:
 	/* Returns the direction vector */
-	virtual glm::vec3 GetDirection() = 0;
+	virtual glm::vec3 GetDirection() const = 0;
 
 	/* Directly set a direction */
 	virtual void SetDirection(const glm::vec3& direction) = 0;

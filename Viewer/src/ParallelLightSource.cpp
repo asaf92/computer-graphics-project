@@ -29,7 +29,7 @@ void ParallelLightSource::RotateZ(const float angle)
 
 #pragma region IDirectional
 
-glm::vec3 ParallelLightSource::GetDirection()
+glm::vec3 ParallelLightSource::GetDirection() const
 {
 	return direction;
 }

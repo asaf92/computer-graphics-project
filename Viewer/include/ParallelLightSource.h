@@ -34,7 +34,7 @@ public:
 	virtual const glm::mat4 GetModelTransformation() const override {return model->GetModelTransformation();}
 
 	// Inherited via IDirectional
-	virtual glm::vec3 GetDirection() override;
+	virtual glm::vec3 GetDirection() const override;
 	virtual void SetDirection(const glm::vec3 & direction) override;
 	virtual void Pan(const float angle) override;
 	virtual void Tilt(const float angle) override;
