@@ -280,7 +280,8 @@ void ShowCameraControls(ImGuiIO& io, Scene& scene)
 	}
 
 	auto& activeCamera = scene.GetActiveCamera();
-	//newCameraParameters = activeCamera.GetCameraParameters();
+	directionalControls(&activeCamera, "Camera");
+
 	auto newLookAtParameters = activeCamera.GetLookAtParameters();
 	moveObjectControls(&activeCamera, "Move Camera");
 

@@ -6,6 +6,7 @@
 #include "ProjectionType.h"
 #include "LookAtParameters.h"
 #include "IMovable.h"
+#include "IDirectional.h"
 
 /*
  * Camera class. This class takes care of all the camera transformations and manipulations.
@@ -32,21 +33,30 @@ struct OrthographicProjectionParameters {
 	float zFar;
 };
 
-class Camera: public IMovable
+class Camera: public IMovable, public IDirectional
 {
 private:
-	LookAtParameters lookAtParameters;
+	// Matrices
 	glm::mat4x4 viewTransformation;
 	glm::mat4x4 projectionTransformation;
+
+	// Parameters
+	LookAtParameters lookAtParameters;
 	OrthographicProjectionParameters orthographicProjectionParameters;
 	PerspectiveProjectionParameters perspectiveProjectionParameters;
 	ProjectionType activeProjectionType;
-	float zoom;
+
+	// Members
+	glm::vec3 direction;
+
+	// Projection functions
 	void SetOrthographicProjection(float left, float right, float top, float bottom, float zNear, float zFar);
+	void SetPerspectiveProjection(const float fovy,const float aspect,const float near,const float zFar);
 	glm::mat4x4 CreateFrustum(float left, float right, float top, float bottom, float, float);
+
+	// Library settings
 	bool useLibraryProjectionMatrix = false;
 	bool useLibraryViewMatrix = false;
-	void SetPerspectiveProjection(const float fovy,const float aspect,const float near,const float zFar);
 
 public:
 	Camera();
@@ -67,8 +77,6 @@ public:
 	void SetOrthographicProjection();
 	void SetPerspectiveProjection();
 	void RenderProjectionMatrix();
-	void SetZoom(const float zoom) { this->zoom = zoom; };
-	float GetZoom() const { return zoom; }
 
 	const glm::mat4x4& GetViewMatrix() const { return viewTransformation; }
 	const glm::mat4x4& GetProjectionMatrix() const { return projectionTransformation; }
@@ -90,6 +98,12 @@ public:
 
 	// Inherited via IMovable
 	virtual void Move(const glm::vec3 direction) override;
+
+	// Inherited via IDirectional
+	virtual glm::vec3 GetDirection() const override { return direction; };
+	virtual void SetDirection(const glm::vec3 & direction) override { this->direction = direction; };
+	virtual void Pan(const float angle) override;
+	virtual void Tilt(const float angle) override;
 
 };
 

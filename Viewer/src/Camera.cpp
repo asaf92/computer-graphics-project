@@ -13,8 +13,7 @@ Camera::Camera() : Camera::Camera(glm::vec3(10.0f, 10.0f, -10.0f),
 
 }
 
-Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
-	zoom(1.0)
+Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up): direction(glm::vec3(0.0f,0.0f,1.0f))
 {
 	orthographicProjectionParameters = { -1.0f ,1.0f ,-1.0f ,1.0f ,-1.0f ,1.0f };
 	perspectiveProjectionParameters = { 30.0f, 4 / 3, 1.0f,40.0f };
@@ -147,10 +146,39 @@ void Camera::RenderProjectionMatrix()
 	}
 }
 
-void Camera::Move(const glm::vec3 direction)
+void Camera::Move(const glm::vec3 moveDirection)
 {
-	lookAtParameters.eye += direction;
-	lookAtParameters.at += direction;
+	lookAtParameters.eye += moveDirection;
+	lookAtParameters.at += moveDirection;
+	SetCameraLookAt();
+}
+
+void Camera::Pan(const float angle)
+{
+	// We need to rotate the "at" value around the "eye"
+	glm::mat4 rotationMatrix = Utils::rotationMatrix(glm::vec3(0.0f, angle, 0.0f));
+	glm::vec4 newAt = Utils::Vec4FromVec3Point(lookAtParameters.at);
+	newAt -= Utils::Vec4FromVec3Point(lookAtParameters.eye);
+	newAt = rotationMatrix * newAt;
+	newAt += Utils::Vec4FromVec3Point(lookAtParameters.eye);
+	lookAtParameters.at = Utils::Vec3FromVec4(newAt);
+
+	SetCameraLookAt();
+}
+
+void Camera::Tilt(const float angle)
+{
+	glm::mat4 rotationMatrix = Utils::rotationMatrix(glm::vec3(angle, 0.0f, 0.0f));
+	glm::vec4 newAt = Utils::Vec4FromVec3Point(lookAtParameters.at);
+	newAt -= Utils::Vec4FromVec3Point(lookAtParameters.eye);
+	newAt = rotationMatrix * newAt;
+	newAt += Utils::Vec4FromVec3Point(lookAtParameters.eye);
+	glm::vec4 newUp = Utils::Vec4FromVec3Point(lookAtParameters.at);
+	newUp -= Utils::Vec4FromVec3Point(lookAtParameters.eye);
+	newUp = rotationMatrix * newUp;
+	newUp += Utils::Vec4FromVec3Point(lookAtParameters.eye);
+	lookAtParameters.at = Utils::Vec3FromVec4(newUp);
+
 	SetCameraLookAt();
 }
 
