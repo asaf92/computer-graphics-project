@@ -199,9 +199,23 @@ void Camera::MoveBackwards()
 
 void Camera::MoveLeft()
 {
+	glm::vec3 forwardDirection = glm::normalize(lookAtParameters.at - lookAtParameters.eye);
+	glm::vec3 rightMovement = glm::normalize(glm::cross(forwardDirection, lookAtParameters.up)) * cameraMoveSpeed;
+
+	lookAtParameters.at  -= rightMovement;
+	lookAtParameters.eye -= rightMovement;
+
+	SetCameraLookAt();
 }
 
 void Camera::MoveRight()
 {
+	glm::vec3 forwardDirection = glm::normalize(lookAtParameters.at - lookAtParameters.eye);
+	glm::vec3 rightMovement = glm::normalize(glm::cross(forwardDirection, lookAtParameters.up)) * cameraMoveSpeed;
+
+	lookAtParameters.at  += rightMovement;
+	lookAtParameters.eye += rightMovement;
+
+	SetCameraLookAt();
 }
 
