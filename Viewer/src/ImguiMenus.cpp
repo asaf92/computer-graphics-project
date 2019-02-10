@@ -595,8 +595,8 @@ void directionalControls(IDirectional* directional, std::string title)
 	ImGui::Text("Rotation");
 	ImGui::SliderFloat(std::string("Pan##" + title).c_str(), &angle.x,  -directionalSliderLimit, directionalSliderLimit);
 	ImGui::SliderFloat(std::string("Tilt##" + title).c_str(), &angle.y, -directionalSliderLimit, directionalSliderLimit);
-	directional->Pan(angle.x);
-	directional->Tilt(angle.y);
+	directional->Pan(-angle.x);			// We use the negative value of the angle to get correct panning & tilting
+	directional->Tilt(-angle.y);
 	ImGui::Text("Direction: x: %f.2,y: %f.2", direction.x, direction.y);
 }
 #pragma endregion
