@@ -169,16 +169,39 @@ void Camera::Pan(const float angle)
 void Camera::Tilt(const float angle)
 {
 	glm::mat4 rotationMatrix = Utils::rotationMatrix(glm::vec3(angle, 0.0f, 0.0f));
-	glm::vec4 newAt = Utils::Vec4FromVec3Point(lookAtParameters.at);
-	newAt -= Utils::Vec4FromVec3Point(lookAtParameters.eye);
+	glm::vec4 eye = Utils::Vec4FromVec3Point(lookAtParameters.eye);
+	glm::vec4 newAt = viewTransformation * Utils::Vec4FromVec3Point(lookAtParameters.at);
+
 	newAt = rotationMatrix * newAt;
-	newAt += Utils::Vec4FromVec3Point(lookAtParameters.eye);
-	glm::vec4 newUp = Utils::Vec4FromVec3Point(lookAtParameters.at);
-	newUp -= Utils::Vec4FromVec3Point(lookAtParameters.eye);
-	newUp = rotationMatrix * newUp;
-	newUp += Utils::Vec4FromVec3Point(lookAtParameters.eye);
-	lookAtParameters.at = Utils::Vec3FromVec4(newUp);
+	newAt = newAt / newAt.w;
+	lookAtParameters.at = Utils::Vec3FromVec4(glm::inverse(viewTransformation) * newAt);
 
 	SetCameraLookAt();
+}
+
+void Camera::MoveForward()
+{
+	glm::vec3 forward = glm::normalize(lookAtParameters.at - lookAtParameters.eye) * cameraMoveSpeed;
+	lookAtParameters.at += forward;
+	lookAtParameters.eye += forward;
+
+	SetCameraLookAt();
+}
+
+void Camera::MoveBackwards()
+{
+	glm::vec3 forward = glm::normalize(lookAtParameters.at - lookAtParameters.eye) * cameraMoveSpeed;
+	lookAtParameters.at -= forward;
+	lookAtParameters.eye -= forward;
+
+	SetCameraLookAt();
+}
+
+void Camera::MoveLeft()
+{
+}
+
+void Camera::MoveRight()
+{
 }
 

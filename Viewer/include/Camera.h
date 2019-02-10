@@ -7,6 +7,7 @@
 #include "LookAtParameters.h"
 #include "IMovable.h"
 #include "IDirectional.h"
+#include "IMoving.h"
 
 /*
  * Camera class. This class takes care of all the camera transformations and manipulations.
@@ -16,6 +17,8 @@
  * Make the Camera class be a subclass of MeshModel, so you can easily and elegantly render 
  * the cameras you have added to the scene.
  */
+
+static float constexpr cameraMoveSpeed = 0.4f;
 
 struct PerspectiveProjectionParameters {
 	float fov;
@@ -33,7 +36,7 @@ struct OrthographicProjectionParameters {
 	float zFar;
 };
 
-class Camera: public IMovable, public IDirectional
+class Camera: public IMovable, public IDirectional, public IMoving
 {
 private:
 	// Matrices
@@ -104,6 +107,13 @@ public:
 	virtual void SetDirection(const glm::vec3 & direction) override { this->direction = direction; };
 	virtual void Pan(const float angle) override;
 	virtual void Tilt(const float angle) override;
+
+
+	// Inherited via IMoving
+	virtual void MoveForward() override;
+	virtual void MoveBackwards() override;
+	virtual void MoveLeft() override;
+	virtual void MoveRight() override;
 
 };
 

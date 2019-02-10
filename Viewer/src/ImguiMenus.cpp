@@ -283,6 +283,7 @@ void ShowCameraControls(ImGuiIO& io, Scene& scene)
 	directionalControls(&activeCamera, "Camera");
 
 	auto newLookAtParameters = activeCamera.GetLookAtParameters();
+	movingControls(&activeCamera);
 	moveObjectControls(&activeCamera, "Move Camera");
 
 	ImGui::Text("Look At");
@@ -597,7 +598,30 @@ void directionalControls(IDirectional* directional, std::string title)
 	ImGui::SliderFloat(std::string("Pan##" + title).c_str(), &angle.x,  -directionalSliderLimit, directionalSliderLimit);
 	ImGui::SliderFloat(std::string("Tilt##" + title).c_str(), &angle.y, -directionalSliderLimit, directionalSliderLimit);
 	directional->Pan(-angle.x);			// We use the negative value of the angle to get correct panning & tilting
-	directional->Tilt(-angle.y);
+	directional->Tilt(angle.y);
 	ImGui::Text("Direction: x: %f.2,y: %f.2", direction.x, direction.y);
+}
+
+void movingControls(IMoving* moving)
+{
+	ImGui::Text("Move");
+	if (ImGui::Button("Forward"))
+	{
+		moving->MoveForward();
+	}
+	if (ImGui::Button("Left"))
+	{
+		moving->MoveLeft();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Backwards"))
+	{
+		moving->MoveBackwards();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Right"))
+	{
+		moving->MoveRight();
+	}
 }
 #pragma endregion
