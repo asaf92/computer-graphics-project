@@ -3,7 +3,9 @@
 #include <algorithm>
 #include <iterator>
 
-InputController::InputController(std::vector<SceneActions> source): _keysMap(source)
+InputController::InputController(IMoving* activeMovingObject, std::vector<SceneAction> source): 
+	_activeMovingObject(activeMovingObject), 
+	_keysMap(source)
 {}
 
 void InputController::KeyPress(char input, bool control, bool shift, bool alt, bool caps)
@@ -34,6 +36,10 @@ void InputController::KeyDown(int mouseButton, float duration)
 	default:
 		return;
 	}
+}
+
+void InputController::KeyRelease(int mouseButton)
+{
 }
 
 void InputController::MouseMove(int deltaX, int deltaY)
@@ -67,13 +73,17 @@ void InputController::moveCommand(char input)
 	switch (_keysMap[input])
 	{
 	case MoveForward:
-		activeMovingObject->MoveForward();
+		_activeMovingObject->MoveForward();
+		break;
 	case MoveBackwards:
-		activeMovingObject->MoveBackwards();
+		_activeMovingObject->MoveBackwards();
+		break;
 	case MoveLeft:
-		activeMovingObject->MoveLeft();
+		_activeMovingObject->MoveLeft();
+		break;
 	case MoveRight:
-		activeMovingObject->MoveRight();
+		_activeMovingObject->MoveRight();
+		break;
 	default:
 		return;
 	}

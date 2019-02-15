@@ -5,10 +5,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <cmath>
-
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+#include "SceneActions.h"
+#include "InputController.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "Camera.h"
@@ -31,6 +32,13 @@ void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 	// Handle mouse scrolling here...
 }
 
+static void HandleUserInput(ImGuiIO& io, IInputController& inputController)
+{
+	for (int i = 0; i < UCHAR_MAX; i++) if (io.KeysDownDuration[i] >= 0.0f) { inputController.KeyDown(i, io.KeysDownDuration[i]); }
+	for (int i = 0; i < UCHAR_MAX; i++) if (ImGui::IsKeyPressed(i)) { inputController.KeyPress(i, false, false, false, false); }
+	for (int i = 0; i < UCHAR_MAX; i++) if (ImGui::IsKeyReleased(i)) { inputController.KeyRelease(i); }
+}
+
 int main(int argc, char **argv)
 {
 	// Create GLFW window
@@ -51,9 +59,18 @@ int main(int argc, char **argv)
 	// Create the scene
 	Scene scene = Scene();
 	
+	// Clear the view
 	glm::vec4 clearColor = scene.GetClearColor();
 	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	glEnable(GL_DEPTH_TEST);
+
+	// Input Controller
+	std::vector<SceneAction> keysMapping(UCHAR_MAX,SceneAction::Nothing);
+	keysMapping[toupper('w')] = SceneAction::MoveForward;
+	keysMapping[toupper('a')] = SceneAction::MoveLeft;
+	keysMapping[toupper('s')] = SceneAction::MoveBackwards;
+	keysMapping[toupper('d')] = SceneAction::MoveRight;
+	IInputController& inputController = InputController(scene.GetActiveMovingObject(),keysMapping);
 
 	// Create the renderer and the scene
 	Renderer renderer = Renderer(scene);
@@ -70,8 +87,11 @@ int main(int argc, char **argv)
         glfwPollEvents();
 		StartFrame();
 
-		// Here we build the menus for the next frame. Feel free to pass more arguments to this function call
+		// Build the menus for the next frame
 		DrawMenus(io, scene);
+
+		// Handle user input
+		HandleUserInput(io, inputController);
 
 		// Render the next frame
 		RenderFrame(window, scene, renderer, io);

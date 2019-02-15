@@ -1,6 +1,6 @@
 #pragma once
 
-enum SceneActions
+enum SceneAction
 {
 	Nothing = 0,
 	MoveForward,
