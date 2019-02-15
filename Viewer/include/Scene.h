@@ -27,23 +27,27 @@ private:
 	std::vector<LightSource*> lights;
 	glm::vec4 ambientLight;
 
+	// Indices
 	int activeCameraIndex;
 	int activeModelIndex;
 	int activeLightsIndex;
+
+	// Execution Times
 	double imGuiRenderExecutionTime;
 	double zBufferExecutionTime;
 	double colorBufferExecutionTime;
 	double swapBuffersExecutionTime;
 	double renderExecutionTime;
 
+	// Booleans
 	bool showNormals = false;
 	bool fillTriangles = true;
-	bool drawAxis = true;
+	bool drawAxis = false;
 	bool demoTriangles = false;
 	bool showFloor = true;
+	bool fogEnabled = false;
 
 	// Fog
-	bool fogEnabled = false;
 	float fogStart;
 	float fogFinish;
 
@@ -139,4 +143,7 @@ public:
 	bool GetFogEnabled() const { return fogEnabled; }
 	float GetFogStart() const { return fogStart; }
 	float GetFogFinish() const { return fogFinish; }
+
+	// Input
+	IMoving* GetActiveMovingObject() { return &GetActiveCamera(); }
 };
