@@ -146,4 +146,5 @@ public:
 
 	// Input
 	IMoving* GetActiveMovingObject() { return &GetActiveCamera(); }
+	IDirectional* GetActiveDirectionalObject() { return &GetActiveCamera(); }
 };

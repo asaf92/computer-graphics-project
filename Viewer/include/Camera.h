@@ -18,7 +18,7 @@
  * the cameras you have added to the scene.
  */
 
-static float constexpr cameraMoveSpeed = 0.4f;
+static float constexpr cameraMoveSpeed = 0.05f;
 
 struct PerspectiveProjectionParameters {
 	float fov;

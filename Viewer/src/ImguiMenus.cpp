@@ -266,7 +266,7 @@ void ShowPerspectiveProjectionControls(Camera & activeCamera)
 	ImGui::SliderFloat("Near", &parameters.zNear, 0, 10);
 
 	ImGui::Text("Far");
-	ImGui::SliderFloat("Far", &parameters.zFar, 0, 10);
+	ImGui::SliderFloat("Far", &parameters.zFar, 0, 200);
 
 	activeCamera.SetPerspectiveProjectionParameters(parameters);
 }

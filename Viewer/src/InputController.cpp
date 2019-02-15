@@ -3,9 +3,11 @@
 #include <algorithm>
 #include <iterator>
 
-InputController::InputController(IMoving* activeMovingObject, std::vector<SceneAction> source): 
+InputController::InputController(IMoving* activeMovingObject,IDirectional* activeDirectionalObject, std::vector<SceneAction> keysMap, std::vector<SceneAction> mouseKeysMap):
 	_activeMovingObject(activeMovingObject), 
-	_keysMap(source)
+	_activeDirectionalObject(activeDirectionalObject),
+	_keysMap(keysMap),
+	_mouseKeysMap(mouseKeysMap)
 {}
 
 void InputController::KeyPress(char input, bool control, bool shift, bool alt, bool caps)
@@ -42,12 +44,16 @@ void InputController::KeyRelease(int mouseButton)
 {
 }
 
-void InputController::MouseMove(int deltaX, int deltaY)
+void InputController::MouseMove(float deltaX, float deltaY)
 {
+	if (!_directionChangeEnabled) { return; }
+	_activeDirectionalObject->Pan(mouseSensitivity * deltaX * (-1));
+	_activeDirectionalObject->Tilt(mouseSensitivity * deltaY * (-1));
 }
 
 void InputController::MouseClick(int mouseButton)
 {
+
 }
 
 void InputController::MouseDoubleClick(int mouseButton)
@@ -56,10 +62,26 @@ void InputController::MouseDoubleClick(int mouseButton)
 
 void InputController::MouseDown(int mouseButton, float mouseDuration)
 {
+	switch (_mouseKeysMap[mouseButton])
+	{
+	case EnableDirectionChange:
+		_directionChangeEnabled = true;
+	case Nothing:
+	default:
+		return;
+	}
 }
 
 void InputController::MouseRelease(int mouseButton)
 {
+	switch (_mouseKeysMap[mouseButton])
+	{
+	case EnableDirectionChange:
+		_directionChangeEnabled = false;
+	case Nothing:
+	default:
+		return;
+	}
 }
 
 void InputController::MouseWheel(float wheel)

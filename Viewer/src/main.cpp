@@ -37,6 +37,18 @@ static void HandleUserInput(ImGuiIO& io, IInputController& inputController)
 	for (int i = 0; i < UCHAR_MAX; i++) if (io.KeysDownDuration[i] >= 0.0f) { inputController.KeyDown(i, io.KeysDownDuration[i]); }
 	for (int i = 0; i < UCHAR_MAX; i++) if (ImGui::IsKeyPressed(i)) { inputController.KeyPress(i, false, false, false, false); }
 	for (int i = 0; i < UCHAR_MAX; i++) if (ImGui::IsKeyReleased(i)) { inputController.KeyRelease(i); }
+	
+	if (!ImGui::IsMousePosValid()) { return; }
+
+	for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (io.MouseDownDuration[i] >= 0.0f) { inputController.MouseDown(i, io.MouseDownDuration[i]); }
+	for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseReleased(i)) { inputController.MouseRelease(i); }
+	inputController.MouseMove(io.MouseDelta.x, io.MouseDelta.y);
+
+	//ImGui::Text("Mouse clicked:");  for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
+	//ImGui::Text("Mouse dbl-clicked:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseDoubleClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
+	//ImGui::Text("Mouse released:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseReleased(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
+	//ImGui::Text("Mouse wheel: %.1f", io.MouseWheel);
+
 }
 
 int main(int argc, char **argv)
@@ -70,7 +82,11 @@ int main(int argc, char **argv)
 	keysMapping[toupper('a')] = SceneAction::MoveLeft;
 	keysMapping[toupper('s')] = SceneAction::MoveBackwards;
 	keysMapping[toupper('d')] = SceneAction::MoveRight;
-	IInputController& inputController = InputController(scene.GetActiveMovingObject(),keysMapping);
+
+	std::vector<SceneAction> mouseKeysMapping(MOUSE_BUTTONS_NUMBER, SceneAction::Nothing);
+	mouseKeysMapping[MOUSE_WHEEL] = SceneAction::EnableDirectionChange;
+
+	IInputController& inputController = InputController(scene.GetActiveMovingObject(),scene.GetActiveDirectionalObject(),keysMapping,mouseKeysMapping);
 
 	// Create the renderer and the scene
 	Renderer renderer = Renderer(scene);

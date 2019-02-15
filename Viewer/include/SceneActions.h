@@ -3,8 +3,13 @@
 enum SceneAction
 {
 	Nothing = 0,
+	
+	// Moving
 	MoveForward,
 	MoveLeft,
 	MoveBackwards,
-	MoveRight
+	MoveRight,
+
+	// Direction changing
+	EnableDirectionChange
 };
