@@ -74,7 +74,7 @@ public:
 
 	// Sets the viewTransformation matrix
 	LookAtParameters GetLookAtParameters() const { return lookAtParameters; }
-	const glm::vec3& GetCameraLocation() const { return lookAtParameters.at; }
+	const glm::vec3& GetCameraLocation() const;
 	void SetCameraLookAt();
 	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 	void SetOrthographicProjection();

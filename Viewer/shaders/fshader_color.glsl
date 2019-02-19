@@ -52,17 +52,19 @@ vec4 calculateDiffusePart(vec3 lightSourceLocation, vec4 lightColor)
 
 vec4 calculateSpecularPart(vec3 lightSourceLocation, vec4 lightColor)
 {
-	float scalar;
-	vec4 directionToCamera = vec4(normalize(cameraLocation - fragPosition),0.0f);
+	// Explanation is here: http://learnwebgl.brown37.net/09_lights/lights_specular.html
+	vec4 normalVector = normalize(vec4(fragNormal,0.0f));
 	vec4 directionToLight = vec4(normalize(lightSourceLocation - fragPosition),0.0f);
-	float lambartian = max((dot(directionToLight, vec4(fragNormal,0.0f))),0.0f);
-	if(lambartian > 0.0f)
-	{
-		vec4 reflection = normalize(2.0f * lambartian * vec4(fragNormal,0.0f) - directionToLight);
-		scalar = dot(reflection, directionToCamera);
-		scalar = pow(scalar, shininess);
-	}
-	vec4 result = specularColor * scalar * lightColor;
+	float normalFactor = dot(directionToLight,normalVector);
+	vec4 N = normalVector * normalFactor; // light source projection on the normal
+	vec4 P = vec4(N - vec4(lightSourceLocation,0.0f)); // Light source point to N
+	vec4 R = 2 * (dot(directionToLight, normalVector)) * normalVector - directionToLight;
 
+	vec4 V = vec4(normalize(cameraLocation - fragPosition),0.0f); // Direction to camera
+	float relectionCameraDotProduct = max(dot(R,V),0.0f);
+	float specularFactor = pow(relectionCameraDotProduct,shininess);
+	specularFactor = max(specularFactor,0.001f);
+	vec4 result = specularColor * specularFactor * lightColor; 
+	
 	return result;
 }

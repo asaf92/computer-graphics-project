@@ -16,7 +16,7 @@ Camera::Camera() : Camera::Camera(glm::vec3(10.0f, 10.0f, -10.0f),
 Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up): direction(glm::vec3(0.0f,0.0f,1.0f))
 {
 	orthographicProjectionParameters = { -1.0f ,1.0f ,-1.0f ,1.0f ,-1.0f ,1.0f };
-	perspectiveProjectionParameters = { 5.0f, 4 / 3, 1.0f,100.0f };
+	perspectiveProjectionParameters = { 30.0f, 4 / 3, 1.0f,100.0f };
 	SetCameraLookAt(eye, at, up);
 	projectionTransformation = glm::mat4x4(1);
 	activeProjectionType = Perspective;
@@ -24,6 +24,11 @@ Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up): 
 
 Camera::~Camera()
 {
+}
+
+const glm::vec3 & Camera::GetCameraLocation() const
+{
+	return lookAtParameters.eye;
 }
 
 void Camera::SetCameraLookAt()
