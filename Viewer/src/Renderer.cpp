@@ -93,9 +93,15 @@ void Renderer::drawMeshModel(const MeshModel & model)
 	colorShader.setUniform("specularColor", model.GetSpecularColor());
 	colorShader.setUniform("shininess", model.GetShininess());
 	colorShader.setUniform("cameraLocation", activeCamera.GetCameraLocation());
+	colorShader.setUniform("useTextures", model.TextureLoaded());
 	triangleDrawer.SetModel(&model);
-	triangleDrawer.DrawTriangles();
-	if (scene.GetFillTriangles()) triangleDrawer.FillTriangles();
+	if (scene.GetFillTriangles()) 
+	{
+		model.BindTextures();
+		triangleDrawer.FillTriangles();
+		model.UnbindTextures();
+	}
+	else triangleDrawer.DrawTriangles();
 }
 
 void Renderer::drawLights()

@@ -12,7 +12,7 @@
 #include "IMeshObject.h"
 #include "IScalable.h"
 #include "IUniformMaterial.h"
-
+#include "Texture2D.h"
 
 /*
  * MeshModel class.
@@ -58,6 +58,10 @@ protected:
 	glm::vec3& GetMinimumsVector()					        { return minimums; }
 	glm::vec3& GetMaximumVectors()					        { return maximums; }
 
+	// Texture
+	Texture2D texture;
+	bool textureLoaded;
+
 	// OpenGL stuff
 	glm::mat4x4 modelTransform;
 	std::vector<Vertex> modelVertices;
@@ -68,7 +72,7 @@ public:
 	// ctors
 	MeshModel() {}
 	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, const std::string& modelName);
-	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec2> textureCoords, const std::string& modelName);
+	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec2> textureCoords, const std::string& modelName, const std::string& textureFileName);
 	MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> textureCoords, const std::string & modelName); 
 	virtual ~MeshModel();
 
@@ -76,10 +80,15 @@ public:
 	void SetTranslation(glm::vec3 direction)            { translationVector = direction; }
 	void SetRotation(const glm::vec3& angle);
 
-	//Getters
+	// Getters
 	const std::string& GetModelName()                const  { return modelName; }
 	const glm::vec3& GetTranslationVector()	         const  { return translationVector; }
 	Material& GetUniformMaterial()                          { return uniformMaterial; }
+
+	// Textures
+	void BindTextures()  const                                    { texture.bind(0); }
+	void UnbindTextures() const                                   { texture.unbind(0); }
+	const bool TextureLoaded() const                              { return textureLoaded; }
 
 	#pragma region Interfaces Implementations
 	// Inherited via IMovable

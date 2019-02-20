@@ -23,6 +23,7 @@ public:
 	static glm::vec3 ScreenVec3FromWorldPoint(const glm::vec4 & worldPoint, int _viewportWidth, int _viewportHeight);
 	static MeshModel* LoadMeshModel(const std::string& filePath);
 	static std::vector<glm::vec3> CalculateNormals(std::vector<glm::vec3> vertices, std::vector<Face> faces);
+	static std::string GetTextureFileName(std::string filePath);
 
 	// Common math
 	static float degreesToRadians(float degress);

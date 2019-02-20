@@ -146,7 +146,8 @@ MeshModel* Utils::LoadMeshModel(const std::string& filePath)
 	}
 
 	//return MeshModel(faces, vertices, normals, Utils::GetFileName(filePath));
-	return new MeshModel(faces, vertices, textureCoords, Utils::GetFileName(filePath));
+	std::string textureFilePath = Utils::GetTextureFileName(filePath);
+	return new MeshModel(faces, vertices, textureCoords, Utils::GetFileName(filePath), textureFilePath);
 }
 
 std::string Utils::GetFileName(const std::string& filePath)
@@ -183,6 +184,15 @@ std::string Utils::GetFileName(const std::string& filePath)
 	}
 
 	return filePath.substr(index + 1, len - index);
+}
+
+std::string Utils::GetTextureFileName(std::string filePath)
+{
+	size_t index = filePath.find_last_of(".");
+	filePath.replace(index, 4, ".jpg");
+	std::ifstream infile(filePath.c_str());
+	
+	return infile.good() ? filePath : "";
 }
 
 glm::mat4 Utils::xRotationMatrix(float rotationAngle)

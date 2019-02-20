@@ -16,13 +16,19 @@ MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, c
 		modelName) 
 { }
 
-MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec2> textureCoords, const std::string& modelName) : MeshModel(
-	faces, 
+MeshModel::MeshModel(std::vector<Face> faces, 
+	std::vector<glm::vec3> vertices, 
+	std::vector<glm::vec2> textureCoords, 
+	const std::string& modelName, 
+	const std::string& textureFileName) : 
+	MeshModel(faces, 
 	vertices, 
 	Utils::CalculateNormals(vertices, faces), 
 	textureCoords, 
 	modelName) 
-{ }
+{
+	textureLoaded = texture.loadTexture(textureFileName);
+}
 
 MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> textureCoords, const std::string& modelName) :
 	modelTransform(1),

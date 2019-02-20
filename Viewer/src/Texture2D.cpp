@@ -87,7 +87,7 @@ bool Texture2D::loadTexture(const string& fileName, bool generateMipMaps)
 //-----------------------------------------------------------------------------
 // Bind the texture unit passed in as the active texture in the shader
 //-----------------------------------------------------------------------------
-void Texture2D::bind(GLuint texUnit)
+void Texture2D::bind(GLuint texUnit) const
 {
 	assert(texUnit >= 0 && texUnit < 32);
 
@@ -98,7 +98,7 @@ void Texture2D::bind(GLuint texUnit)
 //-----------------------------------------------------------------------------
 // Unbind the texture unit passed in as the active texture in the shader
 //-----------------------------------------------------------------------------
-void Texture2D::unbind(GLuint texUnit)
+void Texture2D::unbind(GLuint texUnit) const
 {
 	glActiveTexture(GL_TEXTURE0 + texUnit);
 	glBindTexture(GL_TEXTURE_2D, 0);
