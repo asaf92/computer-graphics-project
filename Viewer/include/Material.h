@@ -1,6 +1,8 @@
 #pragma once
 #include<glm/glm.hpp>
 
+static constexpr float SHININESS_DEFAULT = 100.0f;
+
 class Material
 {
 private:
@@ -10,7 +12,7 @@ private:
 	float shininess;
 public:
 	// Constructors
-	Material() : ambientColor(glm::vec4(0.1f)), diffuseColor(glm::vec4(0.35f, 0.35f, 0.35f, 1.0f)), specularColor(glm::vec4(1.0f,1.0f,1.0f,1.0)) { shininess = 40.0f; }
+	Material() : ambientColor(glm::vec4(0.1f)), diffuseColor(glm::vec4(0.35f, 0.35f, 0.35f, 1.0f)), specularColor(glm::vec4(1.0f,1.0f,1.0f,1.0)) { shininess = SHININESS_DEFAULT; }
 	Material(const Material& other) : ambientColor(other.GetAmbientColor()), diffuseColor(other.GetDiffuseColor()), specularColor(other.GetSpecularColor()) { shininess = other.GetShininess(); }
 
 	// Setters

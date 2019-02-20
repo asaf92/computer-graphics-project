@@ -21,6 +21,8 @@ bool showAnotherWindow = false;
 static float directionalSliderLimit = 2.0f;
 static float rotationSliderLimit = 20.0f;
 static float lightRotationSliderLimit = 1.0f;
+static constexpr float SHININESS_MIN = 0.01f;
+static constexpr float SHININESS_MAX = 500.0f;
 
 // My Menu Bools
 static bool showModelControls =           false;
@@ -44,14 +46,14 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		scene.AddModel(Utils::LoadMeshModel("C:\\Users\\aagami\\Documents\\project-de-west-denya-massiv\\Data\\banana.obj"));
 	}
 	ImGui::SameLine();
+	if (ImGui::Button("Add Crate"))
+	{
+		scene.AddModel(Utils::LoadMeshModel("C:\\Users\\aagami\\Documents\\project-de-west-denya-massiv\\Data\\crate.obj"));
+	}
+	ImGui::SameLine();
 	if (ImGui::Button("Add Cow"))
 	{
 		scene.AddModel(Utils::LoadMeshModel("C:\\Users\\aagami\\Documents\\project-de-west-denya-massiv\\Data\\cow.obj"));
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Add Bishop"))
-	{
-		scene.AddModel(Utils::LoadMeshModel("C:\\Users\\aagami\\Documents\\project-de-west-denya-massiv\\Data\\bishop.obj"));
 	}
 
 	if (ImGui::CollapsingHeader("General"))
@@ -385,7 +387,7 @@ void ShowModelControls(ImGuiIO& io, Scene& scene)
 		ImGui::Text("Diffuse Color");
 		ImGui::ColorEdit3("Diffuse", (float*)&diffuseColor);
 		ImGui::TreePop();
-		ImGui::SliderFloat("Shininess", (float*)&shininess, 0.0f, 100.0f);
+		ImGui::SliderFloat("Shininess", (float*)&shininess, SHININESS_MIN, SHININESS_MAX);
 		activeModel->SetTranslation(newTranslationVector);
 		activeModel->Scale(newScalingSizes);
 		activeModel->SetAmbientColor(ambientColor);
