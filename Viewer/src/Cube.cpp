@@ -5,6 +5,7 @@ Cube::Cube(glm::vec4 location, float size) :Cube(location,size,size,size) {}
 
 Cube::Cube(glm::vec4 location, float length, float width, float height) : length(length), width(width), height(height), location(location)
 {
+	textureLoaded = false;
 	std::vector<glm::vec3> vertices;
 	vertices = {
 	glm::vec3(-width, -height,  length),

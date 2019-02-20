@@ -44,7 +44,7 @@ private:
 	bool fillTriangles = true;
 	bool drawAxis = false;
 	bool demoTriangles = false;
-	bool showFloor = true;
+	bool showFloor = false;
 	bool fogEnabled = false;
 
 	// Fog

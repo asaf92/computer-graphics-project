@@ -28,5 +28,5 @@ public:
 	virtual const glm::mat4 GetModelTransformation() const override { return glm::mat4(1.0f);}
 
 	// Inherited via IMovable
-	virtual void Move(const glm::vec3 direction) override { location += Utils::Vec4FromVec3DirectionVector(direction); };
+	virtual void Move(const glm::vec3 direction) override { MeshModel::Move(direction); location += Utils::Vec4FromVec3DirectionVector(direction); };
 };
