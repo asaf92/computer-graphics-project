@@ -61,6 +61,10 @@ private:
 	float worldRadius;
 	glm::vec4 clearColor;
 
+	// Toon Shading
+	bool toonShading = false;
+	int toonShadingLevels = 1;
+
 	// Generic models
 	Cube floor;
 
@@ -143,6 +147,12 @@ public:
 	bool GetFogEnabled() const { return fogEnabled; }
 	float GetFogStart() const { return fogStart; }
 	float GetFogFinish() const { return fogFinish; }
+
+	// Toon Shading
+	void SetToonShading(bool value) { toonShading = value; }
+	bool GetToonShading() { return toonShading; }
+	void SetToonShadingLevels(int value) { toonShadingLevels = value; }
+	int GetToonShadingLevels() { return toonShadingLevels; }
 
 	// Input
 	IMoving* GetActiveMovingObject() { return &GetActiveCamera(); }

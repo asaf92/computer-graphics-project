@@ -94,6 +94,9 @@ void Renderer::drawMeshModel(const MeshModel & model)
 	colorShader.setUniform("shininess", model.GetShininess());
 	colorShader.setUniform("cameraLocation", activeCamera.GetCameraLocation());
 	colorShader.setUniform("useTextures", model.TextureLoaded());
+	colorShader.setUniform("useToonShading", scene.GetToonShading());
+	colorShader.setUniform("toonShadingLevels", scene.GetToonShadingLevels());
+
 	triangleDrawer.SetModel(&model);
 	if (scene.GetFillTriangles()) 
 	{

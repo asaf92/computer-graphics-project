@@ -21,8 +21,14 @@ bool showAnotherWindow = false;
 static float directionalSliderLimit = 2.0f;
 static float rotationSliderLimit = 20.0f;
 static float lightRotationSliderLimit = 1.0f;
+
+// Shininess
 static constexpr float SHININESS_MIN = 0.01f;
 static constexpr float SHININESS_MAX = 500.0f;
+
+// Toon Shading
+static constexpr int TOON_SHADING_LEVELS_MIN = 1;
+static constexpr int TOON_SHADING_LEVELS_MAX = 10;
 
 // My Menu Bools
 static bool showModelControls =           false;
@@ -63,11 +69,19 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		bool demoTriangle = scene.GetDemoTriangles();
 		bool fillTriangles = scene.GetFillTriangles();
 		bool showFloor = scene.GetShowFloor();
+		bool toonShading = scene.GetToonShading();
+		int toonShadingLevels = scene.GetToonShadingLevels();
 
 		ImGui::Checkbox("Show axis", &drawAxis);
 		ImGui::Checkbox("Show demo triangles", &demoTriangle);
 		ImGui::Checkbox("Fill triangles", &fillTriangles);
 		ImGui::Checkbox("Show floor", &showFloor);
+		
+		// Toon Shading
+		ImGui::Checkbox("Toon Shading", &toonShading); 
+		ImGui::SameLine(); 
+		ImGui::SliderInt("Toon Shading levels", &toonShadingLevels, TOON_SHADING_LEVELS_MIN, TOON_SHADING_LEVELS_MAX);
+		
 		ImGui::ColorEdit3("Background color", (float*)&clearColor, ImGuiColorEditFlags_NoInputs);
 		ImGui::SliderFloat("World Radius", &worldRadius, 0.1f, 10.0f);
 		// Execution stats
@@ -80,6 +94,8 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		scene.SetFillTriangles(fillTriangles);
 		scene.SetShowFloor(showFloor);
 		scene.SetClearColor(clearColor);
+		scene.SetToonShading(toonShading);
+		scene.SetToonShadingLevels(toonShadingLevels);
 	}
 
 	if (ImGui::CollapsingHeader("Transformation Matrices"))
