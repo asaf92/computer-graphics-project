@@ -25,25 +25,20 @@ private:
 	Scene& scene;
 	Fogger fogger;
 	Camera& activeCamera;
-	IMeshObject* demoTriangleModel;
 
 	// Drawing
 	TriangleDrawer triangleDrawer;
 
-
 	// Shaders
+	ShaderProgram* activeShader;
 	ShaderProgram colorShader;
-	ShaderProgram lightShader;
+	ShaderProgram normalMappingShader;
 
 	// Render methods
 	void drawModels();
 	void drawLights();
 	void drawFloor();
 	void drawMeshModel(const MeshModel & model);
-
-	// Demo stuff
-	void demoTriangle();
-	void createDemoTriangle();
 
 public:
 	Renderer(Scene& scene);

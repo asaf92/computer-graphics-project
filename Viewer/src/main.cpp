@@ -54,7 +54,7 @@ static void HandleUserInput(ImGuiIO& io, IInputController& inputController)
 int main(int argc, char **argv)
 {
 	// Create GLFW window
-	int windowWidth = 1280, windowHeight = 720;
+	int windowWidth = 1920, windowHeight = 1080;
 	GLFWwindow* window = SetupGlfwWindow(windowWidth, windowHeight, "Mesh Viewer");
 	if (!window)
 	{

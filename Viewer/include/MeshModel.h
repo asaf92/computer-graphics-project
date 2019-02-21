@@ -68,6 +68,9 @@ protected:
 	GLuint vao;
 	GLuint vbo;
 	
+	// Bump mapping
+	Texture2D* bumpMap;
+
 public:
 	// ctors
 	MeshModel() {}
@@ -89,6 +92,8 @@ public:
 	void BindTextures()  const                                    { texture.bind(0); }
 	void UnbindTextures() const                                   { texture.unbind(0); }
 	const bool TextureLoaded() const                              { return textureLoaded; }
+
+	Texture2D* GetBumpMap() const { return bumpMap; }
 
 	#pragma region Interfaces Implementations
 	// Inherited via IMovable

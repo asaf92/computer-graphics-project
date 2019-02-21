@@ -28,6 +28,8 @@ MeshModel::MeshModel(std::vector<Face> faces,
 	modelName) 
 {
 	textureLoaded = texture.loadTexture(textureFileName);
+	bumpMap = new Texture2D();
+	bumpMap->loadTexture("C:\\Users\\aagami\\Documents\\project-de-west-denya-massiv\\Databrickwall_normal.jpg");
 }
 
 MeshModel::MeshModel(std::vector<Face> faces, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> textureCoords, const std::string& modelName) :
@@ -93,6 +95,7 @@ MeshModel::~MeshModel()
 {
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
+	if (bumpMap != nullptr) delete bumpMap;
 }
 
 // AKA translate

@@ -15,15 +15,13 @@
 Renderer::Renderer(Scene& scene) : scene(scene), activeCamera(scene.GetActiveCamera()), triangleDrawer(TriangleDrawer()), fogger(Fogger()) 
 { 
 	colorShader.loadShaders("vshader_color.glsl", "fshader_color.glsl"); 
-	createDemoTriangle();
+	normalMappingShader.loadShaders("vshader_normal.glsl", "fshader_normal.glsl");
+	activeShader = &colorShader;
 }
 
 Renderer::~Renderer()
 {
-	delete demoTriangleModel;
 }
-
-
 
 void Renderer::ClearBuffers()
 {
@@ -37,7 +35,6 @@ void Renderer::Render()
 	// Start counting runtime
 	auto start = std::chrono::high_resolution_clock::now();
 
-	demoTriangle();
 	drawModels();
 	drawLights();
 	drawFloor();
@@ -70,32 +67,38 @@ void Renderer::drawMeshModel(const MeshModel & model)
 	activeCamera.RenderProjectionMatrix();
 	auto projectionMatrix = activeCamera.GetProjectionMatrix();
 	int numberOfLights = (int)lights.size();
+	Texture2D* bumpMap = nullptr;
 
 	// Vertex shader params
-	colorShader.use();
-	colorShader.setUniform("model", modelToWorld);
-	colorShader.setUniform("view", worldToView);
-	colorShader.setUniform("projection", projectionMatrix);
-	colorShader.setUniform("numberOfLights", numberOfLights);
+	activeShader->use();
+	activeShader->setUniform("model", modelToWorld);
+	activeShader->setUniform("view", worldToView);
+	activeShader->setUniform("projection", projectionMatrix);
+	activeShader->setUniform("numberOfLights", numberOfLights);
+	if (scene.GetUseBumpMapping())
+	{
+		bumpMap = model.GetBumpMap();
+		activeShader->setUniformSampler("bumpMap", 1);
+	}
 
 	// Fragment shader params
 	for (int i = 0; i != numberOfLights; i++)
 	{
 		string lightsColorArrayString = std::string("lightColors[" + std::to_string(i) + ']').c_str();
 		string lightsLocationArrayString = std::string("lightsPositions[" + std::to_string(i) + ']').c_str();
-		colorShader.setUniform(lightsColorArrayString.c_str(), lights[i]->GetColor());
-		colorShader.setUniform(lightsLocationArrayString.c_str(), Utils::Vec3FromVec4(lights[i]->GetLocation()));
+		activeShader->setUniform(lightsColorArrayString.c_str(), lights[i]->GetColor());
+		activeShader->setUniform(lightsLocationArrayString.c_str(), Utils::Vec3FromVec4(lights[i]->GetLocation()));
 	}
 
-	colorShader.setUniform("ambiantColor", model.GetAmbientColor());
-	colorShader.setUniform("ambiantLighting", scene.GetAmbientLight());
-	colorShader.setUniform("diffuseColor", model.GetDiffuseColor());
-	colorShader.setUniform("specularColor", model.GetSpecularColor());
-	colorShader.setUniform("shininess", model.GetShininess());
-	colorShader.setUniform("cameraLocation", activeCamera.GetCameraLocation());
-	colorShader.setUniform("useTextures", model.TextureLoaded());
-	colorShader.setUniform("useToonShading", scene.GetToonShading());
-	colorShader.setUniform("toonShadingLevels", scene.GetToonShadingLevels());
+	activeShader->setUniform("ambiantColor", model.GetAmbientColor());
+	activeShader->setUniform("ambiantLighting", scene.GetAmbientLight());
+	activeShader->setUniform("diffuseColor", model.GetDiffuseColor());
+	activeShader->setUniform("specularColor", model.GetSpecularColor());
+	activeShader->setUniform("shininess", model.GetShininess());
+	activeShader->setUniform("cameraLocation", activeCamera.GetCameraLocation());
+	activeShader->setUniform("useTextures", model.TextureLoaded());
+	activeShader->setUniform("useToonShading", scene.GetToonShading());
+	activeShader->setUniform("toonShadingLevels", scene.GetToonShadingLevels());
 
 	triangleDrawer.SetModel(&model);
 	if (scene.GetFillTriangles()) 
@@ -125,14 +128,14 @@ void Renderer::drawLights()
 		auto projectionMatrix = activeCamera.GetProjectionMatrix();
 
 		// Vertex shader params
-		colorShader.use();
-		colorShader.setUniform("model", modelToWorld);
-		colorShader.setUniform("view", worldToView);
-		colorShader.setUniform("projection", projectionMatrix);
-		colorShader.setUniform("numberOfLights", 0);
-		colorShader.setUniform("ambiantColor", lightColor);
-		colorShader.setUniform("ambiantLighting", lightColor);
-		colorShader.setUniform("cameraLocation", activeCamera.GetCameraLocation());
+		activeShader->use();
+		activeShader->setUniform("model", modelToWorld);
+		activeShader->setUniform("view", worldToView);
+		activeShader->setUniform("projection", projectionMatrix);
+		activeShader->setUniform("numberOfLights", 0);
+		activeShader->setUniform("ambiantColor", lightColor);
+		activeShader->setUniform("ambiantLighting", lightColor);
+		activeShader->setUniform("cameraLocation", activeCamera.GetCameraLocation());
 		triangleDrawer.SetModel(&lightSource);
 		triangleDrawer.DrawTriangles();
 		triangleDrawer.FillTriangles();
@@ -143,54 +146,4 @@ void Renderer::drawFloor()
 {
 	if (!scene.GetShowFloor()) return;
 	drawMeshModel(*scene.GetFloor());
-}
-
-/*
-* Demo to succesfully display a MeshModel with two faces
-* to form a star of david
-*/
-void Renderer::demoTriangle()
-{
-	if (!scene.GetDemoTriangles()) return;
-
-	colorShader.use();
-	auto modelToWorld =     glm::mat4(1.0f);
-	modelToWorld[1][1] = 0.2f;
-	modelToWorld[0][0] = 0.15f;
-	auto worldToView =      glm::mat4(1.0f);
-	auto projectionMatrix = glm::mat4(1.0f);
-	colorShader.setUniform("model", modelToWorld);
-	colorShader.setUniform("view", worldToView);
-	colorShader.setUniform("projection", projectionMatrix);
-	lightShader.use();
-	triangleDrawer.SetModel(demoTriangleModel);
-	triangleDrawer.DrawTriangles();
-	if(scene.GetFillTriangles()) triangleDrawer.FillTriangles();
-}
-
-void Renderer::createDemoTriangle()
-{
-	Face face = Face(
-		std::vector<int>{1, 2, 3},
-		std::vector<int>{1, 2, 3},
-		std::vector<int>()
-	);
-	Face secondFace = Face(
-		std::vector<int>{4, 5, 6},
-		std::vector<int>{4, 5, 6},
-		std::vector<int>()
-	);
-	std::vector<Face> faces{ face, secondFace };
-
-	std::vector<glm::vec3> vertices{
-		glm::vec3(-0.5f,-0.5f,0.0f),
-		glm::vec3(0.5f,-0.5f,0.0f),
-		glm::vec3(0.0f,0.75f,0.0f),
-		glm::vec3(-0.5f,0.5f,0.0f),
-		glm::vec3(0.5f,0.5f,0.0f),
-		glm::vec3(0.0f,-0.75f,0.0f),
-
-	};
-
-	demoTriangleModel = new MeshModel(faces, vertices, "Demo Triangle");
 }

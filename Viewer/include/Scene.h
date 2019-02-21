@@ -52,7 +52,7 @@ private:
 	float fogFinish;
 
 	// Shader
-	ShadingModels selectedShader;
+	bool useBumpMapping = false;
 
 	// Lights
 	bool showingLights;
@@ -137,8 +137,8 @@ public:
 	unsigned int GetLightsNumberLimit() { return MAX_LIGHTS_NUMBER; }
 
 	// Shader
-	ShadingModels GetSelectedShadingModel() const { return selectedShader; }
-	void SetShadingModel(ShadingModels selection) { selectedShader = selection; }
+	bool GetUseBumpMapping() { return useBumpMapping; }
+	void SetUseBumpMapping(bool value) { useBumpMapping = value; }
 
 	// Fog
 	void SetFogEnabled(bool value) { fogEnabled = value; }

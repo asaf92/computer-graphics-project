@@ -6,7 +6,6 @@ Scene::Scene() :
 	activeCameraIndex(0),
 	activeModelIndex(0),
 	activeLightsIndex(0),
-	selectedShader(Phong),
 	fogStart(1.0f),
 	fogFinish(5.0f),
 	worldRadius(10.0f),
