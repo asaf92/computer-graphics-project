@@ -70,6 +70,7 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		bool fillTriangles = scene.GetFillTriangles();
 		bool showFloor = scene.GetShowFloor();
 		bool toonShading = scene.GetToonShading();
+		bool bumpMapping = scene.GetUseBumpMapping();
 		int toonShadingLevels = scene.GetToonShadingLevels();
 
 		ImGui::Checkbox("Show axis", &drawAxis);
@@ -82,6 +83,9 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		ImGui::SameLine(); 
 		ImGui::SliderInt("Toon Shading levels", &toonShadingLevels, TOON_SHADING_LEVELS_MIN, TOON_SHADING_LEVELS_MAX);
 		
+		// Bump Mapping
+		ImGui::Checkbox("Bump Mapping", &bumpMapping);
+
 		ImGui::ColorEdit3("Background color", (float*)&clearColor, ImGuiColorEditFlags_NoInputs);
 		ImGui::SliderFloat("World Radius", &worldRadius, 0.1f, 10.0f);
 		// Execution stats
@@ -96,6 +100,7 @@ void DrawMenus(ImGuiIO& io, Scene& scene)
 		scene.SetClearColor(clearColor);
 		scene.SetToonShading(toonShading);
 		scene.SetToonShadingLevels(toonShadingLevels);
+		scene.SetUseBumpMapping(bumpMapping);
 	}
 
 	if (ImGui::CollapsingHeader("Transformation Matrices"))
