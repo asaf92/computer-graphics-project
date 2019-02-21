@@ -9,6 +9,7 @@ class Texture2D
 {
 public:
 	Texture2D();
+	Texture2D(GLuint textureNumber);
 	virtual ~Texture2D();
 
 	bool loadTexture(const string& fileName, bool generateMipMaps = true);

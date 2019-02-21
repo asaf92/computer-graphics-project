@@ -7,6 +7,9 @@ in vec3 fragPosition;
 in vec3 fragNormal;
 in vec2 fragTexCoords;
 
+// Bump mapping
+uniform sampler2D bumpMap;
+
 // Camera
 uniform vec3 cameraLocation;
 
@@ -86,11 +89,6 @@ vec4 calculateDiffusePart(vec3 lightSourceLocation, vec4 lightColor)
 float getBrightness(vec4 directionToLight, vec4 normalVector)
 {
 	float brightness = dot(directionToLight, normalVector);
-	//if(useToonShading)
-	//{
-	//	float level = floor(brightness * toonShadingLevels);
-	//	brightness = level/toonShadingLevels;
-	//}
 	return brightness;
 }
 

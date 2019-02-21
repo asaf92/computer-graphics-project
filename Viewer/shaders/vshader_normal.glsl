@@ -9,6 +9,9 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+// Bump mapping
+uniform sampler2D bumpMap;
+
 out vec3 fragPosition;
 out vec3 fragNormal;
 out vec2 fragTexCoords;

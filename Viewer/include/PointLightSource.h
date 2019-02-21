@@ -10,7 +10,7 @@ private:
 	Cube cubeModel;
 public:
 	// Constructors
-	PointLightSource() : PointLightSource(glm::vec4(0.5f,0.5f,0.5f,1.0f)) {}
+	PointLightSource() : PointLightSource(glm::vec4(0.5f,5.0f,0.5f,1.0f)) {}
 	PointLightSource(const glm::vec4& _location);
 
 
