@@ -63,10 +63,3 @@ By the end of the course, you will be able to:
 
 *Textbook*:
 Interactive Computer Graphics: A Top-Down Approach with Shader-Based OpenGL ,6th Edition
-
-## Assignments
-* [Assignment 1: Wireframe Viewer](Assignment1/homework1.pdf)
-
-* [Assignment 2: Basic Shading](Assignment2/homework2.pdf)
-
-* [Assignment 3: OpenGL Renderer](Assignment3/homework3.pdf)
