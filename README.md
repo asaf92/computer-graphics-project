@@ -1,32 +1,56 @@
-# Computer Graphics 203.3710, Winter 2018/2019
-## Students Team data
+# Intro
+This project is a graphics engine that I've built during my Computer Graphics (203.3710) course in the University of Haifa. The project was intended for either one or two people to work on. The master branch I worked on is left here as is with all my commits so my entire progress is on display. By the time I started working on this project I was a professional C# programmer for several months, and had some experience with C++ (mostly from my OOP course), but haven't had any experience with computer graphics whatsoever.
 
+In this document I will go through the engine capabilities, show the progress I made and show some of the code.
+
+## Progress
+### Wireframe
+In the begining I started with simple tasks such as drawing lines and drawing triangles. I also parsed 3D models in .obj files, introduced cameras, projections and transformations. I combined the two so that I can parse .obj files, get a set of transformed triangles and draw each triangle on the screen, which gave me a wireframe viewer:
+![](https://i.ibb.co/THYpx7K/image.png)
+**A wireframe presentation of the cow model**
+
+### Lighting & Shaders
+The next assignment was to write and use C++ shaders, I assume that we can understand how shaders work before writing them in OpenGL in the final assignment, and add lighting to the scene. There was also a bonus for including post-effects I believe (which I did by adding fog). I was required to include point light sources as well as parallel light sources, and write Vertex & Fragment shaders. There's an option to switch between flat, Gouraud and Phong shaders. 
+![alt text](https://i.ibb.co/tC6bJTD/image.png)
+**A bunny model with some lighting on**
+![alt text](https://i.ibb.co/2ZrnFsh/image.png)
+**A fog post-effect**
+
+### OpenGL shaders
+The final assignment was to switch the implementation of the shaders to OpenGL. There were also some other bonus tasks such as including textures, including non-linear textures (for example a texture on a sphere), toon shading, bump mapping etc... We were supposed to only have one bonus task, and I believe I finished with 2 bonus tasks and another one which wasn't finished (bump mapping). I received a 100 grade for this task.
+![alt text](https://i.ibb.co/FBgd94K/image.png)
+**The same cow from the first assignment, along with a textured box and several light sources**
+![](https://i.ibb.co/pnhPv5f/image.png)
+**Same scene but with toon shading**
+![](https://i.ibb.co/wyRqPNH/image.png)
+**Sphere texture**
+
+## Extra features
+I added a lot of features for my personal convinience and challenge. Here are some that come to mind:
+### WASD moving
+At some point between assignment 2 and 3 I added an option to navigate around the mesh with the mouse (by pressing the mouse 3 key) and WASD keyboard buttons (Like in an FPS). I did it by first implementing simple "tilt" and "pan" interfaces which I used with GUI controls first, and then I linked it to mouse keys. I did the same but with "move" interfaces (that I used for several other things before I thought about WASD moving)
+### Debug info
+My program had a lot of debug info, mostly for evaluating run-time and performence. Before assignment 3, the shaders were written in C++ and in a non-parallel way. Loading even 2 high-detail models (such as the cow) would make the fps drop to around 1 FPS when running on debug settings. I decided to analyse it by taking the time that any high-level function takes. Intrestingly, I discovered this way that the heaviest operation is actually clearing the buffer before rendering a new frame. This operation of course would take much less time when compiling on "Release" mode. 
+I also added a menu option to show the calculated transformation and projection matrices, as well as compare the matrices I calculated and the glm library calculation results.
+### Performence tweaking
+As I mentioned, performence was a major issue before switching to OpenGL. I introduced a lot of tweaks to the code in some algorithms. 
+I used some pragma commands to prevent optimization of some parts, so I can enjoy the performence boosts that I get with release mode as well as keeping the ability to throughly debug parts of my code. I also included some other tweaks such as skipping loops early when possible, and not rendering objects that are identified early as out of the camera view.
+
+Here are some of the original README.md notes:
+# Computer Graphics 203.3710, Winter 2018/2019 - Course Details
+## Student 
 Name: 'Asaf Agami'  
-Student Number: '203941661'
 
-### Lecturer
+## Lecturer
 *Roi Poranne*
-
 [roiporanne@cs.haifa.ac.il](mailto:roiporanne@cs.haifa.ac.il)
-
 URL: [https://www.inf.ethz.ch/personal/poranner/](https://www.inf.ethz.ch/personal/poranner/)
 
-Office Hours: By appointment.
-
-### Assistant
+## Assistant
 *Roy Velich*
-
 [rvelich@campus.haifa.ac.il](mailto:rvelich@campus.haifa.ac.il)
 
-Office Hours: By appointment.
-
-### Lectures:
-Sundays at 16:00pm - 20:00pm
-
-Main Building, Room 713
-
 ## Course Description
-
 This course provides an introduction to the foundations of Computer Graphics. We will cover the basic mathematical concepts, such as 2D and 3D transformations, shading models, and rendering techniques. The ultimate goal of this course is to develop a basic model viewer.
 
 Students will experiment with modern graphics programming and build a renderer using C++ and OpenGL.
@@ -41,87 +65,8 @@ By the end of the course, you will be able to:
 Interactive Computer Graphics: A Top-Down Approach with Shader-Based OpenGL ,6th Edition
 
 ## Assignments
-
 * [Assignment 1: Wireframe Viewer](Assignment1/homework1.pdf)
 
 * [Assignment 2: Basic Shading](Assignment2/homework2.pdf)
 
 * [Assignment 3: OpenGL Renderer](Assignment3/homework3.pdf)
-
-## General Instructions
-
-### Companion Videos
-All of the instructions below are demonstrated in the two following videos:
-
-* [Setup Environment](https://youtu.be/irAP4DGwvPM)
-* [Generate Project with CMake](https://youtu.be/84wIbGCKYgA)
-
-The videos were made using a Windows system and Visual Studio 2017. CMake also supports project generation for other environments and IDEs, such as CodeBlocks and Eclipse - You should use one of those if you're not running a Windows system.
-
-### Installing Git and CMAKE
-Before we can begin, you must install Git, a version control system which you need for handing in your assignments, and for keeping track of your progress. We refer you to the online [Pro Git book](https://git-scm.com/book/en/v2) for more information. There you will also find [instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git]) on how to to install it. We recommend using [SourceTree](https://www.sourcetreeapp.com/) or [GitHub Desktop](https://desktop.github.com/) as a GUI for Git.
-
-We use CMake for cross-platform builds. On Windows you can download it from: [https://cmake.org/download/](https://cmake.org/download/). If you are using Linux or macOS, we recommend installing it with a package manager instead of the CMake download page. E.g. on Debian/Ubuntu:
-```
-sudo apt-get install cmake
-```
-or with MacPorts on macOS:
-```
-sudo port install cmake.
-```
-
-### Visual Studio
-For those of you who work on Microsoft Windows, we recommand to use Visual Studio 2017 as your IDE. You can download Visual Studio 2017 Community Edition from here [https://visualstudio.microsoft.com/vs/community/](https://visualstudio.microsoft.com/vs/community/).
-
-### Cloning the Assignment Repository
-Before you can clone your private assignment repository, you need to have an active [Github](https://github.com/) account. You can then create your own private repository or join and existing one by following the link we sent you via moodle. The name of the repository will always have the form "computergraphics2018-'Team_name'", where 'Team_name' is replace by the name you chose.
-
-Next, you will need to clone it to your computer, either by using SourceTree, or by typing the following in command line.
-```
-git clone --recursive https://github.com/computer-graphics-fall-2018-2019-haifa/project-'Team_Name'.git
-```
-This can take several minutes.
-
-Next, go into the newly created folder, and add the base assignment repository as a remote (pay attention to capital letters):
-```
-cd project-'Team_Name'
-git remote add base https://github.com/computer-graphics-fall-2018-2019-haifa/project.git
-```
-
-Note: You only have to do this once. This will allow you to recieve updates to the repository from us.
-
-
-You should now have your local clone of the assignment repository. Take a look at the new repository folder and open 'README.md'. It contains the text you are currently reading. Please fill in your name and student number (for both team members) at the top of this file and save. Then, you need to stage, commit and push the changes:
-```
-git add README.md
-git commit -m "Adjust README.md"
-git push
-```
-**Never push large files to the remote repository! You should almost always only push code. Never push executables or build data**
-
-Note: This is how you commit changes manually from the command line. You can also commit changes using a dedicated graphical interface, such as GitHub Desktop. You can see how to do it in the videos linked above.
-
-Please refer to the git book for an explanation on the differences between those steps.
-You should be able to see your name online on your private repository: https://github.com/computer-graphics-fall-2018-2019-haifa/project-'Team_Name'.git
-
-### Building the code
-Use the CMAKE gui as explained in class to create a visual studio solution, or use your compiler/IDE of choice. For a better workflow, we recommend placing a /build folder inside your code folder, where all the build information will be generates.
-**Never push the build folder to the remote repository!**
-
-Once the solution has been generated, open it with visual studio. Check that it compiles and runs.
-
-### Workflow
-In general, you should use Git to commit your changes as often as possible. This will help you to backtrack bugs and also serve as a backup mechanism. For more information we refer you to the [Pro Git book](https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository).
-
-We will notify you when new assignment are up. New assignments can be pulled from the base repository by entering the command:
-```
-git pull base master
-```
-
-### Solution Submission
-
-To submit your final solution of the assignment please add the following commit message: "Solution assignment X". E.g:
-```
-git commit -m "Solution assignment X"
-git push
-```
