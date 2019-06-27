@@ -5,7 +5,7 @@ In this document I will go through the engine capabilities, show the progress I 
 
 ## Progress
 ### Wireframe
-In the begining I started with simple tasks such as drawing lines and drawing triangles. I also parsed 3D models in .obj files, introduced cameras, projections and transformations. I combined the two so that I can parse .obj files, get a set of transformed triangles and draw each triangle on the screen, which gave me a wireframe viewer:
+In the beginning I started with simple tasks such as drawing lines and drawing triangles. I also parsed 3D models in .obj files, introduced cameras, projections and transformations. I combined the two so that I can parse .obj files, get a set of transformed triangles and draw each triangle on the screen, which gave me a wireframe viewer:
 ![](https://i.ibb.co/THYpx7K/image.png)
 **A wireframe presentation of the cow model**
 
@@ -17,7 +17,7 @@ The next assignment was to write and use C++ shaders, I assume that we can under
 **A fog post-effect**
 
 ### OpenGL shaders
-The final assignment was to switch the implementation of the shaders to OpenGL. There were also some other bonus tasks such as including textures, including non-linear textures (for example a texture on a sphere), toon shading, bump mapping etc... We were supposed to only have one bonus task, and I believe I finished with 2 bonus tasks and another one which wasn't finished (bump mapping). I received a 100 grade for this task.
+The final assignment was to switch the implementation of the shaders to OpenGL. There were also some other bonus tasks such as including textures, including non-linear textures (for example a texture on a sphere), [toon shading](https://en.wikipedia.org/wiki/Cel_shading), bump mapping etc... We were supposed to only have one bonus task, and I believe I finished with 2 bonus tasks and another one which wasn't finished (bump mapping). I received a 100 grade for this task.
 ![alt text](https://i.ibb.co/FBgd94K/image.png)
 **The same cow from the first assignment, along with a textured box and several light sources**
 ![](https://i.ibb.co/pnhPv5f/image.png)
@@ -26,15 +26,15 @@ The final assignment was to switch the implementation of the shaders to OpenGL. 
 **Sphere texture**
 
 ## Extra features
-I added a lot of features for my personal convinience and challenge. Here are some that come to mind:
+I added a lot of features for my personal convenience and challenge. Here are some that come to mind:
 ### WASD moving
 At some point between assignment 2 and 3 I added an option to navigate around the mesh with the mouse (by pressing the mouse 3 key) and WASD keyboard buttons (Like in an FPS). I did it by first implementing simple "tilt" and "pan" interfaces which I used with GUI controls first, and then I linked it to mouse keys. I did the same but with "move" interfaces (that I used for several other things before I thought about WASD moving)
 ### Debug info
-My program had a lot of debug info, mostly for evaluating run-time and performence. Before assignment 3, the shaders were written in C++ and in a non-parallel way. Loading even 2 high-detail models (such as the cow) would make the fps drop to around 1 FPS when running on debug settings. I decided to analyse it by taking the time that any high-level function takes. Intrestingly, I discovered this way that the heaviest operation is actually clearing the buffer before rendering a new frame. This operation of course would take much less time when compiling on "Release" mode. 
+My program had a lot of debug info, mostly for evaluating run-time and performance. Before assignment 3, the shaders were written in C++ and in a non-parallel way. Loading even 2 high-detail models (such as the cow) would make the fps drop to around 1 FPS when building the project without any optimizations. I decided to analyze it by tracking the time that any high-level function takes. Interestingly, I discovered this way that the heaviest operation is actually clearing the buffer before rendering a new frame. This operation of course would take much less time when compiling on "Release" mode. 
 I also added a menu option to show the calculated transformation and projection matrices, as well as compare the matrices I calculated and the glm library calculation results.
-### Performence tweaking
-As I mentioned, performence was a major issue before switching to OpenGL. I introduced a lot of tweaks to the code in some algorithms. 
-I used some pragma commands to prevent optimization of some parts, so I can enjoy the performence boosts that I get with release mode as well as keeping the ability to throughly debug parts of my code. I also included some other tweaks such as skipping loops early when possible, and not rendering objects that are identified early as out of the camera view.
+### Performance tweaking
+As I mentioned, performance was a major issue before switching to OpenGL. I introduced a lot of tweaks to the code in some algorithms. 
+I used some pragma commands to prevent optimization of some parts, so I can enjoy the performance boosts that I get with release mode as well as keeping the ability to thoroughly debug parts of my code. I also included some other tweaks such as skipping loops early when possible, and not rendering objects that are identified early as out of the camera view.
 
 Here are some of the original README.md notes:
 # Computer Graphics 203.3710, Winter 2018/2019 - Course Details
