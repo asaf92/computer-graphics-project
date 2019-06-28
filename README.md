@@ -1,7 +1,7 @@
 # Intro
 This project is a graphics engine that I've built during my Computer Graphics (203.3710) course in the University of Haifa. The project was intended for either one or two people to work on. The master branch I worked on is left here as is with all my commits so my entire progress is on display. By the time I started working on this project I was a professional C# programmer for several months, and had some experience with C++ (mostly from my OOP course), but haven't had any experience with computer graphics whatsoever.
 
-In this document I will go through the engine capabilities, show the progress I made and show some of the code.
+In this document I will go through the engine capabilities and show the progress I made.
 
 ## Progress
 ### Wireframe
